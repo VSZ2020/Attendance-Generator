@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace AttendanceGenerator.Utils.Updater
+namespace Services.Infrastructure.Updater
 {
     public class AppUpdater
     {
@@ -12,7 +12,7 @@ namespace AttendanceGenerator.Utils.Updater
         public AppUpdater(string fileInfoUrl, Version curVersion)
         {
             this.fileInfoUrl = fileInfoUrl;
-            this.CurrentVersion = curVersion;
+            CurrentVersion = curVersion;
         }
     }
 }

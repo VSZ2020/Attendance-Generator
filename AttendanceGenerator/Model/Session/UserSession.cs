@@ -1,4 +1,4 @@
-﻿using AttendanceGenerator.Activation;
+﻿using AttendanceGenerator.Infrastructure.Activation;
 using AttendanceGenerator.Model.Session.UserAccount;
 using System;
 using System.Collections.Generic;
