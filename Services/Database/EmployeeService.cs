@@ -33,8 +33,7 @@ namespace Services.Database
                 FirstName = empl.FirstName,
                 LastName = empl.LastName,
                 MiddleName = empl.MiddleName, 
-                Rate = empl.Rate,
-                ShortName = string.Join(" ", empl.LastName, " ", empl.FirstName[0], ". ", empl.MiddleName[0], ".")
+                Rate = empl.Rate
             }).ToList();
         }
     }

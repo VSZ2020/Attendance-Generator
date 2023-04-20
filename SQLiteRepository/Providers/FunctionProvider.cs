@@ -8,7 +8,8 @@ namespace SQLiteRepository.Providers
     {
         public IList<FunctionEntity> GetAll(Func<FunctionEntity, bool>? filter = null)
         {
-            return filter != null ? GetTable().Where(filter).ToList() : GetTable().ToList();
+            using var ctx = EstablishmentContext.Get();
+            return filter != null ? ctx.Set<FunctionEntity>().Where(filter).ToList() : ctx.Set<FunctionEntity>().ToList();
         }
 
         public Task<IList<FunctionEntity>> GetAllAsync(Func<FunctionEntity, bool>? filter = null)
@@ -18,7 +19,9 @@ namespace SQLiteRepository.Providers
 
         public FunctionEntity GetById(int id)
         {
-            return GetTable()
+            using var ctx = EstablishmentContext.Get();
+            return ctx
+                .Set<FunctionEntity>()
                 .Where(e => e.Id == id)
                 .FirstOrDefault() ?? throw new ArgumentNullException($"Отсутствует элемент с идентификатором {id}");
         }
@@ -32,7 +35,11 @@ namespace SQLiteRepository.Providers
         {
             if (!ids.Any())
                 return new List<FunctionEntity>();
-            return GetTable().Where(e => ids.Contains(e.Id)).ToList();
+            using var ctx = EstablishmentContext.Get();
+            return ctx
+                .Set<FunctionEntity>()
+                .Where(e => ids.Contains(e.Id))
+                .ToList();
         }
 
         public Task<IList<FunctionEntity>> GetByIdsAsync(IList<int> ids)
@@ -43,7 +50,7 @@ namespace SQLiteRepository.Providers
         public IQueryable<FunctionEntity> GetTable()
         {
             using var ctx = EstablishmentContext.Get();
-            return ctx.Functions.AsNoTracking();
+            return ctx.Set<FunctionEntity>().AsNoTracking();
         }
 
         public int Insert(FunctionEntity entity)
@@ -51,7 +58,7 @@ namespace SQLiteRepository.Providers
             if (entity == null)
                 throw new ArgumentNullException($"{typeof(FunctionEntity)} is null!");
             using var ctx = EstablishmentContext.Get();
-            var addedEntity = ctx.Functions.Add(entity);
+            var addedEntity = ctx.Set<FunctionEntity>().Add(entity);
             ctx.SaveChanges();
             return addedEntity.Entity.Id;
         }
@@ -75,14 +82,14 @@ namespace SQLiteRepository.Providers
         public void Remove(FunctionEntity entity)
         {
             using var ctx = EstablishmentContext.Get();
-            ctx.Functions.Remove(entity);
+            ctx.Set<FunctionEntity>().Remove(entity);
             ctx.SaveChanges();
         }
 
         public void Remove(IList<FunctionEntity> entities)
         {
             using var ctx = EstablishmentContext.Get();
-            ctx.Functions.RemoveRange(entities);
+            ctx.Set<FunctionEntity>().RemoveRange(entities);
             ctx.SaveChanges();
         }
 

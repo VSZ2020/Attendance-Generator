@@ -5,6 +5,7 @@ using Services.Extensions;
 using Services.POCO;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Linq;
 using System.Runtime.CompilerServices;
 
 namespace AG.ViewModels.Forms
@@ -29,27 +30,35 @@ namespace AG.ViewModels.Forms
             UserAccountService depsService = new UserAccountService(
                 manager.Get<DepartmentEntity>(), 
                 manager.Get<EmployeeEntity>(), 
-                manager.Get<UserAccountEntity>());
+                manager.Get<UserAccountEntity>(),
+                manager.Get<FunctionEntity>(),
+                manager.Get<EmployeeStatusEntity>());
             
 
             this.userAccountService = depsService;
+            user = userAccountService.GetUserAccounts().First();
 
             LoadDepartments();
+            LoadEmployees(SelectedDepartmentId);
         }
 
-        private void LoadDepartments()
+        public void LoadDepartments()
         {
             if (user == null)
                 return;
+            Departments.Clear();
+            Departments.Add(new Department() { Id = 0, Name = "Все подразделения"});
             Departments.AddRange(userAccountService.GetAvailableDepartments(user));
+           
             if (Departments.Count > 0)
-                SelectedDepartmentId = 1;
+                SelectedDepartmentId = 0;
         }
 
-        private void LoadEmployees(int departmentId = 0)
+        public void LoadEmployees(int departmentId = 0)
         {
             if (user == null)
                 return;
+            Employees.Clear();
             Employees.AddRange(userAccountService.GetAvailableEmployees(user, departmentId));
         }
 

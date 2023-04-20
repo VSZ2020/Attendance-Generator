@@ -9,7 +9,8 @@ namespace SQLiteRepository.Providers
         public IList<DepartmentEntity> GetAll(Func<DepartmentEntity, bool>? filter = null)
         {
             using var ctx = EstablishmentContext.Get();
-            return filter != null ? ctx.Departments.Where(filter).ToList() : GetTable().ToList();
+            var table = ctx.Set<DepartmentEntity>();
+            return filter != null ? table.Where(filter).ToList() : table.ToList();
         }
 
         public Task<IList<DepartmentEntity>> GetAllAsync(Func<DepartmentEntity, bool>? filter = null)
@@ -20,7 +21,7 @@ namespace SQLiteRepository.Providers
         public DepartmentEntity GetById(int id)
         {
             using var ctx = EstablishmentContext.Get();
-            return ctx.Departments
+            return ctx.Set<DepartmentEntity>()
                 .Where(e => e.Id == id)
                 .FirstOrDefault() ?? throw new ArgumentNullException($"Отсутствует подразделение с идентификатором {id}");
         }
@@ -35,7 +36,7 @@ namespace SQLiteRepository.Providers
             if (!ids.Any())
                 return new List<DepartmentEntity>();
             using var ctx = EstablishmentContext.Get();
-            return ctx.Departments.Where(e => ids.Contains(e.Id)).ToList();
+            return ctx.Set<DepartmentEntity>().Where(e => ids.Contains(e.Id)).ToList();
         }
 
         public async Task<IList<DepartmentEntity>> GetByIdsAsync(IList<int> ids)
@@ -46,7 +47,7 @@ namespace SQLiteRepository.Providers
             async Task<IList<DepartmentEntity>> getByIds()
             {
                 using var ctx = EstablishmentContext.Get();
-                return await ctx.Departments.Where(i => ids.Contains(i.Id)).ToListAsync();
+                return await ctx.Set<DepartmentEntity>().Where(i => ids.Contains(i.Id)).ToListAsync();
             }
             return await getByIds();
         }
@@ -54,7 +55,7 @@ namespace SQLiteRepository.Providers
         public IQueryable<DepartmentEntity> GetTable()
         {
             using var ctx = EstablishmentContext.Get();
-            return ctx.Departments.AsNoTracking();
+            return ctx.Set<DepartmentEntity>().AsNoTracking();
         }
 
         public int Insert(DepartmentEntity entity)
@@ -62,7 +63,7 @@ namespace SQLiteRepository.Providers
             if (entity == null)
                 throw new ArgumentNullException($"{typeof(DepartmentEntity)} is null!");
             using var ctx = EstablishmentContext.Get();
-            var addedEntity = ctx.Departments.Add(entity);
+            var addedEntity = ctx.Set<DepartmentEntity>().Add(entity);
             ctx.SaveChanges();
             return addedEntity.Entity.Id;
         }
@@ -86,14 +87,14 @@ namespace SQLiteRepository.Providers
         public void Remove(DepartmentEntity entity)
         {
             using var ctx = EstablishmentContext.Get();
-            ctx.Departments.Remove(entity);
+            ctx.Set<DepartmentEntity>().Remove(entity);
             ctx.SaveChanges();
         }
 
         public void Remove(IList<DepartmentEntity> entities)
         {
             using var ctx = EstablishmentContext.Get();
-            ctx.Departments.RemoveRange(entities);
+            ctx.Set<DepartmentEntity>().RemoveRange(entities);
             ctx.SaveChanges();
         }
 

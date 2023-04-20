@@ -31,14 +31,11 @@ namespace Core.Database.Entities
         public bool IsInternalConcurrent { get; set; }
 
         /// <summary>
-        /// Идентификатор должности сотрудника
+        /// Должность сотрудника
         /// </summary>
-        public int FunctionId { get; set; }
+        public FunctionEntity? Function { get; set; }
 
-        /// <summary>
-        /// Должности сотрудника
-        /// </summary>
-        public IList<FunctionEntity> Functions { get; set; }
+        public int FunctionId { get; set; }
 
         /// <summary>
         /// Отдел работы сотрудника
@@ -58,7 +55,46 @@ namespace Core.Database.Entities
 
         public static IList<EmployeeEntity> GetDefault()
         {
-            return new List<EmployeeEntity>();
+            int id = 1;
+            return new List<EmployeeEntity>()
+            {
+                new EmployeeEntity(){
+                    Id = id++,
+                    FirstName = "Имя 1",
+                    LastName = "Фамилия 1",
+                    MiddleName = "Отчество 1",
+                    Email = "user1@user.ru",
+                    Rate = 1f,
+                    DepartmentId = 1,
+                    StatusId = 1,
+                    FunctionId = 1,
+                    IsInternalConcurrent = false
+                },
+                new EmployeeEntity(){
+                    Id = id++,
+                    FirstName = "Имя 2",
+                    LastName = "Фамилия 2",
+                    MiddleName = "Отчество 2",
+                    Email = "user2@user.ru",
+                    Rate = 1f,
+                    DepartmentId = 2,
+                    StatusId = 1,
+                    FunctionId = 2,
+                    IsInternalConcurrent = false
+                },
+                new EmployeeEntity(){
+                    Id = id++,
+                    FirstName = "Name",
+                    LastName = "Last name",
+                    MiddleName = "Middle name",
+                    Email = "user3@user.ru",
+                    Rate = 1f,
+                    DepartmentId = 3,
+                    StatusId = 1,
+                    FunctionId = 3,
+                    IsInternalConcurrent = false
+                },
+            };
         }
     }
 }

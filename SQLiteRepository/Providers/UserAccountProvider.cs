@@ -8,7 +8,9 @@ namespace SQLiteRepository.Providers
     {
         public IList<UserAccountEntity> GetAll(Func<UserAccountEntity, bool>? filter = null)
         {
-            return filter != null ? GetTable().Where(filter).ToList() : GetTable().ToList();
+            using var ctx = AppContext.Get();
+            var table = ctx.Set<UserAccountEntity>();
+            return filter != null ? table.Where(filter).ToList() : table.ToList();
         }
 
         public Task<IList<UserAccountEntity>> GetAllAsync(Func<UserAccountEntity, bool>? filter = null)
@@ -43,7 +45,7 @@ namespace SQLiteRepository.Providers
         public IQueryable<UserAccountEntity> GetTable()
         {
             using var ctx = AppContext.Get();
-            return ctx.UserAccounts.AsNoTracking();
+            return ctx.Set<UserAccountEntity>().AsNoTracking();
         }
 
         public int Insert(UserAccountEntity entity)
@@ -51,7 +53,7 @@ namespace SQLiteRepository.Providers
             if (entity == null)
                 throw new ArgumentNullException($"{typeof(UserAccountEntity)} is null!");
             using var ctx = AppContext.Get();
-            var addedEntity = ctx.UserAccounts.Add(entity);
+            var addedEntity = ctx.Set<UserAccountEntity>().Add(entity);
             ctx.SaveChanges();
             return addedEntity.Entity.Id;
         }
@@ -75,14 +77,14 @@ namespace SQLiteRepository.Providers
         public void Remove(UserAccountEntity entity)
         {
             using var ctx = AppContext.Get();
-            ctx.UserAccounts.Remove(entity);
+            ctx.Set<UserAccountEntity>().Remove(entity);
             ctx.SaveChanges();
         }
 
         public void Remove(IList<UserAccountEntity> entities)
         {
             using var ctx = AppContext.Get();
-            ctx.UserAccounts.RemoveRange(entities);
+            ctx.Set<UserAccountEntity>().RemoveRange(entities);
             ctx.SaveChanges();
         }
 

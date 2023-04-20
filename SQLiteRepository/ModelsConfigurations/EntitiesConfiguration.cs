@@ -79,8 +79,9 @@ namespace SQLiteRepository.ModelsConfigurations
         {
             builder
                 .HasMany(f => f.Employees)
-                .WithMany(e => e.Functions)
-                .UsingEntity(t => t.ToTable("employee-function"));   
+                .WithOne(e => e.Function)
+                .HasForeignKey(e => e.FunctionId)
+                .OnDelete(DeleteBehavior.NoAction);
             builder
                 .ToTable("functions")
                 .HasData(FunctionEntity.GetDefault());

@@ -8,7 +8,8 @@ namespace SQLiteRepository.Providers
     {
         public IList<TimeIntervalEntity> GetAll(Func<TimeIntervalEntity, bool>? filter = null)
         {
-            return filter != null ? GetTable().Where(filter).ToList() : GetTable().ToList();
+            using var ctx = EstablishmentContext.Get();
+            return filter != null ? ctx.Set<TimeIntervalEntity>().Where(filter).ToList() : ctx.Set<TimeIntervalEntity>().ToList();
         }
 
         public Task<IList<TimeIntervalEntity>> GetAllAsync(Func<TimeIntervalEntity, bool>? filter = null)
@@ -18,7 +19,8 @@ namespace SQLiteRepository.Providers
 
         public TimeIntervalEntity GetById(int id)
         {
-            return GetTable()
+            using var ctx = EstablishmentContext.Get();
+            return ctx.Set<TimeIntervalEntity>()
                 .Where(e => e.Id == id)
                 .FirstOrDefault() ?? throw new ArgumentNullException($"Отсутствует элемент с идентификатором {id}");
         }
@@ -32,7 +34,9 @@ namespace SQLiteRepository.Providers
         {
             if (!ids.Any())
                 return new List<TimeIntervalEntity>();
-            return GetTable().Where(e => ids.Contains(e.Id)).ToList();
+
+            using var ctx = EstablishmentContext.Get();
+            return ctx.Set<TimeIntervalEntity>().Where(e => ids.Contains(e.Id)).ToList();
         }
 
         public Task<IList<TimeIntervalEntity>> GetByIdsAsync(IList<int> ids)
@@ -43,7 +47,7 @@ namespace SQLiteRepository.Providers
         public IQueryable<TimeIntervalEntity> GetTable()
         {
             using var ctx = EstablishmentContext.Get();
-            return ctx.TimeIntervals.AsNoTracking();
+            return ctx.Set<TimeIntervalEntity>().AsNoTracking();
         }
 
         public int Insert(TimeIntervalEntity entity)
@@ -51,7 +55,7 @@ namespace SQLiteRepository.Providers
             if (entity == null)
                 throw new ArgumentNullException($"{typeof(TimeIntervalEntity)} is null!");
             using var ctx = EstablishmentContext.Get();
-            var addedEntity = ctx.TimeIntervals.Add(entity);
+            var addedEntity = ctx.Set<TimeIntervalEntity>().Add(entity);
             ctx.SaveChanges();
             return addedEntity.Entity.Id;
         }
@@ -75,14 +79,14 @@ namespace SQLiteRepository.Providers
         public void Remove(TimeIntervalEntity entity)
         {
             using var ctx = EstablishmentContext.Get();
-            ctx.TimeIntervals.Remove(entity);
+            ctx.Set<TimeIntervalEntity>().Remove(entity);
             ctx.SaveChanges();
         }
 
         public void Remove(IList<TimeIntervalEntity> entities)
         {
             using var ctx = EstablishmentContext.Get();
-            ctx.TimeIntervals.RemoveRange(entities);
+            ctx.Set<TimeIntervalEntity>().RemoveRange(entities);
             ctx.SaveChanges();
         }
 

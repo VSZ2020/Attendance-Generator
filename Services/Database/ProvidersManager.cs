@@ -17,9 +17,9 @@ namespace Services.Database
             Register(new FunctionProvider());
             Register(new TimeIntervalProvider());
             Register(new TimeIntervalTypesProvider());
+            Register(new EmployeeStatusProvider());
 
             Register(new UserAccountProvider());
-            Register(new UserRolesProvider());
         }
 
         public ProvidersManager Register<TEntity>(IRepository<TEntity> provider) where TEntity : BaseEntity

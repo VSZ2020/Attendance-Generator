@@ -7,13 +7,7 @@ namespace SQLiteRepository
     public class AppContext: DbContext
     {
         public const string DEFAULT_DB_NAME = "Users";
-        private string connectionString = $"Data Source ={DEFAULT_DB_NAME}";
-
-        public DbSet<UserAccountEntity> UserAccounts { get; set; } = null!;
-
-        public DbSet<UserRoleEntity> UserRoles { get; set; } = null!;
-
-        public DbSet<PermissionEntity> Permissions { get; set; } = null!;
+        private string connectionString = $"Data Source ={DEFAULT_DB_NAME}.db";
 
         public AppContext(string? connString = null)
         {
@@ -24,9 +18,7 @@ namespace SQLiteRepository
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.ApplyConfiguration(new UserRolesConfig());
             modelBuilder.ApplyConfiguration(new UserAccountConfig());
-            modelBuilder.ApplyConfiguration(new PermissionsConfig());
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

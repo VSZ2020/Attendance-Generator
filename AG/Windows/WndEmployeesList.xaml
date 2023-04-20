@@ -25,14 +25,26 @@
                     SelectedValue="{Binding Path=SelectedDepartmentId}"
                     SelectedValuePath="Id"
                     DisplayMemberPath="Name"
-                    />
+                    SelectionChanged="cbDepartment_SelectionChanged"/>
                 <TextBox Text="{Binding SelectedDepartmentIdText}"/>
             </ToolBar>
         </ToolBarPanel>
         <DataGrid
             Grid.Row="1"
+            AutoGenerateColumns="False"
+            CanUserAddRows="False"
+            CanUserDeleteRows="False"
             ItemsSource="{Binding Path=Employees}">
-            
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Фамилия" Binding="{Binding Path=LastName}"/>
+                <DataGridTextColumn Header="Имя" Binding="{Binding Path=FirstName}"/>
+                <DataGridTextColumn Header="Отчетство" Binding="{Binding Path=MiddleName}"/>
+                <DataGridTextColumn Header="Должность" Binding="{Binding Path=Function.Name}"/>
+                <DataGridTextColumn Header="Ставка" Binding="{Binding Path=Rate}"/>
+                <DataGridCheckBoxColumn Header="Совместитель" Binding="{Binding Path=IsConcurrent}"/>
+                <DataGridTextColumn Header="Подразделение" Binding="{Binding Path=Department.Name}"/>
+                <DataGridTextColumn Header="Статус" Binding="{Binding Path=Status.Name}"/>
+            </DataGrid.Columns>
         </DataGrid>
     </Grid>
 </Window>

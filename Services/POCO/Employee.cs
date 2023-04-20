@@ -13,6 +13,11 @@
 
         public float Rate { get; set; }
 
+        public bool IsConcurrent { get; set; }
+
         public Department Department { get; set; }
+        public string PhoneNumber { get; set; }
+
+        public EmployeeStatus Status { get; set; }
     }
 }

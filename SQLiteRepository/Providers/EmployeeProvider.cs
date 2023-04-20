@@ -6,18 +6,11 @@ namespace SQLiteRepository.Providers
 {
     public class EmployeeProvider : IRepository<EmployeeEntity>
     {
-        private readonly EstablishmentContext? context;
-        public EmployeeProvider(EstablishmentContext context = null)
-        {
-            if (context == null)
-                this.context = new EstablishmentContext();
-            else
-                this.context = context;
-        }
 
         public IList<EmployeeEntity> GetAll(Func<EmployeeEntity, bool>? filter = null)
         {
-            return filter != null ? GetTable().Where(filter).ToList() : GetTable().ToList();
+            using var ctx = EstablishmentContext.Get();
+            return filter != null ? ctx.Set<EmployeeEntity>().Where(filter).ToList() : ctx.Set<EmployeeEntity>().ToList();
         }
 
         public Task<IList<EmployeeEntity>> GetAllAsync(Func<EmployeeEntity, bool>? filter = null)
@@ -27,7 +20,8 @@ namespace SQLiteRepository.Providers
 
         public EmployeeEntity GetById(int id)
         {
-            return GetTable()
+            using var ctx = EstablishmentContext.Get();
+            return ctx.Set<EmployeeEntity>()
                 .Where(e => e.Id == id)
                 .FirstOrDefault() ?? throw new ArgumentNullException($"Отсутствует элемент с идентификатором {id}");
         }
@@ -41,7 +35,11 @@ namespace SQLiteRepository.Providers
         {
             if (!ids.Any())
                 return new List<EmployeeEntity>();
-            return GetTable().Where(e => ids.Contains(e.Id)).ToList();
+
+            using var ctx = EstablishmentContext.Get();
+            return ctx.Set<EmployeeEntity>()
+                .Where(e => ids.Contains(e.Id))
+                .ToList();
         }
 
         public Task<IList<EmployeeEntity>> GetByIdsAsync(IList<int> ids)
@@ -52,13 +50,13 @@ namespace SQLiteRepository.Providers
         public IQueryable<EmployeeEntity> GetTable()
         {
             using var ctx = EstablishmentContext.Get();
-            return ctx.Employees.AsNoTracking();
+            return ctx.Set<EmployeeEntity>().AsNoTracking();
         }
 
         public int Insert(EmployeeEntity entity)
         {
             using var ctx = EstablishmentContext.Get();
-            var addedEntity = ctx.Employees.Add(entity).Entity.Id;
+            var addedEntity = ctx.Set<EmployeeEntity>().Add(entity).Entity.Id;
             ctx.SaveChanges();
             return addedEntity;
         }
@@ -81,7 +79,7 @@ namespace SQLiteRepository.Providers
         public void Remove(EmployeeEntity entity)
         {
             using var ctx = EstablishmentContext.Get();
-            ctx.Employees.Remove(entity);
+            ctx.Set<EmployeeEntity>().Remove(entity);
             ctx.SaveChanges();
         }
 
