@@ -1,12 +1,13 @@
-﻿using Core.Database.AppEntities;
-using Core.Database.Entities;
+﻿using AG.Services;
+using Microsoft.Extensions.DependencyInjection;
 using Services.Database;
 using Services.Extensions;
 using Services.POCO;
+using SQLiteRepository;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Windows;
 
 namespace AG.ViewModels.Forms
 {
@@ -26,29 +27,29 @@ namespace AG.ViewModels.Forms
 
         public EmployeesListFormViewModel()
         {
-            ProvidersManager manager = new ProvidersManager();
-            UserAccountService depsService = new UserAccountService(
-                manager.Get<DepartmentEntity>(), 
-                manager.Get<EmployeeEntity>(), 
-                manager.Get<UserAccountEntity>(),
-                manager.Get<FunctionEntity>(),
-                manager.Get<EmployeeStatusEntity>());
-            
+            var provider = ServiceLocator.Services.BuildServiceProvider();
+            this.userAccountService = new UserAccountService(
+                provider.GetService<IAppItemsRepository>(),
+                provider.GetService<IEstablishmentItemsRepository>());
 
-            this.userAccountService = depsService;
-            user = userAccountService.GetUserAccounts().First();
+            user = SessionService.User;
 
             LoadDepartments();
-            LoadEmployees(SelectedDepartmentId);
+            if (Departments.Count > 1) LoadEmployees(SelectedDepartmentId);
         }
 
         public void LoadDepartments()
         {
             if (user == null)
                 return;
+            var departments = userAccountService.GetAvailableDepartments(user);
+
             Departments.Clear();
             Departments.Add(new Department() { Id = 0, Name = "Все подразделения"});
-            Departments.AddRange(userAccountService.GetAvailableDepartments(user));
+            if (departments.StatusCode == DatabaseResponse<Department>.ResponseCode.Success)
+                Departments.AddRange(departments.Results);
+            else if (departments.StatusCode == DatabaseResponse<Department>.ResponseCode.PermissionsError && !string.IsNullOrEmpty(departments.Message))
+                ShowMessage(departments.Message);
            
             if (Departments.Count > 0)
                 SelectedDepartmentId = 0;
@@ -58,9 +59,20 @@ namespace AG.ViewModels.Forms
         {
             if (user == null)
                 return;
+            var employees = userAccountService.GetAvailableEmployees(user, departmentId);
             Employees.Clear();
-            Employees.AddRange(userAccountService.GetAvailableEmployees(user, departmentId));
+            if (employees.StatusCode == DatabaseResponse<Employee>.ResponseCode.Success) 
+                Employees.AddRange(employees.Results);
+            else if (employees.StatusCode == DatabaseResponse<Employee>.ResponseCode.PermissionsError && !string.IsNullOrEmpty(employees.Message))
+                ShowMessage(employees.Message);
         }
+
+        #region Message
+        private void ShowMessage(string msg, string? header = null)
+        {
+            MessageBox.Show(msg, header ?? "Информация", MessageBoxButton.OK, MessageBoxImage.Information);
+        }
+        #endregion
 
         #region INotifyPropertyChanged region
         public event PropertyChangedEventHandler? PropertyChanged;

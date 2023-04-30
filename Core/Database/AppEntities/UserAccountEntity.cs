@@ -19,7 +19,7 @@ namespace Core.Database.AppEntities
         public string PasswordHash { get; set; }
 
         public int? DepartmentId { get; set; }
-        public DepartmentEntity? Department { get; set; }
+        //public DepartmentEntity? Department { get; set; }
 
         public static IList<UserAccountEntity> GetDefault()
         {
@@ -33,6 +33,23 @@ namespace Core.Database.AppEntities
                     Email = "",
                     PasswordHash = "",
                     Role = UserRoleType.Administrator
+                },
+                new UserAccountEntity() {
+                    Id = id++,
+                    UserName = "Модератор",
+                    Login = "moder",
+                    Email = "",
+                    PasswordHash = "",
+                    Role = UserRoleType.Moderator
+                },
+                new UserAccountEntity() {
+                    Id = id++,
+                    UserName = "Обычный Пользователь",
+                    Login = "user",
+                    Email = "",
+                    PasswordHash = "",
+                    Role = UserRoleType.User,
+                    DepartmentId = 1
                 }
             };
         }

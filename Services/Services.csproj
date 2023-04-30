@@ -11,8 +11,4 @@
     <ProjectReference Include="..\SQLiteRepository\SQLiteRepository.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="POCO\EmployeesWnd\" />
-  </ItemGroup>
-
 </Project>

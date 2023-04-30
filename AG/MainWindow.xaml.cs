@@ -1,8 +1,11 @@
 ﻿using AG.Commands;
+using AG.Services;
 using AG.ViewModels.Forms;
 using AG.Windows;
 using Core.Database.Entities;
+using Microsoft.Extensions.DependencyInjection;
 using Services.Database;
+using SQLiteRepository;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -31,6 +34,19 @@ namespace AG
         {
             InitializeComponent();
             viewModel = (MainWindowViewModel)this.Resources["viewModel"];
+
+            //Регистрируем сервисы
+            ServiceLocator.Services
+                .AddTransient<IEstablishmentItemsRepository, EstablishmentItemsRepository>()
+                .AddTransient<IAppItemsRepository, AppItemsRepository>();
+
+            var provider = ServiceLocator.Services.BuildServiceProvider();
+            var userAccountService = new UserAccountService(
+                provider.GetService<IAppItemsRepository>(),
+                provider.GetService<IEstablishmentItemsRepository>());
+
+            SessionService.User = userAccountService.GetUserById(3).Results.First();
+            viewModel.OnChanged(nameof(viewModel.Username));
         }
 
         private void CommandBinding_CanExecute(object sender, CanExecuteRoutedEventArgs e)
@@ -55,6 +71,11 @@ namespace AG
             if (e.Command == MainUICommands.cmdOpenEmployeesList)
             {
                 new WndEmployeesList().ShowDialog();
+                return;
+            }
+            if (e.Command == MainUICommands.cmdDepartmentsList)
+            {
+                new WndDepartments().ShowDialog();
                 return;
             }
         }

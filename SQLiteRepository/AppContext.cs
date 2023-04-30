@@ -9,6 +9,8 @@ namespace SQLiteRepository
         public const string DEFAULT_DB_NAME = "Users";
         private string connectionString = $"Data Source ={DEFAULT_DB_NAME}.db";
 
+        public AppContext(): this(null) { }
+
         public AppContext(string? connString = null)
         {
             if (string.IsNullOrEmpty(connString))

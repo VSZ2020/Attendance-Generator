@@ -2,6 +2,10 @@
 {
     public enum PermissionType
     {
+        ViewEmployees,
+        ViewDepartments,
+        ViewEstablishments,
+        ViewUserAccounts,
         ViewAllEmployees,
         ViewAllDepartments,
         ViewAllEstablishments,

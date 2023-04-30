@@ -41,6 +41,10 @@ namespace Core.Security
                     Name = "Модератор",
                     Permissions = new List<PermissionType>()
                     {
+                        PermissionType.ViewDepartments,
+                        PermissionType.ViewEmployees,
+                        PermissionType.ViewEstablishments,
+                        PermissionType.ViewUserAccounts,
                         PermissionType.ViewAllEmployees,
                         PermissionType.ViewAllDepartments,
                         PermissionType.ViewAllUserAccounts,
@@ -66,11 +70,26 @@ namespace Core.Security
                     Name = "Пользователь",
                     Permissions = new List<PermissionType>()
                     {
-
+                        PermissionType.ViewDepartments,
+                        PermissionType.ViewEmployees,
+                        PermissionType.ViewEstablishments,
+                        PermissionType.AddEmployee,
+                        PermissionType.AddFunction,
+                        PermissionType.AddTimeInterval,
+                        PermissionType.AddUserAccount,
+                        PermissionType.EditEmployee,
+                        PermissionType.EditUserAccount,
+                        PermissionType.EditFunction,
+                        PermissionType.EditTimeInterval
                     }
                 }
             }
 
         };
+
+        public static bool HasAccess(UserRoleType roleType, PermissionType permission)
+        {
+            return AvailableRoles[roleType].Permissions.Contains(permission);
+        }
     }
 }

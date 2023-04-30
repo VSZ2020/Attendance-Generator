@@ -11,6 +11,10 @@ namespace Core.Security
         {
             return new Dictionary<PermissionType, Permission>()
             {
+                {PermissionType.ViewDepartments, new Permission(){ Id = 1, Name = "Просмотр подразделений"} },
+                {PermissionType.ViewEmployees, new Permission(){ Id = 1, Name = "Просмотр сотрудников"} },
+                {PermissionType.ViewEstablishments, new Permission(){ Id = 1, Name = "Просмотр организаций"} },
+                {PermissionType.ViewUserAccounts, new Permission(){ Id = 1, Name = "Просмотр пользователей"} },
                 {PermissionType.ViewAllDepartments, new Permission(){ Id = 1, Name = "Просмотр всех подразделений"} },
                 {PermissionType.ViewAllEstablishments, new Permission(){ Id = 2, Name = "Просмотр всех организаций"} },
                 {PermissionType.ViewAllEmployees, new Permission(){ Id = 3, Name = "Просмотр всех сотрудников"} },

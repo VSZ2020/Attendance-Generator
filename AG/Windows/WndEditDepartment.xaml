@@ -1,0 +1,41 @@
+﻿<Window x:Class="AG.Windows.WndEditDepartment"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:AG.Windows"
+        mc:Ignorable="d"
+        Title="Название подразделения" Height="auto" Width="408">
+    <Grid
+        Margin="5">
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
+        <TextBox Grid.Row="0"
+            Margin="0,0,0,10"
+                 Height="25"
+                 x:Name="tbName"
+                 VerticalContentAlignment="Center"
+            Text="{Binding DepartmentName}"/>
+        <DockPanel
+            HorizontalAlignment="Right"
+            Grid.Row="1">
+            <Button 
+                Content="Отмена"
+                Height="25"
+                Width="120"
+                DockPanel.Dock="Right"
+                Margin="5,0,0,0"
+                IsDefault="True"/>
+            <Button 
+                Content="Подтвердить"
+                Height="25"
+                Width="120"
+                DockPanel.Dock="Right"
+                IsCancel="True"
+                Name="btnAccept"
+                Click="btnAccept_Click"/>
+        </DockPanel>
+    </Grid>
+</Window>
