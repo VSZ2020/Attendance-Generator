@@ -17,7 +17,7 @@ namespace Services.Database
 
 		#endregion fields
 
-		public DatabaseResponse<Department> GetAvailableDepartments(UserAccount user, bool countEmployees = false)
+		public DatabaseResponse<Department> GetDepartments(UserAccount user, bool countEmployees = false)
         {
             IList<DepartmentEntity> departments;
             departments = establishmentsRepository.GetAll<DepartmentEntity>();
@@ -33,7 +33,13 @@ namespace Services.Database
                 new DatabaseResponse<Department>(DatabaseResponse<Department>.ResponseCode.Success, pocoDepartments);
         }
 
-        public void AddDepartment(Department? dep)
+		public Task<DatabaseResponse<Department>> GetDepartmentsAsync(UserAccount user, bool countEmployees = false)
+        {
+            return Task.FromResult(GetDepartments(user, countEmployees));
+		}
+
+
+		public void AddDepartment(Department? dep)
         {
             if (dep == null)
                 throw new ArgumentNullException("Ссылка на подразделение пустая");

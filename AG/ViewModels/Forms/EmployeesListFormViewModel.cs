@@ -1,4 +1,5 @@
 ﻿using AG.Services;
+using AG.Windows;
 using Microsoft.Extensions.DependencyInjection;
 using Services.Database;
 using Services.Extensions;
@@ -6,6 +7,7 @@ using Services.POCO;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 using System.Windows;
 
 namespace AG.ViewModels.Forms
@@ -19,8 +21,7 @@ namespace AG.ViewModels.Forms
 			this.employesService = ServiceLocator.Provider.GetService<IEmployeeService>()!;
 			user = SessionService.User;
 
-			LoadDepartments();
-			if (Departments.Count > 1) LoadEmployees(SelectedDepartmentId);
+			
 		}
 		#endregion ctor
 
@@ -55,11 +56,18 @@ namespace AG.ViewModels.Forms
 		#endregion properties
 
 
-		public void LoadDepartments()
+		public async Task LoadDepartments()
         {
             if (user == null)
                 return;
-            var departments = departmentsService.GetAvailableDepartments(user);
+
+            var departmentsTask = departmentsService.GetDepartmentsAsync(user);
+            //Отображение для пользователя окна ожидания
+            var wndWait = new WndWait();
+            wndWait.Show();
+            var departments = await departmentsTask;
+			await Task.Delay(1000);
+			
 
             Departments.Clear();
             Departments.Add(new Department() { 
@@ -72,7 +80,9 @@ namespace AG.ViewModels.Forms
             
             if (Departments.Count > 0)
                 SelectedDepartmentId = 0;
-        }
+
+			wndWait.Close();
+		}
 
         public void LoadEmployees(int departmentId = 0)
         {

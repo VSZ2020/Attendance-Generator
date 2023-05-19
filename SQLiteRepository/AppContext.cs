@@ -14,7 +14,7 @@ namespace SQLiteRepository
         public AppContext(string? connString = null)
         {
             if (string.IsNullOrEmpty(connString))
-                this.connectionString = $"Data Source={DEFAULT_DB_NAME}";
+                this.connectionString = $"Data Source={DEFAULT_DB_NAME}.db";
             Database.EnsureDeleted();
             Database.EnsureCreated();
         }

@@ -25,7 +25,7 @@ namespace AG.ViewModels.Forms
 
         public void LoadDepartmetns()
         {
-            var departments = departmentsService.GetAvailableDepartments(user, true);
+            var departments = departmentsService.GetDepartments(user, true);
 
             if (departments.StatusCode == DatabaseResponse<Department>.ResponseCode.Success)
             {
