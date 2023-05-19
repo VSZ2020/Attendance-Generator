@@ -1,8 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Core.Security
 {
+    [Obsolete("Устаревший класс, представляющий роль ползователя в системе")]
     public class UserRole
     {
         public UserRoleType  RoleType { get; set; }

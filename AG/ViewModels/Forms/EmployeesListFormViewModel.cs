@@ -15,7 +15,8 @@ namespace AG.ViewModels.Forms
     {
         private int selectedDepartmentId = 0;
         private string selectedDepartmentIdText;
-        private readonly UserAccountService userAccountService;
+        private readonly DepartmentsService departmentsService;
+        private readonly EmployeesService employesService;
 
         public UserAccount? user;
         public ObservableCollection<Employee> Employees { get; set; } = new();
@@ -28,10 +29,8 @@ namespace AG.ViewModels.Forms
         public EmployeesListFormViewModel()
         {
             var provider = ServiceLocator.Services.BuildServiceProvider();
-            this.userAccountService = new UserAccountService(
-                provider.GetService<IAppItemsRepository>(),
-                provider.GetService<IEstablishmentItemsRepository>());
-
+            this.departmentsService = new DepartmentsService(provider.GetService<IEstablishmentItemsRepository>());
+            this.employesService = new EmployeesService(provider.GetService<IEstablishmentItemsRepository>());
             user = SessionService.User;
 
             LoadDepartments();
@@ -42,7 +41,7 @@ namespace AG.ViewModels.Forms
         {
             if (user == null)
                 return;
-            var departments = userAccountService.GetAvailableDepartments(user);
+            var departments = departmentsService.GetAvailableDepartments(user);
 
             Departments.Clear();
             Departments.Add(new Department() { Id = 0, Name = "Все подразделения"});
@@ -59,7 +58,7 @@ namespace AG.ViewModels.Forms
         {
             if (user == null)
                 return;
-            var employees = userAccountService.GetAvailableEmployees(user, departmentId);
+            var employees = employesService.GetAvailableEmployees(user, departmentId);
             Employees.Clear();
             if (employees.StatusCode == DatabaseResponse<Employee>.ResponseCode.Success) 
                 Employees.AddRange(employees.Results);

@@ -25,16 +25,14 @@ namespace AG.Windows
     public partial class WndEditDepartment : Window
     {
         private readonly UserAccount? user;
-        private readonly UserAccountService userAccountService;
+        private readonly DepartmentsService departmentsService;
         public WndEditDepartment()
         {
             InitializeComponent();
             user = SessionService.User;
 
             var provider = new ServiceCollection().BuildServiceProvider();
-            this.userAccountService = new UserAccountService(
-                provider.GetService<IAppItemsRepository>(),
-                provider.GetService<IEstablishmentItemsRepository>());
+            this.departmentsService = new DepartmentsService(provider.GetService<IEstablishmentItemsRepository>());
         }
 
         private void btnAccept_Click(object sender, RoutedEventArgs e)

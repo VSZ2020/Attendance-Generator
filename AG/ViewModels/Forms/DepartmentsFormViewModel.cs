@@ -10,7 +10,7 @@ namespace AG.ViewModels.Forms
 {
     public class DepartmentsFormViewModel
     {
-        private readonly UserAccountService userAccountService;
+        private readonly DepartmentsService departmentsService;
         private readonly UserAccount? user;
         public ObservableCollection<Department> Departments { get; set; } = new();
 
@@ -19,9 +19,7 @@ namespace AG.ViewModels.Forms
         public DepartmentsFormViewModel()
         {
             var provider = ServiceLocator.Services.BuildServiceProvider();
-            this.userAccountService = new UserAccountService(
-                provider.GetService<IAppItemsRepository>(),
-                provider.GetService<IEstablishmentItemsRepository>());
+            this.departmentsService = new DepartmentsService(provider.GetService<IEstablishmentItemsRepository>());
             user = SessionService.User;
 
             LoadDepartmetns();
@@ -29,7 +27,7 @@ namespace AG.ViewModels.Forms
 
         public void LoadDepartmetns()
         {
-            var departments = userAccountService.GetAvailableDepartments(user, true);
+            var departments = departmentsService.GetAvailableDepartments(user, true);
 
             if (departments.StatusCode == DatabaseResponse<Department>.ResponseCode.Success)
             {

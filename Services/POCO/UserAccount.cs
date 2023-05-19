@@ -11,6 +11,6 @@ namespace Services.POCO
 
         public UserRoleType RoleType { get; set; }
         public int DepartmentId { get; set; }
-        
+        public List<int> DepartmentsIds { get; set; }
     }
 }

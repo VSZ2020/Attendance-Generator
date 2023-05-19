@@ -44,8 +44,16 @@ namespace SQLiteRepository
         {
             using var Context = new TContext();
             if (filter != null)
-                return Context.Set<TEntity>().Where(filter).ToList();
+                return Context.Set<TEntity>().AsNoTracking().Where(filter).ToList();
             return Context.Set<TEntity>().AsNoTracking().ToList();
+        }
+
+        public int GetCount<TEntity>(Func<TEntity, bool>? filter = null) where TEntity : BaseEntity
+        {
+            using var Context = new TContext();
+            if (filter != null)
+                return Context.Set<TEntity>().AsNoTracking().Where(filter).Count();
+            return Context.Set<TEntity>().AsNoTracking().Count();
         }
 
         public TEntity GetById<TEntity>(int Id) where TEntity : BaseEntity

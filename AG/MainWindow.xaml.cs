@@ -42,8 +42,7 @@ namespace AG
 
             var provider = ServiceLocator.Services.BuildServiceProvider();
             var userAccountService = new UserAccountService(
-                provider.GetService<IAppItemsRepository>(),
-                provider.GetService<IEstablishmentItemsRepository>());
+                provider.GetService<IAppItemsRepository>());
 
             SessionService.User = userAccountService.GetUserById(3).Results.First();
             viewModel.OnChanged(nameof(viewModel.Username));

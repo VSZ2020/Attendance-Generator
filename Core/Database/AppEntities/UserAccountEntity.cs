@@ -12,13 +12,21 @@ namespace Core.Database.AppEntities
         public string Email { get; set; }
 
         /// <summary>
-        /// Роль пользователя в системе. От роли зависят предоставленные права
+        /// Роль пользователя в системе. От роли зависят предоставленные права.
+        /// Свойство является устаревшим. Используйте вместо этого свойство <see cref="string">Roles</see>
         /// </summary>
+        [Obsolete("Use instead Roles property")]
         public UserRoleType Role { get; set; }
+
+        public string? Roles { get; set; }
+
         public DateTime SessionExpiredAt { get; set; }
-        public string PasswordHash { get; set; }
+        public string? PasswordHash { get; set; }
 
         public int? DepartmentId { get; set; }
+
+        //TODO: Реализовать сохранение в БД
+        public List<int>? DepartmentsIds { get; set; }
         //public DepartmentEntity? Department { get; set; }
 
         public static IList<UserAccountEntity> GetDefault()
@@ -26,13 +34,14 @@ namespace Core.Database.AppEntities
             int id = 1;
             return new List<UserAccountEntity>
             {
-                new UserAccountEntity() { 
-                    Id = id++, 
-                    UserName = "Администратор", 
-                    Login = "admin", 
-                    Email = "",
+                new UserAccountEntity() {
+                    Id = id++,
+                    UserName = "Администратор",
+                    Login = "admin",
+                    Email = "admin@admin.org",
                     PasswordHash = "",
-                    Role = UserRoleType.Administrator
+                    Role = UserRoleType.Administrator,
+                    Roles = RolesDefault.ADMINISTRATOR
                 },
                 new UserAccountEntity() {
                     Id = id++,
@@ -40,7 +49,8 @@ namespace Core.Database.AppEntities
                     Login = "moder",
                     Email = "",
                     PasswordHash = "",
-                    Role = UserRoleType.Moderator
+                    Role = UserRoleType.Moderator,
+                    Roles = RolesDefault.MODERATOR
                 },
                 new UserAccountEntity() {
                     Id = id++,
@@ -49,6 +59,7 @@ namespace Core.Database.AppEntities
                     Email = "",
                     PasswordHash = "",
                     Role = UserRoleType.User,
+                    Roles = RolesDefault.USER,
                     DepartmentId = 1
                 }
             };
