@@ -1,42 +1,35 @@
 ﻿using Core.Database.AppEntities;
 using Core.Database.Entities;
-using Core.Security;
 using Services.POCO;
 using SQLiteRepository;
 
 namespace Services.Database
 {
-    public class UserAccountService
+	public class UserAccountService: IUserAccountService
     {
-        /// <summary>
-        /// Базовый конструктор сервиса
-        /// </summary>
-        public UserAccountService(IItemsRepository<SQLiteRepository.AppContext> usersRep)
+		#region ctor
+		/// <summary>
+		/// Базовый конструктор сервиса
+		/// </summary>
+		public UserAccountService(IAppItemsRepository usersRep)
         {
             this.usersRepository = usersRep;
         }
+        #endregion ctor
 
+        #region fields
+        private readonly IAppItemsRepository usersRepository;
 
-        private readonly IItemsRepository<SQLiteRepository.AppContext> usersRepository;
+		#endregion fields
 
-        public virtual DatabaseResponse<UserAccount> GetUserAccounts(UserRoleType role)
+		public DatabaseResponse<UserAccount> GetUserAccounts()
         {
-            if (usersRepository == null || !UserRole.HasAccess(role, PermissionType.ViewUserAccounts))
-                return new DatabaseResponse<UserAccount>(
-                    DatabaseResponse<UserAccount>.ResponseCode.PermissionsError,
-                    new List<UserAccount>(),
-                    "Нет прав на просмотр списка пользователей");
-
-            IList<UserAccountEntity> userAccounts;
-            if (UserRole.HasAccess(role, PermissionType.ViewAllUserAccounts))
-                userAccounts = usersRepository.GetAll<UserAccountEntity>();
-            else
-                return new DatabaseResponse<UserAccount>(DatabaseResponse<UserAccount>.ResponseCode.PermissionsError, new List<UserAccount>() { });
-
+            var userAccounts = usersRepository.GetAll<UserAccountEntity>();
+            
             return new DatabaseResponse<UserAccount>(DatabaseResponse<UserAccount>.ResponseCode.Success, userAccounts.Select(DbEntityToUserAccount).ToList());
         }
 
-        public virtual DatabaseResponse<UserAccount> GetUserById(int id)
+        public DatabaseResponse<UserAccount> GetUserById(int id)
         {
             var user = DbEntityToUserAccount(usersRepository.GetById<UserAccountEntity>(id));
             return new DatabaseResponse<UserAccount>(DatabaseResponse<UserAccount>.ResponseCode.Success,new List<UserAccount>() { user } );
@@ -66,7 +59,7 @@ namespace Services.Database
                 Login = entity.Login,
                 SessionExpiredAt = entity.SessionExpiredAt,
                 DepartmentId = entity.DepartmentId.HasValue ? entity.DepartmentId.Value : 0,
-                RoleType = entity.Role
+                Roles = entity.Roles
             };
         }
 

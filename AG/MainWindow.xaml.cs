@@ -35,16 +35,11 @@ namespace AG
             InitializeComponent();
             viewModel = (MainWindowViewModel)this.Resources["viewModel"];
 
-            //Регистрируем сервисы
-            ServiceLocator.Services
-                .AddTransient<IEstablishmentItemsRepository, EstablishmentItemsRepository>()
-                .AddTransient<IAppItemsRepository, AppItemsRepository>();
-
-            var provider = ServiceLocator.Services.BuildServiceProvider();
-            var userAccountService = new UserAccountService(
-                provider.GetService<IAppItemsRepository>());
+            
+            var userAccountService = ServiceLocator.Provider.GetService<IUserAccountService>();
 
             SessionService.User = userAccountService.GetUserById(3).Results.First();
+
             viewModel.OnChanged(nameof(viewModel.Username));
         }
 

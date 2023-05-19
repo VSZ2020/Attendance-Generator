@@ -3,14 +3,13 @@ using Microsoft.Extensions.DependencyInjection;
 using Services.Database;
 using Services.Extensions;
 using Services.POCO;
-using SQLiteRepository;
 using System.Collections.ObjectModel;
 
 namespace AG.ViewModels.Forms
 {
-    public class DepartmentsFormViewModel
+	public class DepartmentsFormViewModel
     {
-        private readonly DepartmentsService departmentsService;
+        private readonly IDepartmentsService departmentsService;
         private readonly UserAccount? user;
         public ObservableCollection<Department> Departments { get; set; } = new();
 
@@ -18,8 +17,7 @@ namespace AG.ViewModels.Forms
 
         public DepartmentsFormViewModel()
         {
-            var provider = ServiceLocator.Services.BuildServiceProvider();
-            this.departmentsService = new DepartmentsService(provider.GetService<IEstablishmentItemsRepository>());
+            this.departmentsService = ServiceLocator.Provider.GetService<IDepartmentsService>()!;
             user = SessionService.User;
 
             LoadDepartmetns();

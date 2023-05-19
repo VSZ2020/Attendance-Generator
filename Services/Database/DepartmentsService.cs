@@ -1,31 +1,26 @@
 ﻿using Core.Database.Entities;
-using Core.Security;
 using Services.POCO;
 using SQLiteRepository;
 
 namespace Services.Database
 {
-    public class DepartmentsService
+	public class DepartmentsService: IDepartmentsService
     {
-        public DepartmentsService(IEstablishmentItemsRepository repo) { 
+		#region ctor
+		public DepartmentsService(IEstablishmentItemsRepository repo) { 
             this.establishmentsRepository = repo;
         }
+		#endregion ctor
 
-        private readonly IEstablishmentItemsRepository establishmentsRepository;
+		#region fields
+		private readonly IEstablishmentItemsRepository establishmentsRepository;
 
-        public virtual DatabaseResponse<Department> GetAvailableDepartments(UserAccount user, bool countEmployees = false)
+		#endregion fields
+
+		public DatabaseResponse<Department> GetAvailableDepartments(UserAccount user, bool countEmployees = false)
         {
-            if (user == null || !UserRole.HasAccess(user.RoleType, PermissionType.ViewDepartments))
-                return new DatabaseResponse<Department>(
-                    DatabaseResponse<Department>.ResponseCode.PermissionsError,
-                    new List<Department>(),
-                    "Нет прав на просмотр списка подразделений");
-
             IList<DepartmentEntity> departments;
-            if (UserRole.AvailableRoles[user.RoleType].HasAccess(PermissionType.ViewAllDepartments))
-                departments = establishmentsRepository.GetAll<DepartmentEntity>();
-            else
-                departments = establishmentsRepository.GetAll<DepartmentEntity>(dep => user.DepartmentsIds.Contains(dep.Id));
+            departments = establishmentsRepository.GetAll<DepartmentEntity>();
 
             var pocoDepartments = departments.Select(DbEntityToDepartment).ToList();
 
@@ -38,7 +33,7 @@ namespace Services.Database
                 new DatabaseResponse<Department>(DatabaseResponse<Department>.ResponseCode.Success, pocoDepartments);
         }
 
-        public virtual void AddDepartment(Department? dep)
+        public void AddDepartment(Department? dep)
         {
             if (dep == null)
                 throw new ArgumentNullException("Ссылка на подразделение пустая");
@@ -46,7 +41,7 @@ namespace Services.Database
             establishmentsRepository.AddEntity(ToEntity(dep));
         }
 
-        public virtual void RemoveDepartment(Department? dep)
+        public void RemoveDepartment(Department? dep)
         {
             if (dep == null)
                 throw new ArgumentNullException("Ссылка на подразделение пустая");
@@ -54,12 +49,13 @@ namespace Services.Database
             establishmentsRepository.Remove(ToEntity(dep));
         }
 
-        public virtual void RemoveDepartment(int id)
+        public void RemoveDepartment(int id)
         {
             establishmentsRepository.Remove<DepartmentEntity>(id);
         }
 
-        protected Department DbEntityToDepartment(DepartmentEntity? entity)
+		#region Utils
+		protected Department DbEntityToDepartment(DepartmentEntity? entity)
         {
             if (entity == null)
                 new Department() { Id = 0, Name = "Не определено" };
@@ -81,5 +77,6 @@ namespace Services.Database
                 EstablishmentId = department.EstablishmentId
             };
         }
-    }
+		#endregion Utils
+	}
 }

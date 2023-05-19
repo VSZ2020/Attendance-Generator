@@ -1,12 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Services.Generators
+﻿namespace Services.Generators
 {
-    public class ReportGeneratorService
+	public class ReportGeneratorService: IReportGeneratorService
     {
-    }
+        public ReportGeneratorService() { }
+
+		public void GenerateReport()
+		{
+			throw new NotImplementedException();
+		}
+	}
 }

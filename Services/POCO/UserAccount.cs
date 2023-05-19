@@ -9,7 +9,7 @@ namespace Services.POCO
         public string Login { get; set; }
         public DateTime SessionExpiredAt { get; set; }
 
-        public UserRoleType RoleType { get; set; }
+        public string? Roles { get; set; }
         public int DepartmentId { get; set; }
         public List<int> DepartmentsIds { get; set; }
     }

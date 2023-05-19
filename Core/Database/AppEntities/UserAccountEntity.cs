@@ -9,14 +9,7 @@ namespace Core.Database.AppEntities
     {
         public string UserName { get; set; }
         public string Login { get; set; }
-        public string Email { get; set; }
-
-        /// <summary>
-        /// Роль пользователя в системе. От роли зависят предоставленные права.
-        /// Свойство является устаревшим. Используйте вместо этого свойство <see cref="string">Roles</see>
-        /// </summary>
-        [Obsolete("Use instead Roles property")]
-        public UserRoleType Role { get; set; }
+        public string? Email { get; set; }
 
         public string? Roles { get; set; }
 
@@ -26,7 +19,7 @@ namespace Core.Database.AppEntities
         public int? DepartmentId { get; set; }
 
         //TODO: Реализовать сохранение в БД
-        public List<int>? DepartmentsIds { get; set; }
+        public string DepartmentIds { get; set; }
         //public DepartmentEntity? Department { get; set; }
 
         public static IList<UserAccountEntity> GetDefault()
@@ -40,8 +33,8 @@ namespace Core.Database.AppEntities
                     Login = "admin",
                     Email = "admin@admin.org",
                     PasswordHash = "",
-                    Role = UserRoleType.Administrator,
-                    Roles = RolesDefault.ADMINISTRATOR
+                    Roles = RolesDefault.ADMINISTRATOR,
+                    DepartmentIds = ""
                 },
                 new UserAccountEntity() {
                     Id = id++,
@@ -49,19 +42,19 @@ namespace Core.Database.AppEntities
                     Login = "moder",
                     Email = "",
                     PasswordHash = "",
-                    Role = UserRoleType.Moderator,
-                    Roles = RolesDefault.MODERATOR
-                },
+                    Roles = RolesDefault.MODERATOR,
+					DepartmentIds = ""
+				},
                 new UserAccountEntity() {
                     Id = id++,
                     UserName = "Обычный Пользователь",
                     Login = "user",
                     Email = "",
                     PasswordHash = "",
-                    Role = UserRoleType.User,
                     Roles = RolesDefault.USER,
-                    DepartmentId = 1
-                }
+                    DepartmentId = 1,
+					DepartmentIds = "1"
+				}
             };
         }
     }
