@@ -33,9 +33,9 @@ namespace SQLiteRepository
             if (filter != null)
             {
                 if (include != null)
-                    return Context.Set<TEntity>().Include(include).Where(filter).ToList();
+                    return Context.Set<TEntity>().AsNoTracking().Include(include).Where(filter).ToList();
                 else
-                    return Context.Set<TEntity>().Where(filter).ToList();
+                    return Context.Set<TEntity>().AsNoTracking().Where(filter).ToList();
             }
             return include != null ? Context.Set<TEntity>().AsNoTracking().Include(include).ToList() : Context.Set<TEntity>().AsNoTracking().ToList();
         }
@@ -61,7 +61,7 @@ namespace SQLiteRepository
             CheckId(Id);
             CheckIEnumerable<TEntity>();
             using var Context = new TContext();
-            return Context.Set<TEntity>().Where(item => item.Id == Id).FirstOrDefault() ?? throw new Exception($"Не удалось найти {typeof(TEntity)} с Id = {Id}");
+            return Context.Set<TEntity>().AsNoTracking().Where(item => item.Id == Id).FirstOrDefault() ?? throw new Exception($"Не удалось найти {typeof(TEntity)} с Id = {Id}");
         }
 
         public IList<TEntity> GetByIds<TEntity>(IList<int> Ids) where TEntity : BaseEntity
@@ -69,7 +69,7 @@ namespace SQLiteRepository
             if (!Ids.Any())
                 throw new ArgumentException($"В массиве идентификаторов есть повторы");
             using var Context = new TContext();
-            return Context.Set<TEntity>().Where(item => Ids.Contains(item.Id)).ToList();
+            return Context.Set<TEntity>().AsNoTracking().Where(item => Ids.Contains(item.Id)).ToList();
         }
 
         public void Remove<TEntity>(TEntity? entity) where TEntity : BaseEntity
@@ -132,9 +132,9 @@ namespace SQLiteRepository
             if (filter != null)
             {
                 if (include != null)
-                    return await Task.FromResult(Context.Set<TEntity>().Include(include).Where(filter).ToList());
+                    return await Task.FromResult(Context.Set<TEntity>().AsNoTracking().Include(include).Where(filter).ToList());
                 else
-                    return await Task.FromResult(Context.Set<TEntity>().Where(filter).ToList());
+                    return await Task.FromResult(Context.Set<TEntity>().AsNoTracking().Where(filter).ToList());
             }
             return include != null ? await Context.Set<TEntity>().AsNoTracking().Include(include).ToListAsync() : await Context.Set<TEntity>().AsNoTracking().ToListAsync();
         }
@@ -143,7 +143,7 @@ namespace SQLiteRepository
             CheckId(Id);
             CheckIEnumerable<TEntity>();
             using var Context = new TContext();
-            return await Context.Set<TEntity>().Where(item => item.Id == Id).FirstOrDefaultAsync() ?? throw new Exception($"Не удалось найти {typeof(TEntity)} с Id = {Id}");
+            return await Context.Set<TEntity>().AsNoTracking().Where(item => item.Id == Id).FirstOrDefaultAsync() ?? throw new Exception($"Не удалось найти {typeof(TEntity)} с Id = {Id}");
         }
 
         public async Task<IList<TEntity>> GetByIdsAsync<TEntity>(IList<int> Ids) where TEntity : BaseEntity
@@ -152,7 +152,7 @@ namespace SQLiteRepository
                 throw new ArgumentException($"В массиве идентификаторов есть повторы");
 
             using var Context = new TContext();
-            return await Task.FromResult(Context.Set<TEntity>().Where(item => Ids.Contains(item.Id)).ToList());
+            return await Task.FromResult(Context.Set<TEntity>().AsNoTracking().Where(item => Ids.Contains(item.Id)).ToList());
         }
         #endregion
 

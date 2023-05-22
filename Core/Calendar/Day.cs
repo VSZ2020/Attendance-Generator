@@ -19,6 +19,7 @@ namespace Core.Calendar
         {
             this.Date = new DateTime(year, month, day);
             this.Type = type;
+            
         }
     }
 }

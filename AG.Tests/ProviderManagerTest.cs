@@ -1,6 +1,5 @@
 ﻿using Core.Database.Entities;
 using Services.Database;
-using SQLiteRepository.Providers;
 
 namespace AG.Tests
 {
