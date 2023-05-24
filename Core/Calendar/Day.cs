@@ -1,21 +1,22 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Core.Calendar
 {
-    public class Day
+	public class Day
     {
-        private DateTime Date;
+        public DateTime Date { get; private set; }
+
         public int Month => Date.Month;
         public int Year => Date.Year;
+
+        public int DayNumber => Date.Day;
 
         /// <summary>
         /// Задает тип дня: выходной, праздничный, предпраздничный
         /// </summary>
-        public DayType Type { get; private set; }
+        public DayType Type { get; set; }
 
-        public Day(int day, int month, int year, DayType type)
+        public Day(int year, int month, int day, DayType type)
         {
             this.Date = new DateTime(year, month, day);
             this.Type = type;

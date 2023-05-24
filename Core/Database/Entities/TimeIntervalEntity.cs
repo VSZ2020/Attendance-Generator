@@ -1,9 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 
 namespace Core.Database.Entities
 {
-    public class TimeIntervalEntity: BaseEntity
+	public class TimeIntervalEntity: BaseEntity
     {
         public int IntervalTypeId { get; set; }
         public TimeIntervalTypeEntity? IntervalType { get; set; }
@@ -14,9 +13,8 @@ namespace Core.Database.Entities
         public EmployeeEntity? Employee { get; set; }
         public int EmployeeId { get; set; }
 
-        public static IList<TimeIntervalEntity> GetDefault()
-        {
-            throw new NotImplementedException();
-        }
+        public string? Comment { get; set; }
+
+        
     }
 }

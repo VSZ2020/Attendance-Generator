@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Core.Infrastructure.Logger
+namespace Services.Infrastructure.Logger
 {
     public static class Logger
     {

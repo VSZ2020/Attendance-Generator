@@ -1,10 +1,15 @@
 ﻿using Core.Database.Entities;
 using System;
 
-namespace Core.Sheet
+namespace Services.POCO.ReportCard
 {
     public class Sheet
     {
+        /// <summary>
+        /// Номер формы по ОКУД
+        /// </summary>
+        public string FormTypeId { get; set; } = "";
+
         /// <summary>
         /// Название табеля
         /// </summary>
@@ -35,7 +40,7 @@ namespace Core.Sheet
         /// <summary>
         /// Отдел, для которого генерируется табель
         /// </summary>
-        public DepartmentEntity? Department { get; set; }
+        public Department? Department { get; set; }
 
         /// <summary>
         /// Период ведения табеля
@@ -55,16 +60,16 @@ namespace Core.Sheet
         /// <summary>
         /// Ответственный за табель
         /// </summary>
-        public EmployeeEntity? SheetResponsible { get; set; }
+        public Employee? SheetResponsible { get; set; }
 
         /// <summary>
         /// Исполнитель
         /// </summary>
-        public EmployeeEntity? SheetExecutor { get; set; }
+        public Employee? SheetExecutor { get; set; }
 
         /// <summary>
         /// Финансовый исполнитель (проверяющий бухгалтер)
         /// </summary>
-        public EmployeeEntity? FinancialExecutor { get; set; }
+        public Employee? FinancialExecutor { get; set; }
     }
 }

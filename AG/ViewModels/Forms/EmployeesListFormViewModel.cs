@@ -89,7 +89,7 @@ namespace AG.ViewModels.Forms
             if (user == null)
                 return;
 
-            var employees = employesService.GetEmployees(user, departmentId);
+            var employees = employesService.GetEmployees(departmentId);
 
             Employees.Clear();
             if (employees.StatusCode == DatabaseResponse<Employee>.ResponseCode.Success && employees.Results != null) 

@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Services.Database;
 using Services.Generators;
+using Services.POCO;
 using SQLiteRepository;
 using System;
 
@@ -17,6 +18,7 @@ namespace AG
                 .AddTransient<IEstablishmentItemsRepository, EstablishmentItemsRepository>()
                 .AddTransient<IAppItemsRepository, AppItemsRepository>()
                 .AddTransient<IUserAccountService, UserAccountService>()
+                .AddSingleton<UserAccount>()
                 .AddTransient<IEmployeeService, EmployeesService>()
                 .AddTransient<IDepartmentsService, DepartmentsService>()
                 .AddTransient<IReportGeneratorService, ReportGeneratorService>();
