@@ -1,18 +1,24 @@
 ﻿using Core.Calendar;
 using Services.Infrastructure.Configuration.Configs;
-using Services.POCO;
 using Services.Extensions;
 using Services.Factories;
 using System.Linq;
 using SQLiteRepository;
 using Services.Database;
+using System;
+using Services.Domains;
+using Services.Domains.ReportCard;
 
 namespace Services.Calendar
 {
-	public class CalendarService
+	public class CalendarService: ICalendarService
 	{
 		#region ctor
-		public CalendarService(ICalendar? calendar = null) { this.calendar = calendar; }
+		public CalendarService(IEmployeeService employeeService, ICalendar? calendar = null) 
+		{ 
+			this.employeeService = employeeService;  
+			this.calendar = calendar; 
+		}
 		#endregion ctor
 
 		#region fields
@@ -37,8 +43,25 @@ namespace Services.Calendar
 		}
 
 		public Month CreateMonth(
-			int year, 
-			int month, 
+			DateTime date,
+			WorkingWeekConfig? weekConfig,
+			IList<DateTime>? holidays = null,
+			IList<Day>? userDaysCorrections = null)
+		{
+			return CreateMonth(date.Year, date.Month, weekConfig.DayTypes, holidays, userDaysCorrections);
+		}
+
+		public Month CreateMonth(
+			DateTime date,
+			Dictionary<DayOfWeek, DayType> weekDayTypes,
+			IList<DateTime>? holidays = null,
+			IList<Day>? userDaysCorrections = null)
+		{
+			return CreateMonth(date.Year, date.Month, weekDayTypes, holidays, userDaysCorrections);
+		}
+
+		public Month CreateMonth(
+			int year, int month, 
 			WorkingWeekConfig? weekConfig, 
 			IList<DateTime>? holidays = null, 
 			IList<Day>? userDaysCorrections = null)
@@ -48,12 +71,10 @@ namespace Services.Calendar
 			return CreateMonth(year, month, weekConfig.DayTypes, holidays, userDaysCorrections);
 		}
 
-
+		
 		public Month CreateMonth(
-			int year, 
-			int month, 
-			Dictionary<DayOfWeek, 
-			DayType> weekDayTypes, 
+			int year, int month, 
+			Dictionary<DayOfWeek, DayType> weekDayTypes, 
 			IList<DateTime>? holidays = null, 
 			IList<Day>? userDaysCorrections = null) 
 		{
@@ -73,21 +94,16 @@ namespace Services.Calendar
             
 			return newMonth.MakeMonthHolidaysCorrection(holidays).MakeUserDaysCorrections(userDaysCorrections);
 		}
-
-		public SheetMonth MakeEmployeeMonth(Month currentMonth, Employee employee)
+		
+		public SheetMonth MakeEmployeeMonth(Month currentMonth, WorkingWeekConfig weekConfig, Employee employee)
 		{
 			var response = employeeService.GetEmployeePeriods(employee);
 			var timeIntervals = response.StatusCode == DatabaseResponse<TimeInterval>.ResponseCode.Success && response.Results != null ? response.Results : new List<TimeInterval>();
-			return MakeEmployeeMonth(currentMonth, timeIntervals);
+			return MakeEmployeeMonth(currentMonth, weekConfig, timeIntervals, employee.Rate);
 		}
 
-		/// <summary>
-		/// Формирует <see cref="SheetMonth"/> для сотрудника в соответствии с заданным месяцем <see cref="Month"/>
-		/// </summary>
-		/// <param name="currentMonth">Месяц, для которого формируется новый объект</param>
-		/// <param name="employeePeriods">Сотрудник, для которого формируется отчетный месяц</param>
-		/// <returns></returns>
-		public SheetMonth MakeEmployeeMonth(Month currentMonth, IList<TimeInterval> employeePeriods)
+		
+		public SheetMonth MakeEmployeeMonth(Month currentMonth, WorkingWeekConfig weekConfig, IList<TimeInterval> employeePeriods, float rate)
 		{
 			var newMonth = new SheetMonth(currentMonth.Year, currentMonth.Id);
 			for (int i = 0; i < currentMonth.DaysCount; i++)
@@ -95,10 +111,22 @@ namespace Services.Calendar
 				var day = currentMonth[i];
 				var interval = employeePeriods.InsideInterval(day.Date);
 				var newDay = new SheetDay(day.Year, day.Month, day.DayNumber, day.Type, interval?.TimeIntervalType ?? null);
+				newDay.WorkingHours = 
+					interval != null ? 
+					GetCustomTimeIntervalHours(interval.TimeIntervalType, newDay.DayOfWeek, weekConfig) : 
+					GetHoursForDayType(newDay.DayType, newDay.DayOfWeek, weekConfig);
+				//Учитываем долю ставки сотрудника при расчете рабочих часов
+				newDay.WorkingHours *= rate;
 				newMonth.AddDay(newDay);
 			}
 			return newMonth;
 		}
+
+		public IList<SheetMonth> MakeManyEmployeesMonths(Month baseMonth, WorkingWeekConfig weekConfig, IList<Employee> employees)
+		{
+			return employees.Select(empl => MakeEmployeeMonth(baseMonth, weekConfig, empl)).ToList();
+		}
+
 		#region Utils
 		/// <summary>
 		/// Возвращает список праздников в году. Если <see cref="ICalendar"/> NULL, то используется текущий год
@@ -131,11 +159,39 @@ namespace Services.Calendar
 				new DateTime(curYear, 5, 9),
 				
 				//Праздники в июне
-				new DateTime(curYear, 6, 1),
 				new DateTime(curYear, 6, 12),
 
 				//Праздники в ноябре
 				new DateTime(curYear, 11, 4)
+			};
+		}
+
+		public float GetHoursForDayType(DayType dayType, DayOfWeek dayOfWeek, WorkingWeekConfig weekConfig)
+		{
+			return dayType switch
+			{
+				DayType.DayOff | DayType.Holiday => 0,
+				DayType.PreHoliday => weekConfig.HoursInShortDay,
+				DayType.Working => weekConfig.WorkingHours[dayOfWeek],
+				_ => 0
+			};
+		}
+
+		/// <summary>
+		/// Содержит правила обработки для пользовательских временных интервалов
+		/// </summary>
+		/// <param name="intervalType">Тип пользовательского временнОго интервала</param>
+		/// <param name="dayOfWeek">День недели</param>
+		/// <param name="weekConfig">Конфигурация для недели</param>
+		/// <returns>Количество часов, соотвествующих пользовательскому типу временного интервала</returns>
+		public float GetCustomTimeIntervalHours(TimeIntervalType? intervalType, DayOfWeek dayOfWeek, WorkingWeekConfig weekConfig)
+		{
+			if (intervalType == null)
+				return 0;
+			return intervalType.ShortName switch
+			{
+				"К" => weekConfig.WorkingHours[dayOfWeek],
+				_ => 0f
 			};
 		}
 		#endregion

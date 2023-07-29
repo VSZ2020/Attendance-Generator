@@ -1,4 +1,4 @@
-﻿using Services.POCO.ReportCard;
+﻿using Services.Domains.ReportCard;
 using System;
 using System.Collections.Generic;
 using System.Linq;

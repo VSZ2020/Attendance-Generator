@@ -5,12 +5,14 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:AG.Windows"
         mc:Ignorable="d"
-        Height="191" Width="367" WindowStartupLocation="CenterScreen" ResizeMode="NoResize" ShowInTaskbar="False">
-    <Grid>
-        <TextBlock Text="Ожидайте..." 
+        Height="191" Width="367" WindowStartupLocation="CenterScreen" ResizeMode="NoResize" ShowInTaskbar="False" Topmost="True">
+    <Grid Margin="10">
+        <TextBlock Text="{Binding MessageText}" 
                    FontSize="24" 
                    FontWeight="Bold" 
+                   TextAlignment="Center"
                    VerticalAlignment="Center" 
-                   HorizontalAlignment="Center"/>
+                   HorizontalAlignment="Stretch"
+                   TextWrapping="Wrap"/>
     </Grid>
 </Window>

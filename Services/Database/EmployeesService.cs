@@ -1,5 +1,5 @@
 ﻿using Core.Database.Entities;
-using Services.POCO;
+using Services.Domains;
 using SQLiteRepository;
 
 namespace Services.Database
@@ -75,6 +75,16 @@ namespace Services.Database
                 Description = entity.Description,
             };
         }
+
+		public Task<DatabaseResponse<Employee>> GetEmployeesAsync(int departmentId = 0)
+		{
+			return Task.FromResult(GetEmployees(departmentId));
+		}
+
+		public Task<DatabaseResponse<TimeInterval>> GetEmployeePeriodsAsync(Employee employee)
+		{
+            return Task.FromResult(GetEmployeePeriods(employee));
+		}
 		#endregion Utils
 	}
 }

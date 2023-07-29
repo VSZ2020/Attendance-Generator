@@ -1,27 +1,37 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel;
+using System.Runtime.CompilerServices;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace AG.Windows
 {
 	/// <summary>
 	/// Логика взаимодействия для WndWait.xaml
 	/// </summary>
-	public partial class WndWait : Window
+	public partial class WndWait : Window, INotifyPropertyChanged
 	{
-		public WndWait()
+		private string messageText = "";
+
+		
+
+		public string MessageText { get => messageText; set { messageText = value; OnChanged(); } }
+		public WndWait(string? message = null)
 		{
 			InitializeComponent();
+			this.WindowStyle = WindowStyle.None;
+
+			this.DataContext = this;
+			
+			if (!string.IsNullOrEmpty(message))
+				MessageText = message;
+			else
+				MessageText = "Ожидайте";
+		}
+
+		public event PropertyChangedEventHandler? PropertyChanged;
+
+		public void OnChanged([CallerMemberName]string? name = null)
+		{
+			PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
 		}
 	}
 }

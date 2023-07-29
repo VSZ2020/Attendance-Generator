@@ -8,16 +8,6 @@ namespace SQLiteRepository
         public const string DEFAULT_DB_NAME = "Establishment";
         private readonly string connectionString = "";
 
-        //public DbSet<EstablishmentEntity> Establishments { get; set; } = null!;
-        //public DbSet<DepartmentEntity> Departments { get; set; } = null!;
-        //public DbSet<FunctionEntity> Functions { get; set; } = null!;
-        //public DbSet<FunctionGroupEntity> FruncGroups { get; set; } = null!;
-        //public DbSet<EmployeeStatusEntity> EmployeeStatuses { get; set; } = null!;
-        //public DbSet<EmployeeEntity> Employees { get; set; } = null!;
-
-        //public DbSet<TimeIntervalTypeEntity> TimeIntervalTypes { get; set; } = null!;
-        //public DbSet<TimeIntervalEntity> TimeIntervals { get; set; } = null!;
-
         public EstablishmentContext(): this(null)
         {
 

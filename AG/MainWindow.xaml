@@ -7,7 +7,7 @@
         xmlns:vm="clr-namespace:AG.ViewModels.Forms"
         xmlns:local="clr-namespace:AG"
         mc:Ignorable="d"
-        Title="Attendance Generator" Height="450" Width="800">
+        Title="Attendance Generator" Height="450" Width="800" WindowStartupLocation="CenterScreen">
     <Window.Resources>
         <vm:MainWindowViewModel x:Key="viewModel"/>
     </Window.Resources>
@@ -17,6 +17,7 @@
         <CommandBinding Command="{x:Static cmd:MainUICommands.cmdOrganizationInfo}" CanExecute="CommandBinding_CanExecute" Executed="CommandBinding_Executed"/>
         <CommandBinding Command="{x:Static cmd:MainUICommands.cmdDepartmentsList}" CanExecute="CommandBinding_CanExecute" Executed="CommandBinding_Executed"/>
         <CommandBinding Command="{x:Static cmd:MainUICommands.cmdOpenEmployeesList}" CanExecute="CommandBinding_CanExecute" Executed="CommandBinding_Executed"/>
+        <CommandBinding Command="{x:Static cmd:MainUICommands.cmdViewSheet}" CanExecute="CommandBinding_CanExecute" Executed="CommandBinding_Executed"/>
         <CommandBinding Command="{x:Static cmd:MainUICommands.cmdGenerateSheet}" CanExecute="CommandBinding_CanExecute" Executed="CommandBinding_Executed"/>
         
         <CommandBinding Command="{x:Static ApplicationCommands.Cut}" CanExecute="CommandBinding_CanExecute" Executed="CommandBinding_Executed"/>
@@ -45,17 +46,24 @@
                 <MenuItem Command="{x:Static ApplicationCommands.Copy}"/>
                 <MenuItem Command="{x:Static ApplicationCommands.Paste}"/>
                 <Separator/>
-                <MenuItem Header="Настройки"/>
+                <MenuItem Header="Настройки программы"/>
             </MenuItem>
             <MenuItem Header="Организация">
                 <MenuItem Command="{x:Static cmd:MainUICommands.cmdOrganizationInfo}"/>
                 <MenuItem Command="{x:Static cmd:MainUICommands.cmdDepartmentsList}"/>
                 <MenuItem Command="{x:Static cmd:MainUICommands.cmdOpenEmployeesList}"/>
+                <MenuItem Header="Справочник">
+                    <MenuItem Header="Должности"/>
+                    <MenuItem Header="Статусы сотрудников"/>
+                    <MenuItem Header="Виды неявок"/>
+                    <MenuItem Header="Виды календарных дней"/>
+                </MenuItem>
             </MenuItem>
             <MenuItem Header="Календарь">
-
+                <MenuItem Header="Неявки"/>
             </MenuItem>
             <MenuItem Header="Табель">
+                <MenuItem Command="{x:Static cmd:MainUICommands.cmdViewSheet}"/>
                 <MenuItem Command="{x:Static cmd:MainUICommands.cmdGenerateSheet}"/>
             </MenuItem>
             <MenuItem Header="?">

@@ -1,0 +1,67 @@
+﻿<Window x:Class="AG.Windows.WndSheetViewer"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:AG.Windows"
+        mc:Ignorable="d"
+        xmlns:vm="clr-namespace:AG.ViewModels.Forms"
+        Title="WndSheetViewer" Height="450" Width="800" WindowStartupLocation="CenterScreen">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <Menu Grid.Row="0">
+            <MenuItem Header="Файл">
+
+            </MenuItem>
+        </Menu>
+        <ToolBarTray Grid.Row="1">
+            <ToolBarTray.Background>
+                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                    <GradientStop Color="#FFE2E2E2" Offset="1"/>
+                    <GradientStop Color="#FFF3F3F3" Offset="0"/>
+                </LinearGradientBrush>
+            </ToolBarTray.Background>
+            <ToolBar>
+                <ToolBar.Background>
+                    <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                        <GradientStop Color="#FFE2E2E2" Offset="1"/>
+                        <GradientStop Color="#FFF3F3F3" Offset="0"/>
+                    </LinearGradientBrush>
+                </ToolBar.Background>
+                <DatePicker
+                    x:Name="datePicker"
+                    MinWidth="130" 
+                    Margin="5,0,5,0" FirstDayOfWeek="Monday"/>
+                <Button 
+                    Content="Применить"
+                    Name="btnApplyDate"
+                    Click="btnApplyDate_Click"
+                    Margin="5,0,5,0"/>
+            </ToolBar>
+            <ToolBar>
+                <ToolBar.Background>
+                    <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                        <GradientStop Color="#FFE2E2E2" Offset="1"/>
+                        <GradientStop Color="#FFF3F3F3" Offset="0"/>
+                    </LinearGradientBrush>
+                </ToolBar.Background>
+                <TextBlock Text="Подразделение" Margin="5,0,5,0" VerticalAlignment="Center"/>
+                <ComboBox Margin="5,0,5,0" MinWidth="200"/>
+            </ToolBar>
+        </ToolBarTray>
+        <DataGrid x:Name="grid"
+                  Grid.Row="2"
+                  AutoGenerateColumns="False"
+                  CanUserAddRows="False"
+                  CanUserDeleteRows="False"
+                  CanUserReorderColumns="True"
+                  SelectionMode="Extended"
+                  SelectionUnit="Cell">
+
+        </DataGrid>
+    </Grid>
+</Window>

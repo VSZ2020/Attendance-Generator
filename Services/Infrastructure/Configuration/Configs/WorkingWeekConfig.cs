@@ -17,14 +17,19 @@ namespace Services.Infrastructure.Configuration.Configs
 		public float HoursInShortDay { get; set; } = 7f;
 
 		/// <summary>
+		/// Дата месяца, которая считается половиной отчетного периода
+		/// </summary>
+		public int MonthHalfDate { get; set; } = 15;
+
+		/// <summary>
 		/// Распределение рабочих часов на неделе
 		/// </summary>
 		public Dictionary<DayOfWeek, float> WorkingHours { get; set; } = new() 
 		{
-			{ DayOfWeek.Monday,  8f},
-			{ DayOfWeek.Tuesday,  8f},
-			{ DayOfWeek.Wednesday,  8f},
-			{ DayOfWeek.Thursday,  8f},
+			{ DayOfWeek.Monday,  8.25f},
+			{ DayOfWeek.Tuesday,  8.25f},
+			{ DayOfWeek.Wednesday,  8.25f},
+			{ DayOfWeek.Thursday,  8.25f},
 			{ DayOfWeek.Friday,  7f},
 			{ DayOfWeek.Saturday,  0},
 			{ DayOfWeek.Sunday,  0},

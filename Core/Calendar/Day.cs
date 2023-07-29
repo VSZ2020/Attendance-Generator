@@ -11,6 +11,8 @@ namespace Core.Calendar
 
         public int DayNumber => Date.Day;
 
+        public DayOfWeek DayOfWeek => Date.DayOfWeek;
+
         /// <summary>
         /// Задает тип дня: выходной, праздничный, предпраздничный
         /// </summary>

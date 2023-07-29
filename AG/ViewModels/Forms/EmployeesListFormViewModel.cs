@@ -2,8 +2,8 @@
 using AG.Windows;
 using Microsoft.Extensions.DependencyInjection;
 using Services.Database;
+using Services.Domains;
 using Services.Extensions;
-using Services.POCO;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
@@ -66,8 +66,6 @@ namespace AG.ViewModels.Forms
             var wndWait = new WndWait();
             wndWait.Show();
             var departments = await departmentsTask;
-			await Task.Delay(1000);
-			
 
             Departments.Clear();
             Departments.Add(new Department() { 

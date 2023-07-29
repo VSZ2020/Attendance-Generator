@@ -1,4 +1,4 @@
-﻿namespace Services.POCO
+﻿namespace Services.Domains
 {
 	public class TimeIntervalType
 	{

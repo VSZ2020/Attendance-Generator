@@ -29,5 +29,11 @@ namespace AG.Commands
             "MakeTabel",
             typeof(MainWindow)
             );
-    }
+
+		public static RoutedUICommand cmdViewSheet = new RoutedUICommand(
+			"Просмотр табеля",
+			"ViewReport",
+			typeof(MainWindow)
+			);
+	}
 }

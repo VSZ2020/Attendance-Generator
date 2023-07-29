@@ -7,11 +7,12 @@ namespace Services.Infrastructure.Configuration
 		#region ctor
 		public ConfigManager() {
 			Register<WorkingWeekConfig>();
+			Register<ReportViewerConfig>();
 		}
 		#endregion
 
 		#region fields
-		private static readonly Dictionary<string, IConfig> _configs = new();
+		private static readonly Dictionary<Type, IConfig> _configs = new();
 		#endregion fields
 
 		#region properties
@@ -33,7 +34,7 @@ namespace Services.Infrastructure.Configuration
 		public void Register<TConfig>() where TConfig : IConfig, new()
 		{
 			var config = new TConfig();
-			_configs.Add(config.Name, config);
+			_configs.Add(typeof(TConfig), config);
 		}
 
 		/// <summary>
@@ -44,7 +45,7 @@ namespace Services.Infrastructure.Configuration
 		/// <exception cref="ArgumentException"></exception>
 		public TConfig Get<TConfig>() where TConfig: IConfig
 		{
-			if (_configs[nameof(TConfig)] is not TConfig config)
+			if (_configs[typeof(TConfig)] is not TConfig config)
 				throw new ArgumentException($"Отсутствует конфигурация с названием {nameof(config)}");
 			return config;
 		}
@@ -56,7 +57,7 @@ namespace Services.Infrastructure.Configuration
 		/// <param name="configToUpdate"></param>
 		public void Update<TConfig>(TConfig configToUpdate) where TConfig: IConfig
 		{
-			_configs[configToUpdate.Name] = configToUpdate;
+			_configs[typeof(TConfig)] = configToUpdate;
 		}
 
 		/// <summary>

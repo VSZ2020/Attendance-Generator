@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 
 namespace Core.Database.Entities
 {
@@ -11,6 +9,8 @@ namespace Core.Database.Entities
 
         public EstablishmentEntity? Establishment { get; set; }
         public int EstablishmentId { get; set;}
+
+        public List<FunctionEntity>? Functions { get; set; }
 
         public static IList<DepartmentEntity> GetDefault()
         {

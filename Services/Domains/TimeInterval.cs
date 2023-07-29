@@ -1,6 +1,6 @@
 ﻿using Core.Database.Entities;
 
-namespace Services.POCO
+namespace Services.Domains
 {
 	public class TimeInterval
 	{

@@ -1,6 +1,6 @@
 ﻿using Core.Database.AppEntities;
 using Core.Database.Entities;
-using Services.POCO;
+using Services.Domains;
 using SQLiteRepository;
 
 namespace Services.Database

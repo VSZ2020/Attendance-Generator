@@ -1,4 +1,4 @@
-﻿using Services.POCO;
+﻿using Services.Domains;
 
 namespace Services.Extensions
 {

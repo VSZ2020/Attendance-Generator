@@ -4,7 +4,11 @@ using AG.ViewModels.Forms;
 using AG.Windows;
 using Core.Database.Entities;
 using Microsoft.Extensions.DependencyInjection;
+using Services.Calendar;
 using Services.Database;
+using Services.Infrastructure.Configuration;
+using Services.Infrastructure.Configuration.Configs;
+using Services.ReportCard;
 using SQLiteRepository;
 using System;
 using System.Collections.Generic;
@@ -55,7 +59,9 @@ namespace AG
             if (e.Command.Equals(MainUICommands.cmdOpenEmployeesList))
                 e.CanExecute = true;
 
-            if (e.Command.Equals(MainUICommands.cmdGenerateSheet))
+			if (e.Command.Equals(MainUICommands.cmdViewSheet))
+				e.CanExecute = true;
+			if (e.Command.Equals(MainUICommands.cmdGenerateSheet))
                 e.CanExecute = true;
             
         }
@@ -72,6 +78,18 @@ namespace AG
                 new WndDepartments().ShowDialog();
                 return;
             }
-        }
+
+			if (e.Command == MainUICommands.cmdViewSheet)
+			{
+                var calendarService = ServiceLocator.Provider.GetService<ICalendarService>();
+                var employeeService = ServiceLocator.Provider.GetService<IEmployeeService>();
+                var reportCardService = ServiceLocator.Provider.GetService<IReportCardService>();
+                var weekConfig = ConfigManager.Instance.Get<WorkingWeekConfig>();
+                var reportViewerConfig = ConfigManager.Instance.Get<ReportViewerConfig>();
+
+				new WndSheetViewer(calendarService, employeeService, reportCardService, weekConfig, reportViewerConfig).ShowDialog();
+				return;
+			}
+		}
     }
 }

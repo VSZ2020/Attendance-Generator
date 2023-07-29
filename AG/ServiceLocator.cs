@@ -1,13 +1,14 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using Services.Calendar;
 using Services.Database;
-using Services.Generators;
-using Services.POCO;
+using Services.Domains;
+using Services.ReportCard;
 using SQLiteRepository;
 using System;
 
 namespace AG
 {
-    public class ServiceLocator
+	public class ServiceLocator
     {
         public static IServiceCollection Services = new ServiceCollection();
         public static IServiceProvider Provider { get; private set; }
@@ -21,7 +22,8 @@ namespace AG
                 .AddSingleton<UserAccount>()
                 .AddTransient<IEmployeeService, EmployeesService>()
                 .AddTransient<IDepartmentsService, DepartmentsService>()
-                .AddTransient<IReportGeneratorService, ReportGeneratorService>();
+                .AddTransient<ICalendarService, CalendarService>()
+                .AddTransient<IReportCardService, ReportCardService>();
 
 			Provider = Services.BuildServiceProvider();
 		}

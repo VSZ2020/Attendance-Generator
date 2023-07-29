@@ -36,6 +36,11 @@ namespace Core.Database.Entities
         public string? Email { get; set; }
 
         /// <summary>
+        /// Номера телефонов организации
+        /// </summary>
+        public string? Phones { get; set; }
+
+        /// <summary>
         /// Руководитель организации
         /// </summary>
         public EmployeeEntity? Header { get; set; }

@@ -1,8 +1,8 @@
-﻿namespace Services.POCO
+﻿namespace Services.Domains.ReportCard
 {
 	public class SheetMonth
 	{
-		public SheetMonth(int year, int month) { this.Year = year; this.Month = month; }
+		public SheetMonth(int year, int month) { Year = year; Month = month; }
 
 		private IList<SheetDay> Days = new List<SheetDay>();
 
@@ -17,9 +17,9 @@
 			set => Days[id] = value;
 		}
 
-		public void AddDay(SheetDay day) 
-		{  
-			Days.Add(day); 
+		public void AddDay(SheetDay day)
+		{
+			Days.Add(day);
 		}
 	}
 }
