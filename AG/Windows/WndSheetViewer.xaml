@@ -4,56 +4,60 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:AG.Windows"
+        xmlns:uc="clr-namespace:AG.UserControls"
         mc:Ignorable="d"
         xmlns:vm="clr-namespace:AG.ViewModels.Forms"
-        Title="WndSheetViewer" Height="450" Width="800" WindowStartupLocation="CenterScreen">
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="auto"/>
-            <RowDefinition/>
-        </Grid.RowDefinitions>
-        <Menu Grid.Row="0">
-            <MenuItem Header="Файл">
-
-            </MenuItem>
-        </Menu>
-        <ToolBarTray Grid.Row="1">
-            <ToolBarTray.Background>
-                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                    <GradientStop Color="#FFE2E2E2" Offset="1"/>
-                    <GradientStop Color="#FFF3F3F3" Offset="0"/>
-                </LinearGradientBrush>
-            </ToolBarTray.Background>
-            <ToolBar>
-                <ToolBar.Background>
+        Title="Просмотр табеля посещаемости" Height="450" Width="800" WindowStartupLocation="CenterScreen">
+    <Window.Resources>
+        <vm:SheetViewViewModel x:Key="viewModel"/>
+    </Window.Resources>
+    <Grid DataContext="{StaticResource viewModel}">
+        <uc:WaitBackground Panel.ZIndex="1"/>
+        <Grid Panel.ZIndex="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <Menu Grid.Row="0">
+                <MenuItem Header="Файл">
+                    <MenuItem Header="Экспорт">
+                        <MenuItem Header="Текстовый файл"/>
+                        <MenuItem Header="Microsoft Excel"/>
+                    </MenuItem>
+                </MenuItem>
+            </Menu>
+            <ToolBarTray Grid.Row="1">
+                <ToolBarTray.Background>
                     <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
                         <GradientStop Color="#FFE2E2E2" Offset="1"/>
                         <GradientStop Color="#FFF3F3F3" Offset="0"/>
                     </LinearGradientBrush>
-                </ToolBar.Background>
-                <DatePicker
-                    x:Name="datePicker"
-                    MinWidth="130" 
-                    Margin="5,0,5,0" FirstDayOfWeek="Monday"/>
-                <Button 
+                </ToolBarTray.Background>
+                <ToolBar>
+                    <ToolBar.Background>
+                        <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                            <GradientStop Color="#FFE2E2E2" Offset="1"/>
+                            <GradientStop Color="#FFF3F3F3" Offset="0"/>
+                        </LinearGradientBrush>
+                    </ToolBar.Background>
+                    <TextBlock Text="Подразделение" Margin="5,0,5,0" VerticalAlignment="Center"/>
+                    <ComboBox Margin="5,0,5,0" MinWidth="200" ItemsSource="{Binding DepartmentsList}" DisplayMemberPath="Name" SelectedValue="{Binding SelectedDepartmentId}" SelectedValuePath="Id" SelectedIndex="0"/>
+
+                    <TextBlock Text="Месяц и год" Margin="10,0,5,0" VerticalAlignment="Center"/>
+                    <DatePicker MinWidth="120" FirstDayOfWeek="Monday" IsTodayHighlighted="True" SelectedDate="{Binding SelectedDate}"/>
+
+                    <Button Content="Корректирующие дни" Margin="10,0,5,0" VerticalAlignment="Center" Click="btnCorrectionDays_Click"/>
+                    <Separator/>
+                    <Button 
                     Content="Применить"
                     Name="btnApplyDate"
                     Click="btnApplyDate_Click"
+                    FontWeight="Bold"
                     Margin="5,0,5,0"/>
-            </ToolBar>
-            <ToolBar>
-                <ToolBar.Background>
-                    <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                        <GradientStop Color="#FFE2E2E2" Offset="1"/>
-                        <GradientStop Color="#FFF3F3F3" Offset="0"/>
-                    </LinearGradientBrush>
-                </ToolBar.Background>
-                <TextBlock Text="Подразделение" Margin="5,0,5,0" VerticalAlignment="Center"/>
-                <ComboBox Margin="5,0,5,0" MinWidth="200"/>
-            </ToolBar>
-        </ToolBarTray>
-        <DataGrid x:Name="grid"
+                </ToolBar>
+            </ToolBarTray>
+            <DataGrid x:Name="grid"
                   Grid.Row="2"
                   AutoGenerateColumns="False"
                   CanUserAddRows="False"
@@ -62,6 +66,7 @@
                   SelectionMode="Extended"
                   SelectionUnit="Cell">
 
-        </DataGrid>
+            </DataGrid>
+        </Grid>
     </Grid>
 </Window>

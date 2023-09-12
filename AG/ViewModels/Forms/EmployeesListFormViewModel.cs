@@ -1,27 +1,22 @@
-﻿using AG.Services;
-using AG.Windows;
-using Microsoft.Extensions.DependencyInjection;
+﻿using AG.Windows;
+using Core.ViewModel;
 using Services.Database;
 using Services.Domains;
 using Services.Extensions;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Threading;
 
 namespace AG.ViewModels.Forms
 {
-	public class EmployeesListFormViewModel : INotifyPropertyChanged
+	public class EmployeesListFormViewModel : ViewModelCore
     {
 		#region ctor
 		public EmployeesListFormViewModel()
 		{
-			this.departmentsService = ServiceLocator.Provider.GetService<IDepartmentsService>()!;
-			this.employesService = ServiceLocator.Provider.GetService<IEmployeeService>()!;
-			user = SessionService.User;
-
-			
+			this.departmentsService = ServiceLocator.GetService<IDepartmentsService>()!;
+			this.employesService = ServiceLocator.GetService<IEmployeeService>()!;
 		}
 		#endregion ctor
 
@@ -29,84 +24,64 @@ namespace AG.ViewModels.Forms
 		private int selectedDepartmentId = 0;
         private readonly IDepartmentsService departmentsService;
         private readonly IEmployeeService employesService;
-		private UserAccount? user;
+		private Employee selectedEmployee;
 		#endregion fields
 
-		#region properties
+		#region Properties
 
 		public ObservableCollection<Employee> Employees { get; set; } = new();
 
         public ObservableCollection<Department> Departments { get; set; } = new();
 
-        public int SelectedDepartmentId { 
-            get => selectedDepartmentId; 
-            set 
-            { 
-                selectedDepartmentId = value; 
-                OnChanged(nameof(SelectedDepartmentIdText)); 
-            } 
-        }
-        public string SelectedDepartmentIdText { 
-            get => selectedDepartmentId.ToString(); 
-            set 
-            { 
-                OnChanged(); 
-            } 
-        }
+		public Employee SelectedEmployee { get=> selectedEmployee; set { selectedEmployee = value; OnChanged(); } }
+
+        public int SelectedDepartmentId {  get => selectedDepartmentId; set  {  selectedDepartmentId = value;  OnChanged(nameof(SelectedDepartmentId));  } }
 		#endregion properties
 
+		public async Task InitializeWindow()
+		{
+			await LoadDepartmentsAsync();
+			await LoadEmployeesAsync();
+		}
 
-		public async Task LoadDepartments()
+		#region LoadDepartments
+		public async Task LoadDepartmentsAsync()
         {
-            if (user == null)
-                return;
-
-            var departmentsTask = departmentsService.GetDepartmentsAsync(user);
-            //Отображение для пользователя окна ожидания
-            var wndWait = new WndWait();
-            wndWait.Show();
-            var departments = await departmentsTask;
+			ShowWaitMessage("Загрузка подразделений", "Подождите");
+			var departmentsResult = await Task.Run(() => departmentsService.GetDepartments());
+			ClearWaitMessage();
 
             Departments.Clear();
-            Departments.Add(new Department() { 
-                Id = 0, 
-                Name = "Все подразделения"
-            });
 
-            if (departments.StatusCode == DatabaseResponse<Department>.ResponseCode.Success && departments.Results != null)
-                Departments.AddRange(departments.Results);
+            if (departmentsResult.StatusCode == DatabaseResponse<Department>.ResponseCode.Success && departmentsResult.Results != null)
+                Departments.AddRange(departmentsResult.Results);
             
             if (Departments.Count > 0)
                 SelectedDepartmentId = 0;
-
-			wndWait.Close();
 		}
+		#endregion
 
-        public void LoadEmployees(int departmentId = 0)
+		#region LoadEmployees
+		public async Task LoadEmployeesAsync()
         {
-            if (user == null)
+            if (SelectedDepartmentId < 0)
                 return;
+			ShowWaitMessage("Загрузка списка сотрудников", "Подождите");
+			var employees = await Task.Run(() => employesService.GetEmployees(SelectedDepartmentId));
+			ClearWaitMessage();
 
-            var employees = employesService.GetEmployees(departmentId);
+			Employees.Clear();
+			if (employees.StatusCode == DatabaseResponse<Employee>.ResponseCode.Success && employees.Results != null)
+				Employees.AddRange(employees.Results);
+		}
+		#endregion
 
-            Employees.Clear();
-            if (employees.StatusCode == DatabaseResponse<Employee>.ResponseCode.Success && employees.Results != null) 
-                Employees.AddRange(employees.Results);
-        }
-
-        #region Message
-        private void ShowMessage(string msg, string? header = null)
-        {
-            MessageBox.Show(msg, header ?? "Информация", MessageBoxButton.OK, MessageBoxImage.Information);
-        }
-        #endregion
-
-        #region INotifyPropertyChanged region
-        public event PropertyChangedEventHandler? PropertyChanged;
-        public void OnChanged([CallerMemberName]string? name = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
-        }
-        #endregion
-    }
+		#region ShowEmployeeTimeIntervals()
+		public void ShowEmployeeTimeIntervals()
+		{
+			new WndEmployeeTimeIntervals(SelectedEmployee).ShowDialog();
+			//MessageBox.Show("Не выбран сотрудник для отображения неявок", "", MessageBoxButton.OK, MessageBoxImage.Warning);
+		}
+		#endregion
+	}
 }

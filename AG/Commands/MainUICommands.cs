@@ -35,5 +35,6 @@ namespace AG.Commands
 			"ViewReport",
 			typeof(MainWindow)
 			);
+
 	}
 }

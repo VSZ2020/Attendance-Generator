@@ -74,6 +74,5 @@ namespace Services.Calendar
 		/// <param name="employees">Список сотрудников, для которых создаются <see cref="SheetMonth"/></param>
 		/// <returns></returns>
 		public IList<SheetMonth> MakeManyEmployeesMonths(Month baseMonth, WorkingWeekConfig weekConfig, IList<Employee> employees);
-
 	}
 }

@@ -10,14 +10,20 @@ namespace AG.Windows
     /// </summary>
     public partial class WndDepartments : Window
     {
-        private DepartmentsFormViewModel viewModel;
-        public WndDepartments()
-        {
-            InitializeComponent();
-            viewModel = (DepartmentsFormViewModel)Resources["ViewModel"];
-        }
+		#region ctor
+		public WndDepartments()
+		{
+			InitializeComponent();
+			viewModel = (DepartmentsFormViewModel)Resources["ViewModel"];
+		}
+		#endregion
 
-        private void CommandBinding_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+		#region fields
+		private readonly DepartmentsFormViewModel viewModel;
+		#endregion
+
+		#region Event Handlers
+		private void CommandBinding_CanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
             if (e.Command == DepartmentsCommands.cmdAddDepartment) e.CanExecute = true;
             if (e.Command == DepartmentsCommands.cmdEditDepartment) e.CanExecute = viewModel?.SelectedDepartment != null;
@@ -29,5 +35,6 @@ namespace AG.Windows
         {
 
         }
-    }
+		#endregion
+	}
 }

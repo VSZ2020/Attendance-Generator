@@ -1,10 +1,12 @@
 ﻿using AG.Services;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
+using AG.Windows;
+using Core.ViewModel;
+using Services.Domains;
+using System.Windows;
 
 namespace AG.ViewModels.Forms
 {
-	public class MainWindowViewModel: INotifyPropertyChanged
+	public class MainWindowViewModel: ViewModelCore
     {
 		#region ctor
 		public MainWindowViewModel()
@@ -13,19 +15,50 @@ namespace AG.ViewModels.Forms
 		}
 		#endregion ctor
 
-		#region properties
-		public string Username { get => SessionService.User?.Username ?? "Войти"; }
+		#region fields
+		private bool isLoggedIn = false;
+		private string username = string.Empty;
+		#endregion
+		#region Properties
+		public string Username { get => username; set { username = value; OnChanged(); } }
 
         public int EstablishmentId { get; set; } = 1;
-
+		public bool IsLoggedIn { get => isLoggedIn; set { isLoggedIn = value; OnChanged(); } }
         #endregion properties
 
-        #region INotifyPropertyChanged region
-        public event PropertyChangedEventHandler? PropertyChanged;
-        public void OnChanged([CallerMemberName] string? name = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
-        }
-        #endregion
+		public void LoadApplication()
+		{
+			IsLoggedIn = true;
+			SessionService.User = new UserAccount("Test user");
+		}
+
+		/// <summary>
+		/// Вход пользователя в систему
+		/// </summary>
+		public void LoginUser()
+		{
+			var wndAuthUser = new WndAuthUser();
+			wndAuthUser.ShowDialog();
+
+			if (SessionService.IsLoggedIn)
+			{
+				IsLoggedIn = true;
+				Username = SessionService.User.Username;
+			}
+			else
+			{
+				MessageBox.Show("Не удалось пройти аутентификацию пользователя!", "Внимание", MessageBoxButton.OK, MessageBoxImage.Warning);
+
+			}
+		}
+
+		/// <summary>
+		/// Выход пользователя из системы
+		/// </summary>
+		public void LogoutUser()
+		{
+			SessionService.User = null;
+			IsLoggedIn = false;
+		}
     }
 }

@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:cmd="clr-namespace:AG.Commands"
         xmlns:vm="clr-namespace:AG.ViewModels.Forms"
+        xmlns:session="clr-namespace:AG.Services"
         xmlns:local="clr-namespace:AG"
         mc:Ignorable="d"
         Title="Attendance Generator" Height="450" Width="800" WindowStartupLocation="CenterScreen">
@@ -26,29 +27,38 @@
     </Window.CommandBindings>
     <Grid DataContext="{StaticResource viewModel}">
         <Grid.RowDefinitions>
-            <RowDefinition Height="auto"/>
+            <RowDefinition Height="25"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
         <Menu
             Grid.Column="0"
-            Grid.Row="0"
             IsMainMenu="True">
             <Menu.ItemsPanel>
                 <ItemsPanelTemplate>
-                    <DockPanel HorizontalAlignment="Stretch"/>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="auto"/>
+                            <ColumnDefinition Width="auto"/>
+                            <ColumnDefinition Width="auto"/>
+                            <ColumnDefinition Width="auto"/>
+                            <ColumnDefinition Width="auto"/>
+                            <ColumnDefinition Width="auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                    </Grid>
                 </ItemsPanelTemplate>
             </Menu.ItemsPanel>
-            <MenuItem Header="Файл">
+            <MenuItem Header="Файл" Grid.Column="0">
                 <MenuItem Command="{x:Static cmd:MainUICommands.cmdOpenFile}"/>
             </MenuItem>
-            <MenuItem Header="Правка">
+            <MenuItem Header="Правка" Grid.Column="1">
                 <MenuItem Command="{x:Static ApplicationCommands.Cut}"/>
                 <MenuItem Command="{x:Static ApplicationCommands.Copy}"/>
                 <MenuItem Command="{x:Static ApplicationCommands.Paste}"/>
                 <Separator/>
                 <MenuItem Header="Настройки программы"/>
             </MenuItem>
-            <MenuItem Header="Организация">
+            <MenuItem Header="Организация" Grid.Column="2">
                 <MenuItem Command="{x:Static cmd:MainUICommands.cmdOrganizationInfo}"/>
                 <MenuItem Command="{x:Static cmd:MainUICommands.cmdDepartmentsList}"/>
                 <MenuItem Command="{x:Static cmd:MainUICommands.cmdOpenEmployeesList}"/>
@@ -59,23 +69,24 @@
                     <MenuItem Header="Виды календарных дней"/>
                 </MenuItem>
             </MenuItem>
-            <MenuItem Header="Календарь">
+            <MenuItem Header="Календарь" Grid.Column="3">
                 <MenuItem Header="Неявки"/>
             </MenuItem>
-            <MenuItem Header="Табель">
+            <MenuItem Header="Табель" Grid.Column="4">
                 <MenuItem Command="{x:Static cmd:MainUICommands.cmdViewSheet}"/>
                 <MenuItem Command="{x:Static cmd:MainUICommands.cmdGenerateSheet}"/>
             </MenuItem>
-            <MenuItem Header="?">
+            <MenuItem Header="?" Grid.Column="5">
                 <MenuItem Header="Справка"/>
                 <Separator/>
                 <MenuItem Header="О программе..."/>
             </MenuItem>
-            <MenuItem Header="{Binding Username}" HorizontalAlignment="Right">
-                
+            <MenuItem Header="{Binding Username}" HorizontalAlignment="Right" Grid.Column="6" Visibility="{Binding IsLoggedIn, Converter={StaticResource visibilityConverter}}">
+                <MenuItem Header="Профиль пользователя" Visibility="{Binding IsLoggedIn, Converter={StaticResource visibilityConverter}}"/>
+                <MenuItem Header="Выйти" Name="miLogout" Click="MenuItem_Click" Visibility="{Binding IsLoggedIn, Converter={StaticResource visibilityConverter}}"/>
             </MenuItem>
+            <MenuItem Header="Войти в систему" HorizontalAlignment="Right" Grid.Column="6" Name="miLogin" Click="MenuItem_Click" Visibility="{Binding IsLoggedIn, Converter={StaticResource invVisibilityConverter}}"/>
         </Menu>
-        
         <!--Content grid-->
         <Grid
             Grid.Column="0"

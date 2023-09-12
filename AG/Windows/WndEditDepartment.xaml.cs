@@ -1,5 +1,4 @@
 ﻿using AG.Services;
-using Microsoft.Extensions.DependencyInjection;
 using Services.Database;
 using Services.Domains;
 using System.Windows;
@@ -19,7 +18,7 @@ namespace AG.Windows
             InitializeComponent();
             user = SessionService.User;
 
-            this.departmentsService = ServiceLocator.Provider.GetService<IDepartmentsService>()!;
+            this.departmentsService = ServiceLocator.GetService<IDepartmentsService>()!;
         }
 
         private void btnAccept_Click(object sender, RoutedEventArgs e)

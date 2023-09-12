@@ -17,25 +17,30 @@ namespace Services.Database
 
 		#endregion fields
 
-		public DatabaseResponse<Department> GetDepartments(UserAccount user, bool countEmployees = false)
+		public DatabaseResponse<Department> GetDepartments(bool countEmployees = false)
         {
             IList<DepartmentEntity> departments;
             departments = establishmentsRepository.GetAll<DepartmentEntity>();
 
             var pocoDepartments = departments.Select(DbEntityToDepartment).ToList();
-
+            int totalEmployees = 0;
             if (countEmployees)
                 foreach (var dep in pocoDepartments)
-                    dep.EmployeesCount = establishmentsRepository.GetCount<EmployeeEntity>(e => e.DepartmentId == dep.Id);
+                {
+					dep.EmployeesCount = establishmentsRepository.GetCount<EmployeeEntity>(e => e.DepartmentId == dep.Id);
+                    totalEmployees += dep.EmployeesCount;
+				}
+
+            pocoDepartments.Insert(0, new Department() { Id = 0, Name = "Все подразделения", EmployeesCount = totalEmployees });
 
             return departments == null ?
                 new DatabaseResponse<Department>(DatabaseResponse<Department>.ResponseCode.NoData, null, "В базе нет подразделений для указанных параметров") :
                 new DatabaseResponse<Department>(DatabaseResponse<Department>.ResponseCode.Success, pocoDepartments);
         }
 
-		public Task<DatabaseResponse<Department>> GetDepartmentsAsync(UserAccount user, bool countEmployees = false)
+		public Task<DatabaseResponse<Department>> GetDepartmentsAsync(bool countEmployees = false)
         {
-            return Task.FromResult(GetDepartments(user, countEmployees));
+            return Task.FromResult(GetDepartments(countEmployees));
 		}
 
 

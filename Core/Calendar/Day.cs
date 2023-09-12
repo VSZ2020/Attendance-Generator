@@ -18,11 +18,13 @@ namespace Core.Calendar
         /// </summary>
         public DayType Type { get; set; }
 
-        public Day(int year, int month, int day, DayType type)
-        {
-            this.Date = new DateTime(year, month, day);
-            this.Type = type;
-            
-        }
-    }
+        public Day(int year, int month, int day, DayType type): this(new DateTime(year, month, day), type){}
+
+		public Day(DateTime date, DayType type)
+		{
+			this.Date = date;
+			this.Type = type;
+
+		}
+	}
 }

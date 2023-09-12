@@ -1,6 +1,4 @@
-﻿using Core.Security;
-
-namespace Services.Domains
+﻿namespace Services.Domains
 {
 	public class UserAccount
 	{
@@ -12,5 +10,18 @@ namespace Services.Domains
 		public string? Roles { get; set; }
 		public int DepartmentId { get; set; }
 		public List<int> DepartmentsIds { get; set; }
+
+		#region ctor
+		public UserAccount(int id, string username, string login)
+		{
+			Id = id;
+			Username = username;
+			Login = login;
+		}
+
+		public UserAccount(string username) : this(0, username, username) { }
+
+		public UserAccount(): this(0, "", "") { }
+		#endregion
 	}
 }

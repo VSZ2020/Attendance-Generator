@@ -4,47 +4,60 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:vm="clr-namespace:AG.ViewModels.Forms"
+        xmlns:cmd="clr-namespace:AG.Commands"
         xmlns:local="clr-namespace:AG.Windows"
+        xmlns:uc="clr-namespace:AG.UserControls"
         mc:Ignorable="d"
         Title="Список сотрудников" Height="450" Width="800" WindowStartupLocation="CenterScreen">
     <Window.Resources>
         <vm:EmployeesListFormViewModel x:Key="viewModel"/>
     </Window.Resources>
+    <Window.CommandBindings>
+        <CommandBinding Command="{x:Static cmd:EmployeesListCommands.cmdAddEmployee}" CanExecute="CommandBinding_CanExecute" Executed="CommandBinding_Executed"/>
+        <CommandBinding Command="{x:Static cmd:EmployeesListCommands.cmdEditEmployee}" CanExecute="CommandBinding_CanExecute" Executed="CommandBinding_Executed"/>
+        <CommandBinding Command="{x:Static cmd:EmployeesListCommands.cmdRemoveEmployee}" CanExecute="CommandBinding_CanExecute" Executed="CommandBinding_Executed"/>
+        <CommandBinding Command="{x:Static cmd:EmployeesListCommands.cmdTimeIntervals}" CanExecute="CommandBinding_CanExecute" Executed="CommandBinding_Executed"/>
+    </Window.CommandBindings>
     <Grid DataContext="{StaticResource viewModel}">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="auto"/>
-            <RowDefinition/>
-        </Grid.RowDefinitions>
-        <ToolBarPanel Grid.Row="0" Background="#FFF0F0F0">
-            <ToolBar Background="#FFF0F0F0">
-                <TextBlock Text="Подразделение" Margin="5,0,5,0"/>
-                <ComboBox 
+        <uc:WaitBackground Grid.Column="0" Grid.Row="0" Panel.ZIndex="1"/>
+        <Grid Panel.ZIndex="0" Grid.Column="0" Grid.Row="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+
+            <ToolBarPanel Grid.Row="0" Background="#FFF0F0F0">
+                <ToolBar Background="#FFF0F0F0">
+                    <TextBlock Text="Подразделение" Margin="5,0,5,0"/>
+                    <ComboBox 
                     Width="200"
                     ItemsSource="{Binding Departments}"
                     Name="cbDepartment"
                     SelectedValue="{Binding Path=SelectedDepartmentId}"
                     SelectedValuePath="Id"
-                    DisplayMemberPath="Name"
-                    SelectionChanged="cbDepartment_SelectionChanged"/>
-                <TextBox Text="{Binding SelectedDepartmentIdText}"/>
-            </ToolBar>
-        </ToolBarPanel>
-        <DataGrid
-            Grid.Row="1"
-            AutoGenerateColumns="False"
-            CanUserAddRows="False"
-            CanUserDeleteRows="False"
-            ItemsSource="{Binding Path=Employees}">
-            <DataGrid.Columns>
-                <DataGridTextColumn Header="Фамилия" Binding="{Binding Path=LastName}"/>
-                <DataGridTextColumn Header="Имя" Binding="{Binding Path=FirstName}"/>
-                <DataGridTextColumn Header="Отчетство" Binding="{Binding Path=MiddleName}"/>
-                <DataGridTextColumn Header="Должность" Binding="{Binding Path=Function.Name}"/>
-                <DataGridTextColumn Header="Ставка" Binding="{Binding Path=Rate}"/>
-                <DataGridCheckBoxColumn Header="Совместитель" Binding="{Binding Path=IsConcurrent}"/>
-                <DataGridTextColumn Header="Подразделение" Binding="{Binding Path=Department.Name}"/>
-                <DataGridTextColumn Header="Статус" Binding="{Binding Path=Status.Name}"/>
-            </DataGrid.Columns>
-        </DataGrid>
+                    DisplayMemberPath="Name"/>
+                    <Button Content="Неявки сотрудника" Command="{x:Static cmd:EmployeesListCommands.cmdTimeIntervals}" MinWidth="150"/>
+                </ToolBar>
+            </ToolBarPanel>
+            
+            <DataGrid
+                Grid.Row="1"
+                AutoGenerateColumns="False"
+                CanUserAddRows="False"
+                CanUserDeleteRows="False"
+                SelectedItem="{Binding SelectedEmployee}"
+                ItemsSource="{Binding Path=Employees}">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Фамилия" Binding="{Binding Path=LastName}"/>
+                    <DataGridTextColumn Header="Имя" Binding="{Binding Path=FirstName}"/>
+                    <DataGridTextColumn Header="Отчетство" Binding="{Binding Path=MiddleName}"/>
+                    <DataGridTextColumn Header="Должность" Binding="{Binding Path=Function}"/>
+                    <DataGridTextColumn Header="Ставка" Binding="{Binding Path=Rate}"/>
+                    <DataGridCheckBoxColumn Header="Совместитель" Binding="{Binding Path=IsConcurrent}"/>
+                    <DataGridTextColumn Header="Подразделение" Binding="{Binding Path=Department}"/>
+                    <DataGridTextColumn Header="Статус" Binding="{Binding Path=Status}"/>
+                </DataGrid.Columns>
+            </DataGrid>
+        </Grid>
     </Grid>
 </Window>

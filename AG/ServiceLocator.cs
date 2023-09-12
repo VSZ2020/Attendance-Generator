@@ -10,8 +10,8 @@ namespace AG
 {
 	public class ServiceLocator
     {
-        public static IServiceCollection Services = new ServiceCollection();
-        public static IServiceProvider Provider { get; private set; }
+        private static IServiceCollection Services = new ServiceCollection();
+        private static IServiceProvider Provider { get;  set; }
         static ServiceLocator()
         {
             //Регистрируем сервисы
@@ -27,5 +27,9 @@ namespace AG
 
 			Provider = Services.BuildServiceProvider();
 		}
+        public static T? GetService<T>() where T : class
+        {
+            return Provider.GetService<T>();
+        }
     }
 }

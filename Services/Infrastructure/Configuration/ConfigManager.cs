@@ -8,6 +8,7 @@ namespace Services.Infrastructure.Configuration
 		public ConfigManager() {
 			Register<WorkingWeekConfig>();
 			Register<ReportViewerConfig>();
+			Register<CalendarConfig>();
 		}
 		#endregion
 

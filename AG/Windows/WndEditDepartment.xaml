@@ -5,19 +5,24 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:AG.Windows"
         mc:Ignorable="d"
-        Title="Название подразделения" Height="auto" Width="408">
+        Title="Редактирование подразделения" Height="auto" Width="408">
     <Grid
         Margin="5">
         <Grid.RowDefinitions>
             <RowDefinition/>
             <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
-        <TextBox Grid.Row="0"
-            Margin="0,0,0,10"
-                 Height="25"
-                 x:Name="tbName"
-                 VerticalContentAlignment="Center"
-            Text="{Binding DepartmentName}"/>
+        <StackPanel Grid.Row="0">
+            <TextBlock Text="Название подразделения" Margin="0,0,0,5"/>
+            <TextBox 
+                Margin="0,0,0,10"
+                Height="25"
+                x:Name="tbName"
+                VerticalContentAlignment="Center"
+                Text="{Binding DepartmentName}"/>
+            <TextBlock Text="Заведующий лабораторией" Margin="0,0,0,5"/>
+            <ComboBox Margin="0,0,0,10"/>
+        </StackPanel>
         <DockPanel
             HorizontalAlignment="Right"
             Grid.Row="1">
