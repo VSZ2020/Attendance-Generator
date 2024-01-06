@@ -1,27 +1,54 @@
-﻿namespace Services.Domains
+﻿using Core.Converters;
+using Core.Database.AppEntities;
+
+namespace Services.Domains
 {
-	public class UserAccount
+	public class UserAccount : BaseDomain, IEntityConverter<UserAccountEntity>
 	{
-		public int Id { get; set; }
-		public string Username { get; set; }
-		public string Login { get; set; }
-		public DateTime SessionExpiredAt { get; set; }
-
-		public string? Roles { get; set; }
-		public int DepartmentId { get; set; }
-		public List<int> DepartmentsIds { get; set; }
-
 		#region ctor
-		public UserAccount(int id, string username, string login)
+		public UserAccount(Guid id, string username, string login, string passwd_hash, Guid departmentId, string[] roles)
 		{
 			Id = id;
 			Username = username;
 			Login = login;
+			this.DepartmentId = departmentId;
+			this.Roles = roles;
 		}
 
-		public UserAccount(string username) : this(0, username, username) { }
+		public UserAccount(UserAccountEntity entity)
+		{
+			Id = entity.Id;
+			Username = entity.UserName;
+			Login = entity.Login;
+			Roles = entity.Roles;
+			DepartmentId = entity.DepartmentId;
+			SessionExpiredAt = entity.SessionExpiredAt;
+		}
+		#endregion
 
-		public UserAccount(): this(0, "", "") { }
+		public string Username { get; set; }
+		public string Login { get; set; }
+		public DateTime SessionExpiredAt { get; set; }
+
+		public string[] Roles { get; set; }
+		public Guid DepartmentId { get; set; }
+		public Department? Department { get; set; }
+		
+
+		#region IEntityConverter
+		public UserAccountEntity ConvertToEntity()
+		{
+			return new UserAccountEntity()
+			{
+				Id = Id,
+				UserName = Username,
+				Login = Login,
+				Roles = Roles,
+				DepartmentId = DepartmentId,
+				SessionExpiredAt = SessionExpiredAt,
+
+			};
+		}
 		#endregion
 	}
 }

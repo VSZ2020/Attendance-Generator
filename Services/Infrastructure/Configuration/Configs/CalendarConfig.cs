@@ -1,15 +1,12 @@
 ﻿using Core.Calendar;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Services.Infrastructure.Configuration.Configs
 {
 	public class CalendarConfig : IConfig
 	{
 		public string Name => nameof(CalendarConfig);
+
+		public IList<Day> DaysToCorrect { get; set; } = new List<Day>();
 
 		/// <summary>
 		/// Возвращает список государственных праздников в году. Если <see cref="ICalendar"/> NULL, то используется текущий год

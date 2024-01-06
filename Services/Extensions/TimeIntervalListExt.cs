@@ -83,12 +83,13 @@ namespace Services.Extensions
 		/// <returns></returns>
 		public static bool HasCollisionWith(this TimeInterval TI1, TimeInterval TI2)
 		{
-			bool leftT1EdgeIntercept = TI2.Begin.Date <= TI1.Begin.Date && TI1.Begin.Date <= TI2.End.Date;
-			bool rightT1EdgeIntercept = TI2.Begin.Date <= TI1.End.Date && TI1.End.Date <= TI2.End.Date;
+			//bool leftT1EdgeIntercept = TI2.Begin.Date <= TI1.Begin.Date && TI1.Begin.Date <= TI2.End.Date;
+			//bool rightT1EdgeIntercept = TI2.Begin.Date <= TI1.End.Date && TI1.End.Date <= TI2.End.Date;
 
-			bool leftT2EdgeIntercept = TI1.Begin.Date <= TI2.Begin.Date && TI2.Begin.Date <= TI1.End.Date;
-			bool rightT2EdgeIntercept = TI1.Begin.Date <= TI2.End.Date && TI2.End.Date <= TI1.End.Date;
-			return leftT1EdgeIntercept || rightT1EdgeIntercept || leftT2EdgeIntercept || rightT2EdgeIntercept;
+			//bool leftT2EdgeIntercept = TI1.Begin.Date <= TI2.Begin.Date && TI2.Begin.Date <= TI1.End.Date;
+			//bool rightT2EdgeIntercept = TI1.Begin.Date <= TI2.End.Date && TI2.End.Date <= TI1.End.Date;
+			//return leftT1EdgeIntercept || rightT1EdgeIntercept || leftT2EdgeIntercept || rightT2EdgeIntercept;
+			return !(TI1.Begin > TI2.End || TI2.Begin > TI1.End);
 		}
 	}
 }

@@ -5,19 +5,15 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:AG.Windows"
         xmlns:cmd="clr-namespace:AG.Commands"
-        xmlns:vm="clr-namespace:AG.ViewModels.Forms"
         mc:Ignorable="d"
         Title="Подразделения" Height="337" Width="515" WindowStartupLocation="CenterScreen">
-    <Window.Resources>
-        <vm:DepartmentsFormViewModel x:Key="ViewModel"/>
-    </Window.Resources>
     <Window.CommandBindings>
         <CommandBinding Command="{x:Static cmd:DepartmentsCommands.cmdAddDepartment}" CanExecute="CommandBinding_CanExecute" Executed="CommandBinding_Executed"/>
         <CommandBinding Command="{x:Static cmd:DepartmentsCommands.cmdEditDepartment}" CanExecute="CommandBinding_CanExecute" Executed="CommandBinding_Executed"/>
         <CommandBinding Command="{x:Static cmd:DepartmentsCommands.cmdRemoveDepartment}" CanExecute="CommandBinding_CanExecute" Executed="CommandBinding_Executed"/>
         <CommandBinding Command="{x:Static cmd:DepartmentsCommands.cmdShowEmployees}" CanExecute="CommandBinding_CanExecute" Executed="CommandBinding_Executed"/>
     </Window.CommandBindings>
-    <Grid DataContext="{StaticResource ViewModel}">
+    <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="0.7*"/>
             <ColumnDefinition Width="0.3*"/>
@@ -25,22 +21,22 @@
         <DataGrid
             Grid.Column="0"
             AutoGenerateColumns="False"
-            CanUserAddRows="False"
-            CanUserDeleteRows="false"
-            CanUserSortColumns="false"
+            Style="{StaticResource DefaultDataGridStyle}"
             ItemsSource="{Binding Departments}"
-            SelectedItem="{Binding SelectedDepartment}" HorizontalGridLinesBrush="#FFC3C3C3" VerticalGridLinesBrush="Gainsboro" IsReadOnly="True" SelectionUnit="Cell">
+            SelectedItem="{Binding SelectedDepartment}" 
+            IsReadOnly="True" SelectionUnit="FullRow">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Название" Binding="{Binding Path=Name}" MinWidth="200"/>
                 <DataGridTextColumn Header="Количество сотрудников" Binding="{Binding Path=EmployeesCount}"/>
             </DataGrid.Columns>
         </DataGrid>
         <StackPanel
-            Grid.Column="1">
-            <Button Command="{x:Static cmd:DepartmentsCommands.cmdAddDepartment}" Content="Добавить" Height="30"/>
-            <Button Command="{x:Static cmd:DepartmentsCommands.cmdEditDepartment}" Content="Редактировать" Height="30"/>
-            <Button Command="{x:Static cmd:DepartmentsCommands.cmdRemoveDepartment}" Content="Удалить" Height="30"/>
-            <Button Command="{x:Static cmd:DepartmentsCommands.cmdShowEmployees}" Content="Сотрудники" Height="30"/>
+            Grid.Column="1"
+            Margin="5">
+            <Button Command="{x:Static cmd:DepartmentsCommands.cmdAddDepartment}" Content="Добавить" Height="30" Style="{StaticResource normal_button}" Margin="0,0,0,5"/>
+            <Button Command="{x:Static cmd:DepartmentsCommands.cmdEditDepartment}" Content="Редактировать" Height="30" Style="{StaticResource normal_button}" Margin="0,0,0,5"/>
+            <Button Command="{x:Static cmd:DepartmentsCommands.cmdRemoveDepartment}" Content="Удалить" Height="30" Style="{StaticResource normal_button}" Margin="0,0,0,5"/>
+            <Button Command="{x:Static cmd:DepartmentsCommands.cmdShowEmployees}" Content="Сотрудники" Height="30" Style="{StaticResource normal_button}" Margin="0,0,0,5"/>
         </StackPanel>
     </Grid>
 </Window>

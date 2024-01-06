@@ -28,4 +28,38 @@
             </Setter.Value>
         </Setter>
     </Style>
+
+    <Style TargetType="ToolBarPanel" x:Key="toolbarPanelStyle">
+        <Setter Property="Background" Value="#FFF0F0F0"/>
+        
+    </Style>
+
+    <Style TargetType="ToolBarTray" x:Key="toolbarTrayStyle">
+        <Setter Property="Background" Value="#FFF0F0F0"/>
+    </Style>
+
+    <Style TargetType="ToolBar" x:Key="toolbarStyle">
+        <Setter Property="Background" Value="#FFF0F0F0"/>
+    </Style>
+    
+    <ControlTemplate x:Key="emptyDataGridTemplate">
+        <TextBlock Text="Нет данных для отображения" VerticalAlignment="Center" HorizontalAlignment="Center" TextWrapping="Wrap"/>
+    </ControlTemplate>
+    
+    <Style TargetType="DataGrid" x:Key="DefaultDataGridStyle">
+        <Setter Property="HorizontalGridLinesBrush" Value="#FFD2D2D2"/>
+        <Setter Property="VerticalGridLinesBrush" Value="#FFD2D2D2"/>
+        <Setter Property="CanUserAddRows" Value="False"/>
+        <Setter Property="CanUserDeleteRows" Value="False"/>
+        <Setter Property="CanUserResizeRows" Value="False"/>
+        <Setter Property="AutoGenerateColumns" Value="False"/>
+        <Style.Triggers>
+            <DataTrigger Value="{x:Null}" Binding="{Binding ItemsSource, RelativeSource={RelativeSource Self}}">
+                <Setter Property="Template" Value="{StaticResource emptyDataGridTemplate}"/>
+            </DataTrigger>
+            <DataTrigger Value="0" Binding="{Binding ItemsSource.Count, RelativeSource={RelativeSource Self}}">
+                <Setter Property="Template" Value="{StaticResource emptyDataGridTemplate}"/>
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
 </ResourceDictionary>

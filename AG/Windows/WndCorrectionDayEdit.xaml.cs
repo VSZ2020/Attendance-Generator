@@ -1,6 +1,4 @@
 ﻿using AG.ViewModels.Forms;
-using Core.Calendar;
-using System.Collections.Generic;
 using System.Windows;
 
 namespace AG.Windows
@@ -16,16 +14,9 @@ namespace AG.Windows
 		{
 			InitializeComponent();
 			this.viewModel = (CorrectionDaysFormViewModel)Resources["viewModel"];
+			this.Closed += (s, e) => viewModel.SaveCorrectionDays();
 		}
 
-		/// <summary>
-		/// Возвращает список поправочных дней
-		/// </summary>
-		/// <returns></returns>
-		public IList<Day> GetCorrectionDays()
-		{
-			return viewModel.GetCorrectionDays();
-		}
 
 		private void Button_Click(object sender, RoutedEventArgs e)
 		{
@@ -56,7 +47,7 @@ namespace AG.Windows
 			}
 			if(sender == btnImport)
 			{
-				viewModel.LoadFromFile();
+				viewModel.LoadCorrectionDays();
 			}
 		}
 

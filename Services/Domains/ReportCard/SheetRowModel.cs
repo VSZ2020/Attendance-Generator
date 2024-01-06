@@ -1,8 +1,7 @@
 ﻿namespace Services.Domains.ReportCard
 {
-	public class SheetRowModel
+	public class SheetRowModel: BaseDomain
 	{
-		public int Id { get; set; }
 		public float Rate { get; set; }
 		public string FullName { get; set; }
 		public string Function { get; set; }

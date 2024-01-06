@@ -1,6 +1,7 @@
 using AG.ASP.NET.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Services.Database;
 
 namespace AG.ASP.NET
 {
@@ -15,7 +16,9 @@ namespace AG.ASP.NET
 			builder.Services.AddDbContext<ApplicationDbContext>(options =>
 				options.UseSqlServer(connectionString));
 			builder.Services.AddDatabaseDeveloperPageExceptionFilter();
-
+			builder.Services.AddHttpContextAccessor();
+			builder.Services.AddTransient<IDepartmentsService, DefaultDepartmentsService>()
+							.AddTransient<IEmployeeService, DefaultEmployeeService>();
 			builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
 				.AddEntityFrameworkStores<ApplicationDbContext>();
 			builder.Services.AddControllersWithViews();
@@ -44,8 +47,8 @@ namespace AG.ASP.NET
 			app.MapControllerRoute(
 				name: "default",
 				pattern: "{controller=Home}/{action=Index}/{id?}");
-			app.MapRazorPages();
 
+            app.MapRazorPages();
 			app.Run();
 		}
 	}

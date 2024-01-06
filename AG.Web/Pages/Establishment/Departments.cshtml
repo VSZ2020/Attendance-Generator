@@ -1,0 +1,44 @@
+﻿@page
+
+@using Services.Domains.Security
+@model AG.Web.Pages.Establishment.DepartmentsModel
+@{
+    ViewData["Title"] = "Подразделения";
+    bool canAddRemove = ViewContext.HttpContext.User.IsInRole(CustomRoles.MODERATOR) || ViewContext.HttpContext.User.IsInRole(CustomRoles.ADMIN);
+}
+<h1 class="display-4">@ViewData["Title"]</h1>
+<h2 class="display-5">@Model.EstablishmentName</h2>
+
+@if (canAddRemove)
+    {
+        <div>
+            <a class="btn btn-link" asp-page="EditDepartment" asp-page-handler="Create">Добавить подразделение</a>
+        </div>
+    }
+
+<table class="table table-bordered table-hover table-sm">
+    <thead class="thead-light">
+        <tr>
+            <th scope="col"><b>Название</b></th>
+            <th scope="col"><b>Количество сотрудников</b></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var department in Model.DepartmentsList)
+        {
+            <tr>
+                <td scope="row">@department.Name</td>
+                <td scope="row">@department.EmployeesCount</td>
+                <td>
+                    @if (canAddRemove)
+                    {
+                        <a asp-page="EditDepartment" asp-page-handler="Edit" asp-route-departmentId="@department.Id">Редактировать</a> @: |
+                        <a asp-action = "Remove" asp-route-departmentId = "@department.Id">Удалить</a> @: |
+                    }
+                    <a asp-page="Employees" asp-route-departmentId="@department.Id">Сотрудники</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+
+</table>

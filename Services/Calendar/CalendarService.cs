@@ -1,13 +1,10 @@
 ﻿using Core.Calendar;
-using Services.Infrastructure.Configuration.Configs;
-using Services.Extensions;
-using Services.Factories;
-using System.Linq;
-using SQLiteRepository;
 using Services.Database;
-using System;
 using Services.Domains;
 using Services.Domains.ReportCard;
+using Services.Extensions;
+using Services.Factories;
+using Services.Infrastructure.Configuration.Configs;
 
 namespace Services.Calendar
 {
@@ -97,8 +94,7 @@ namespace Services.Calendar
 		
 		public SheetMonth MakeEmployeeMonth(Month currentMonth, WorkingWeekConfig weekConfig, Employee employee)
 		{
-			var response = employeeService.GetEmployeePeriods(employee);
-			var timeIntervals = response.StatusCode == DatabaseResponse<TimeInterval>.ResponseCode.Success && response.Results != null ? response.Results : new List<TimeInterval>();
+			var timeIntervals = employeeService.GetTimeIntervalAsync(employee).Result;
 			return MakeEmployeeMonth(currentMonth, weekConfig, timeIntervals, employee.Rate);
 		}
 

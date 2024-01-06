@@ -1,5 +1,11 @@
 ﻿using Core.Calendar;
 using Core.ViewModel;
+using Services.Database;
+using Services.Domains;
+using Services.Extensions;
+using Services.Infrastructure;
+using Services.Infrastructure.Logger;
+using Services.Session;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -13,43 +19,49 @@ namespace AG.ViewModels.Forms
 		#region ctor
 		public CorrectionDaysFormViewModel()
 		{
+			departmentsService = ServicesLocator.GetService<IDepartmentsService>()!;
+			currentEstablishmentId = SessionService.CurrentEstablishemntId ?? Guid.Empty;
+
+			LoadCorrectionDays();
 		}
 		#endregion
 
 		#region fields
-		private ObservableCollection<DayToCorrect> daysList = new ObservableCollection<DayToCorrect>();
+		private IDepartmentsService departmentsService;
+		private Guid currentEstablishmentId;
+
+		private ObservableCollection<CorrectionDay> daysList = new();
 		private Dictionary<DayType, string> popupDayTypes = GetAvailableDayTypes();
 		private DateTime popupDate;
 		private DayType popupSelectedDayType;
-		private DayToCorrect? selectedDay;
+		private CorrectionDay? selectedDay;
 		private bool isPopupShowed;
 		#endregion
 
 		#region Properties
-		public ObservableCollection<DayToCorrect> DaysList { get => daysList; set { daysList = value; OnChanged(); } }
+		public bool IsPopup { get => isPopupShowed; set { isPopupShowed = value; OnChanged(); } }
+		public bool CanRemoveDay { get => DaysList.Count > 0; set { OnChanged();} }
+		public ObjectOperationType CurrentObjectOperationType { get; set; }
+		public ObservableCollection<CorrectionDay> DaysList { get => daysList; set { daysList = value; OnChanged(); } }
 		public Dictionary<DayType, string> DayTypes { get => popupDayTypes; set { popupDayTypes = value; OnChanged(); } }
 		public DateTime SelectedPopupDateTime { get=> popupDate; set {  popupDate = value; OnChanged(); } }
 		public DayType SelectedPopupDayType { get => popupSelectedDayType; set {  popupSelectedDayType = value; OnChanged();} }
-		public DayToCorrect? SelectedDayToCorrect { get => selectedDay; set {  selectedDay = value; OnChanged(); } }
-		public bool IsPopup { get => isPopupShowed; set { isPopupShowed = value; OnChanged(); } }
-		public ObjectOperationType CurrentObjectOperationType { get; set; }
-		public bool CanRemoveDay { get => DaysList.Count > 0; set { OnChanged();} }
+		public CorrectionDay? SelectedDayToCorrect { get => selectedDay; set {  selectedDay = value; OnChanged(); } }
 		#endregion
 
 		#region GetAvailableDayTypes()
 		public static Dictionary<DayType, string> GetAvailableDayTypes()
 		{
-			return Enum.GetValues<DayType>().ToDictionary(k => k, DayToCorrect.DayTypeNameTranslator);
+			return Enum.GetValues<DayType>().ToDictionary(k => k, DepartmentServiceUtils.DayTypeNameTranslator);
 		}
 		#endregion
 
 		#region ApplyDayAdd()
 		public void ApplyDayAdd()
 		{
-			var newDayToCorrect = new DayToCorrect(SelectedPopupDateTime, SelectedPopupDayType);
-			if (DaysList
-				.Where(d => d.Date.Year == newDayToCorrect.Date.Year && d.Date.Month == newDayToCorrect.Date.Month && d.Date.Day == newDayToCorrect.Date.Day)
-				.Count() == 0)
+			var newDayToCorrect = new CorrectionDay(SelectedPopupDateTime, SelectedPopupDayType, currentEstablishmentId);
+
+			if (DaysList.Where(d => d.Date.Year == newDayToCorrect.Date.Year && d.Date.Month == newDayToCorrect.Date.Month && d.Date.Day == newDayToCorrect.Date.Day).Count() == 0)
 			{
 				DaysList.Add(newDayToCorrect);
 				OnChanged(nameof(CanRemoveDay));
@@ -60,16 +72,25 @@ namespace AG.ViewModels.Forms
 		#endregion
 
 		#region RemoveDay()
-		public void RemoveDay()
+		public async void RemoveDay()
 		{
 			if (SelectedDayToCorrect != null)
 			{
-				var dayToRemove = DaysList.SingleOrDefault(d => d.Date == SelectedDayToCorrect.Date && d.DayType == SelectedDayToCorrect.DayType);
-				if (dayToRemove != null)
+				try
 				{
-					DaysList.Remove(dayToRemove);
-					OnChanged(nameof(CanRemoveDay));
+					var removeResult = await departmentsService.RemoveCorrectionDay(SelectedDayToCorrect);
+					if (removeResult)
+					{
+						DaysList.Remove(SelectedDayToCorrect);
+						OnChanged(nameof(CanRemoveDay));
+					}
 				}
+				catch (Exception ex)
+				{
+					Logger.Log(ex, "Remove correction day operation");
+					MessageBox.Show($"Не удалось удалить день. Причина: {ex.Message}");
+				}
+				
 			}
 			else
 				MessageBox.Show("Сначала выберите из списка день, который нужно удалить", "", MessageBoxButton.OK, MessageBoxImage.Warning);
@@ -82,13 +103,14 @@ namespace AG.ViewModels.Forms
 			if (SelectedDayToCorrect != null)
 			{
 				SelectedDayToCorrect.Date = SelectedPopupDateTime;
-				SelectedDayToCorrect.DayType = SelectedPopupDayType;
+				SelectedDayToCorrect.Type = SelectedPopupDayType;
 			}
 			else
 				MessageBox.Show("Не выбран день для редактирования", "", MessageBoxButton.OK, MessageBoxImage.Warning);
 		}
 		#endregion
 
+		#region ShowPopup
 		public void ShowPopup(ObjectOperationType operationTag)
 		{
 			CurrentObjectOperationType = operationTag;
@@ -104,7 +126,7 @@ namespace AG.ViewModels.Forms
 				{
 					IsPopup = true;
 					SelectedPopupDateTime = SelectedDayToCorrect.Date;
-					SelectedPopupDayType = SelectedDayToCorrect.DayType;
+					SelectedPopupDayType = SelectedDayToCorrect.Type;
 				}
 				else
 					MessageBox.Show("Не выбран день для редактирования", "", MessageBoxButton.OK, MessageBoxImage.Warning);
@@ -114,7 +136,9 @@ namespace AG.ViewModels.Forms
 				RemoveDay();
 			}
 		}
+		#endregion
 
+		#region ClosePopup
 		public void ClosePopup(ObjectOperationType? operationType = null)
 		{
 			IsPopup = false;
@@ -126,59 +150,40 @@ namespace AG.ViewModels.Forms
 					ApplyDayEdit();
 			}
 		}
-
-		public IList<Day> GetCorrectionDays()
-		{
-			return DaysList.Select(d => new Day(d.Date, d.DayType)).ToList();
-		}
-
-		public void LoadFromFile()
-		{
-			//TODO: Implement loading
-			throw new NotImplementedException();
-		}
-	}
-
-	public class DayToCorrect: BaseModel
-	{
-		#region ctor
-		public DayToCorrect(DateTime date, DayType type)
-		{
-			this.Date = date;
-			this.DayType = type;
-		}
-
-		public DayToCorrect(Day day): this(day.Date, day.Type) { }
-		#endregion
-		#region fields
-		private DateTime date;
-		private DayType dayType;
-		//private string dayTypeName;
 		#endregion
 
-		#region Properties
-		public DateTime Date { get => date; set { date = value; OnChanged(); } }
-		public DayType DayType { get => dayType; set { dayType = value; OnChanged(); } }
-		public string DayTypeName { get => DayTypeNameTranslator(DayType); set { OnChanged(); } }
+		#region LoadCorrectionDays
+		public async void LoadCorrectionDays()
+		{
+			var days = await departmentsService.GetCorrectionDaysAsync(currentEstablishmentId);
+
+			DaysList.Clear();
+			DaysList.AddRange(days);
+		}
 		#endregion
 
-		public override string ToString()
+		#region SaveCorrectionDays
+		public async void SaveCorrectionDays()
 		{
-			return Date.ToShortDateString();
-		}
-
-		#region DayTypeNameTranslator
-		public static string DayTypeNameTranslator(DayType dayType)
-		{
-			return dayType switch
+			try
 			{
-				DayType.DayOff => "Выходной",
-				DayType.PreHoliday => "Предпраздничный",
-				DayType.Holiday => "Праздничный",
-				DayType.Working => "Рабочий",
-				_ => throw new NotImplementedException()
-			};
-		}
+				var existingCorrectionDays = (await departmentsService.GetCorrectionDaysAsync(currentEstablishmentId)).Select(e => e.Id);
+				foreach (var day in DaysList)
+				{
+					if (existingCorrectionDays.Contains(day.Id))
+					{
+						await departmentsService.UpdateCorrectionDay(day);
+					}
+					else
+						await departmentsService.AddCorrectionDay(day);
+				}
+			}
+			catch (Exception ex)
+			{
+				Logger.Log(ex, "Save Correction Days operation");
+				MessageBox.Show($"Не удалось сохранить список дней. Причина {ex.Message}");
+			}
+		} 
 		#endregion
 	}
 }

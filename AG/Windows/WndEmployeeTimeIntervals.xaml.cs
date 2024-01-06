@@ -27,11 +27,14 @@ namespace AG.Windows
 			viewModel?.ShowPopup(ViewModels.ObjectOperationType.Edit);
 		}
 
+		#region Button_Click
 		private void Button_Click(object sender, RoutedEventArgs e)
 		{
 			if (sender == btnApply)
 			{
-				viewModel.ApplyPendingChanges();
+				var result = viewModel.ApplyPendingChanges().Result;
+				if (result)
+					this.Close();
 				return;
 			}
 
@@ -64,7 +67,12 @@ namespace AG.Windows
 				viewModel?.ClosePopup(true);
 				return;
 			}
-		}
+		} 
+		#endregion
 
-	}
+		private void btnApplyFilter_Click(object sender, RoutedEventArgs e)
+		{
+			viewModel.FilterTimeIntervals();
+        }
+    }
 }

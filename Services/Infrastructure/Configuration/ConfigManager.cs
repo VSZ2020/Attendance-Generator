@@ -1,4 +1,6 @@
 ﻿using Services.Infrastructure.Configuration.Configs;
+using System.Runtime.Serialization.Json;
+using System.Text.Json.Serialization;
 
 namespace Services.Infrastructure.Configuration
 {
@@ -9,11 +11,18 @@ namespace Services.Infrastructure.Configuration
 			Register<WorkingWeekConfig>();
 			Register<ReportViewerConfig>();
 			Register<CalendarConfig>();
+
+			var dataPath = GetApplicationDataDirectory();
+			if (!Directory.Exists(dataPath))
+				Directory.CreateDirectory(dataPath);
+			configurationsPath = Path.Combine(dataPath, CONFIG_FILE_NAME);
 		}
 		#endregion
 
 		#region fields
+		private const string CONFIG_FILE_NAME = "settings.json";
 		private static readonly Dictionary<Type, IConfig> _configs = new();
+		private string configurationsPath;
 		#endregion fields
 
 		#region properties
@@ -31,6 +40,8 @@ namespace Services.Infrastructure.Configuration
 			}
 		}
 		#endregion
+
+		public string GetApplicationDataDirectory() => Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "data");
 
 		public void Register<TConfig>() where TConfig : IConfig, new()
 		{
@@ -70,6 +81,15 @@ namespace Services.Infrastructure.Configuration
 			foreach (IConfig config in configs)
 			{
 				Update(config);
+			}
+		}
+
+		public async void LoadFromFile()
+		{
+			using (var reader = new StreamReader(configurationsPath))
+			{
+				var rawJson = await reader.ReadToEndAsync();
+				
 			}
 		}
 	}

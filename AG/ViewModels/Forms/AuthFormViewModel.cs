@@ -1,8 +1,10 @@
-﻿using AG.Services;
-using Core.ViewModel;
+﻿using Core.ViewModel;
 using Microsoft.Extensions.DependencyInjection;
+using Services;
 using Services.Database;
+using Services.Infrastructure;
 using Services.Infrastructure.Logger;
+using Services.Session;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows;
@@ -12,11 +14,14 @@ namespace AG.ViewModels.Forms
 	public class AuthFormViewModel: ViewModelCore
 	{
 		#region ctor
-		public AuthFormViewModel(): base() { }
+		public AuthFormViewModel(): base() 
+		{
+			userAccountService = ServicesLocator.GetService<IUserAccountService>();
+		}
 		#endregion
 
 		#region fields
-		
+		private readonly IUserAccountService userAccountService;
 		#endregion
 
 		#region Properties
@@ -29,7 +34,7 @@ namespace AG.ViewModels.Forms
 			{
 				if (true)
 				{
-					var user = ServiceLocator.GetService<IUserAccountService>().GetUserById(1).Results.First();
+					var user = userAccountService.GetUserAccountsAsync().Result.First();
 					SessionService.User = user;
 					return true;
 				}
@@ -44,7 +49,7 @@ namespace AG.ViewModels.Forms
 
 		public bool ValidateLoginPass(string login, string passwd)
 		{
-			ClearValidationMessages();
+			base.ClearValidationMessages();
 
 			if (login.Length < 3)
 				AddValidationMessage("Неправильный формат логина. Длина логина должна быть не менее 3 символов", "Логин");

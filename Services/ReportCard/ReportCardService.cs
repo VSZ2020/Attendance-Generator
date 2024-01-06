@@ -3,7 +3,6 @@ using Services.Calendar;
 using Services.Domains;
 using Services.Domains.ReportCard;
 using Services.Infrastructure.Configuration.Configs;
-using System;
 
 namespace Services.ReportCard
 {
@@ -46,7 +45,7 @@ namespace Services.ReportCard
 				{
 					Id = employees[i].Id,
 					FullName = employees[i].FullName,
-					Function = employees[i].Function,
+					Function = employees[i].Function?.Name ?? "Не задана",
 					Rate = employees[i].Rate,
 					HalfMonthHours = halfMonthEmployeeHours,
 					TotalMonthHours = totalMonthEmployeeHours,

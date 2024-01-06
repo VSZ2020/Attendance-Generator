@@ -7,20 +7,19 @@
         xmlns:vm="clr-namespace:AG.ViewModels.Forms"
         xmlns:uc="clr-namespace:AG.UserControls"
         mc:Ignorable="d"
-        Title="Редактор неявок" Height="450" Width="476" WindowStartupLocation="CenterScreen">
+        Title="Неявки сотрудника" Height="450" Width="476" WindowStartupLocation="CenterScreen">
     <Window.Resources>
         <vm:EmployeeTimeIntervalsViewModel x:Key="viewModel"/>
     </Window.Resources>
     <Grid DataContext="{StaticResource viewModel}">
-        <uc:WaitBackground/>
-        <Grid Margin="10">
+        <uc:WaitBackground Panel.ZIndex="1"/>
+        <Grid Margin="10" Panel.ZIndex="0">
             <Grid.RowDefinitions>
                 <RowDefinition Height="auto"/>
                 <RowDefinition/>
                 <RowDefinition Height="auto"/>
             </Grid.RowDefinitions>
             <StackPanel Grid.Row="0">
-                <TextBlock Text="Перечень всех неявок сотрудника" Margin="0, 0, 0, 3" FontSize="14"/>
                 <TextBlock Text="{Binding EmployeeName}" FontWeight="Bold" Margin="0,0,0,5"/>
                 <GroupBox Header="Фильтр" Padding="3" Margin="0,0,0,5">
                     <StackPanel Orientation="Horizontal">
@@ -28,6 +27,7 @@
                         <ComboBox ItemsSource="{Binding FilterYears}" Width="80" Margin="0,0,10,0" SelectedItem="{Binding SelectedFilterYear}"/>
                         <TextBlock Text="Месяц" Margin="0,0,10,3" VerticalAlignment="Center"/>
                         <ComboBox ItemsSource="{Binding FilterMonths}" Width="120" Margin="0,0,10,0" DisplayMemberPath="Name" SelectedValue="{Binding SelectedFilterMonth}" SelectedValuePath="Id"/>
+                        <Button Content="Применить фильтр" Name="btnApplyFilter" Click="btnApplyFilter_Click" Style="{StaticResource normal_button}" Width="120"/>
                     </StackPanel>
                 </GroupBox>
                 <Grid Margin="0,0,0,5">
@@ -41,7 +41,7 @@
                     <Button Content="Удалить неявку" Style="{StaticResource normal_button}" Grid.Column="2" Name="btnRemoveTimeInterval" Click="Button_Click"/>
                 </Grid>
             </StackPanel>
-            <ListView Grid.Row="1" Grid.Column="0" ItemsSource="{Binding TimeIntervals}" SelectedItem="{Binding SelectedTimeInterval}" Name="TimeIntervalsDataGrid" MouseDoubleClick="TimeIntervalsDataGrid_MouseDoubleClick" Background="White">
+            <ListView Grid.Row="1" Grid.Column="0" ItemsSource="{Binding EmployeeTimeIntervals}" SelectedItem="{Binding SelectedTimeInterval}" Name="TimeIntervalsDataGrid" MouseDoubleClick="TimeIntervalsDataGrid_MouseDoubleClick" Background="White">
                 <ListView.View>
                     <GridView>
                         <GridViewColumn Header="Начало" DisplayMemberBinding="{Binding Begin, StringFormat={}dd.MM.yyyy}" Width="80"/>
@@ -57,6 +57,8 @@
                 <Button Content="Подтвердить" IsDefault="True" DockPanel.Dock="Right" Style="{StaticResource normal_button}" Width="100" Margin="0,0,5,0" Name="btnApply" Click="Button_Click"/>
             </DockPanel>
         </Grid>
+        
+        <!--#region Popup window -->
         <Border Name="popupContainer" Background="#A5000000" Visibility="{Binding IsPopupVisible, Converter={StaticResource visibilityConverter}}">
             <Border Background="White" VerticalAlignment="Center" HorizontalAlignment="Center" Padding="15" CornerRadius="10">
                 <Grid>
@@ -82,5 +84,6 @@
                 </Grid>
             </Border>
         </Border>
+        <!--#endregion-->
     </Grid>
 </Window>

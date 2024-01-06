@@ -3,22 +3,18 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:vm="clr-namespace:AG.ViewModels.Forms"
         xmlns:cmd="clr-namespace:AG.Commands"
         xmlns:local="clr-namespace:AG.Windows"
         xmlns:uc="clr-namespace:AG.UserControls"
         mc:Ignorable="d"
         Title="Список сотрудников" Height="450" Width="800" WindowStartupLocation="CenterScreen">
-    <Window.Resources>
-        <vm:EmployeesListFormViewModel x:Key="viewModel"/>
-    </Window.Resources>
     <Window.CommandBindings>
         <CommandBinding Command="{x:Static cmd:EmployeesListCommands.cmdAddEmployee}" CanExecute="CommandBinding_CanExecute" Executed="CommandBinding_Executed"/>
         <CommandBinding Command="{x:Static cmd:EmployeesListCommands.cmdEditEmployee}" CanExecute="CommandBinding_CanExecute" Executed="CommandBinding_Executed"/>
         <CommandBinding Command="{x:Static cmd:EmployeesListCommands.cmdRemoveEmployee}" CanExecute="CommandBinding_CanExecute" Executed="CommandBinding_Executed"/>
         <CommandBinding Command="{x:Static cmd:EmployeesListCommands.cmdTimeIntervals}" CanExecute="CommandBinding_CanExecute" Executed="CommandBinding_Executed"/>
     </Window.CommandBindings>
-    <Grid DataContext="{StaticResource viewModel}">
+    <Grid>
         <uc:WaitBackground Grid.Column="0" Grid.Row="0" Panel.ZIndex="1"/>
         <Grid Panel.ZIndex="0" Grid.Column="0" Grid.Row="0">
             <Grid.RowDefinitions>
@@ -26,36 +22,41 @@
                 <RowDefinition/>
             </Grid.RowDefinitions>
 
-            <ToolBarPanel Grid.Row="0" Background="#FFF0F0F0">
-                <ToolBar Background="#FFF0F0F0">
-                    <TextBlock Text="Подразделение" Margin="5,0,5,0"/>
+            <ToolBarTray Grid.Row="0" Style="{StaticResource toolbarTrayStyle}">
+                <ToolBar Style="{StaticResource toolbarStyle}" Header="Подразделение">
                     <ComboBox 
-                    Width="200"
-                    ItemsSource="{Binding Departments}"
-                    Name="cbDepartment"
-                    SelectedValue="{Binding Path=SelectedDepartmentId}"
-                    SelectedValuePath="Id"
-                    DisplayMemberPath="Name"/>
+                        Width="200"
+                        ItemsSource="{Binding Departments}"
+                        Name="cbDepartment"
+                        SelectedValue="{Binding Path=SelectedDepartmentId}"
+                        SelectedValuePath="Id"
+                        DisplayMemberPath="Name"/>
+                </ToolBar>
+                <ToolBar Style="{StaticResource toolbarStyle}">
+                    <Button Content="Добавить" Command="{x:Static cmd:EmployeesListCommands.cmdAddEmployee}" Padding="5"/>
+                    <Button Content="Изменить" Command="{x:Static cmd:EmployeesListCommands.cmdEditEmployee}"  Padding="5"/>
+                    <Button Content="Удалить" Command="{x:Static cmd:EmployeesListCommands.cmdRemoveEmployee}"  Padding="5"/>
                     <Button Content="Неявки сотрудника" Command="{x:Static cmd:EmployeesListCommands.cmdTimeIntervals}" MinWidth="150"/>
                 </ToolBar>
-            </ToolBarPanel>
+            </ToolBarTray>
             
             <DataGrid
                 Grid.Row="1"
-                AutoGenerateColumns="False"
-                CanUserAddRows="False"
-                CanUserDeleteRows="False"
+                IsReadOnly="True"
+                Style="{StaticResource DefaultDataGridStyle}"
                 SelectedItem="{Binding SelectedEmployee}"
-                ItemsSource="{Binding Path=Employees}">
+                ItemsSource="{Binding Path=Employees}"
+                Name="employeeGrid"
+                MouseDoubleClick="employeeGrid_MouseDoubleClick">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="Фамилия" Binding="{Binding Path=LastName}"/>
                     <DataGridTextColumn Header="Имя" Binding="{Binding Path=FirstName}"/>
-                    <DataGridTextColumn Header="Отчетство" Binding="{Binding Path=MiddleName}"/>
-                    <DataGridTextColumn Header="Должность" Binding="{Binding Path=Function}"/>
+                    <DataGridTextColumn Header="Отчество" Binding="{Binding Path=MiddleName}"/>
+                    <DataGridTextColumn Header="Должность" Binding="{Binding Path=FunctionName}"/>
                     <DataGridTextColumn Header="Ставка" Binding="{Binding Path=Rate}"/>
                     <DataGridCheckBoxColumn Header="Совместитель" Binding="{Binding Path=IsConcurrent}"/>
-                    <DataGridTextColumn Header="Подразделение" Binding="{Binding Path=Department}"/>
-                    <DataGridTextColumn Header="Статус" Binding="{Binding Path=Status}"/>
+                    <DataGridTextColumn Header="Подразделение" Binding="{Binding Path=DepartmentName}"/>
+                    <DataGridTextColumn Header="Статус" Binding="{Binding Path=StatusName}"/>
                 </DataGrid.Columns>
             </DataGrid>
         </Grid>

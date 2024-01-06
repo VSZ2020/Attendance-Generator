@@ -13,7 +13,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Services", "Services\Servic
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AG", "AG\AG.csproj", "{535DCE36-0799-4591-A331-2560CE1EEC43}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AG.ASP.NET", "AG.ASP.NET\AG.ASP.NET.csproj", "{DFAC4A05-8474-447A-8E73-46A35E7E9AFB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AG.ASP.NET", "AG.ASP.NET\AG.ASP.NET.csproj", "{DFAC4A05-8474-447A-8E73-46A35E7E9AFB}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AG.Web", "AG.Web\AG.Web.csproj", "{FA502F5A-5A04-42BF-8BFB-23C61B6B29C5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,6 +47,10 @@ Global
 		{DFAC4A05-8474-447A-8E73-46A35E7E9AFB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DFAC4A05-8474-447A-8E73-46A35E7E9AFB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DFAC4A05-8474-447A-8E73-46A35E7E9AFB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FA502F5A-5A04-42BF-8BFB-23C61B6B29C5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FA502F5A-5A04-42BF-8BFB-23C61B6B29C5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FA502F5A-5A04-42BF-8BFB-23C61B6B29C5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FA502F5A-5A04-42BF-8BFB-23C61B6B29C5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -5,10 +5,10 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:cmd="clr-namespace:AG.Commands"
         xmlns:vm="clr-namespace:AG.ViewModels.Forms"
-        xmlns:session="clr-namespace:AG.Services"
+        xmlns:session="clr-namespace:Services"
         xmlns:local="clr-namespace:AG"
         mc:Ignorable="d"
-        Title="Attendance Generator" Height="450" Width="800" WindowStartupLocation="CenterScreen">
+        Title="{Binding Title}" Height="450" Width="800" WindowStartupLocation="CenterScreen">
     <Window.Resources>
         <vm:MainWindowViewModel x:Key="viewModel"/>
     </Window.Resources>
@@ -25,7 +25,7 @@
         <CommandBinding Command="{x:Static ApplicationCommands.Copy}" CanExecute="CommandBinding_CanExecute" Executed="CommandBinding_Executed"/>
         <CommandBinding Command="{x:Static ApplicationCommands.Paste}" CanExecute="CommandBinding_CanExecute" Executed="CommandBinding_Executed"/>
     </Window.CommandBindings>
-    <Grid DataContext="{StaticResource viewModel}">
+    <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="25"/>
             <RowDefinition/>

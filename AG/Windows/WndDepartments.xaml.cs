@@ -1,5 +1,6 @@
 ﻿using AG.Commands;
 using AG.ViewModels.Forms;
+using System;
 using System.Windows;
 using System.Windows.Input;
 
@@ -11,10 +12,11 @@ namespace AG.Windows
     public partial class WndDepartments : Window
     {
 		#region ctor
-		public WndDepartments()
+		public WndDepartments(Guid establishmentId)
 		{
 			InitializeComponent();
-			viewModel = (DepartmentsFormViewModel)Resources["ViewModel"];
+			viewModel = new DepartmentsFormViewModel(establishmentId);
+			DataContext = viewModel;
 		}
 		#endregion
 
@@ -22,19 +24,43 @@ namespace AG.Windows
 		private readonly DepartmentsFormViewModel viewModel;
 		#endregion
 
-		#region Event Handlers
+		#region CommandBinding_CanExecute
 		private void CommandBinding_CanExecute(object sender, CanExecuteRoutedEventArgs e)
-        {
-            if (e.Command == DepartmentsCommands.cmdAddDepartment) e.CanExecute = true;
-            if (e.Command == DepartmentsCommands.cmdEditDepartment) e.CanExecute = viewModel?.SelectedDepartment != null;
-            if (e.Command == DepartmentsCommands.cmdRemoveDepartment) e.CanExecute = viewModel?.Departments.Count > 0;
-            if (e.Command == DepartmentsCommands.cmdShowEmployees) e.CanExecute = viewModel?.SelectedDepartment != null;
-        }
+		{
+			if (e.Command == DepartmentsCommands.cmdAddDepartment) e.CanExecute = true;
+			if (e.Command == DepartmentsCommands.cmdEditDepartment) e.CanExecute = viewModel?.SelectedDepartment != null;
+			if (e.Command == DepartmentsCommands.cmdRemoveDepartment) e.CanExecute = viewModel?.Departments.Count > 0 && viewModel?.SelectedDepartment != null;
+			if (e.Command == DepartmentsCommands.cmdShowEmployees) e.CanExecute = viewModel?.SelectedDepartment != null;
+		} 
+		#endregion
 
-        private void CommandBinding_Executed(object sender, ExecutedRoutedEventArgs e)
-        {
+		#region CommandBinding_Executed
+		private void CommandBinding_Executed(object sender, ExecutedRoutedEventArgs e)
+		{
+			if (e.Command == DepartmentsCommands.cmdAddDepartment)
+			{
+				viewModel.AddDepartment();
+				return;
+			}
 
-        }
+			if (e.Command == DepartmentsCommands.cmdEditDepartment)
+			{
+				viewModel.EditDepartment();
+				return;
+			}
+
+			if (e.Command == DepartmentsCommands.cmdRemoveDepartment)
+			{
+				viewModel.RemoveDepartment();
+				return;
+			}
+
+			if (e.Command == DepartmentsCommands.cmdShowEmployees)
+			{
+				viewModel.ShowEmployeesForm();
+				return;
+			}
+		} 
 		#endregion
 	}
 }

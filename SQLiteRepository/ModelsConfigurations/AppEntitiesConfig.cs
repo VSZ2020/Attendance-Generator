@@ -11,7 +11,7 @@ namespace SQLiteRepository.ModelsConfigurations
         {
             builder
                 .ToTable("accounts")
-                .HasData(UserAccountEntity.GetDefault());
+                .HasData(DefaultEntitiesProvider.GetDefaultUserAccounts());
         }
     }
 }

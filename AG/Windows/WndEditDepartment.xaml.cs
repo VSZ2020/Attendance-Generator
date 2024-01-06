@@ -1,6 +1,6 @@
-﻿using AG.Services;
-using Services.Database;
+﻿using AG.ViewModels.Forms;
 using Services.Domains;
+using System;
 using System.Windows;
 
 namespace AG.Windows
@@ -10,26 +10,24 @@ namespace AG.Windows
 	/// </summary>
 	public partial class WndEditDepartment : Window
     {
-        private readonly UserAccount? user;
-        private readonly IDepartmentsService departmentsService;
-
-        public WndEditDepartment()
+        #region ctor
+        public WndEditDepartment(Guid establishmentId, Department? department = null)
         {
             InitializeComponent();
-            user = SessionService.User;
 
-            this.departmentsService = ServiceLocator.GetService<IDepartmentsService>()!;
+            vm = new EditDepartmentViewModel(establishmentId, department);
+            DataContext = vm;
         }
+        #endregion
 
-        private void btnAccept_Click(object sender, RoutedEventArgs e)
+        private EditDepartmentViewModel vm;
+
+		#region btnAccept_Click
+		private async void btnAccept_Click(object sender, RoutedEventArgs e)
         {
-            if (string.IsNullOrEmpty(tbName.Text))
-            {
-                MessageBox.Show("Название не может быть пустым", "Внимание", MessageBoxButton.OK, MessageBoxImage.Warning);
-                return;
-            }
-
-            
-        }
+            if (await vm.AcceptChanges())
+                this.Close();
+        } 
+        #endregion
     }
 }

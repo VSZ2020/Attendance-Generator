@@ -3,28 +3,35 @@ using Core.ViewModel;
 using Services.Database;
 using Services.Domains;
 using Services.Extensions;
+using Services.Infrastructure;
+using System;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Threading;
 
 namespace AG.ViewModels.Forms
 {
 	public class EmployeesListFormViewModel : ViewModelCore
     {
 		#region ctor
-		public EmployeesListFormViewModel()
+		public EmployeesListFormViewModel(Guid? filterDepartmentId = null)
 		{
-			this.departmentsService = ServiceLocator.GetService<IDepartmentsService>()!;
-			this.employesService = ServiceLocator.GetService<IEmployeeService>()!;
+			this.departmentsService = ServicesLocator.GetService<IDepartmentsService>()!;
+			this.employesService = ServicesLocator.GetService<IEmployeeService>()!;
+
+			fixedDepartmentFilterId = filterDepartmentId;
+
+			InitializeWindow();
 		}
 		#endregion ctor
 
 		#region fields
-		private int selectedDepartmentId = 0;
         private readonly IDepartmentsService departmentsService;
         private readonly IEmployeeService employesService;
+		private Guid selectedDepartmentId = Guid.Empty;
 		private Employee selectedEmployee;
+		private readonly Guid? fixedDepartmentFilterId;
 		#endregion fields
 
 		#region Properties
@@ -35,44 +42,54 @@ namespace AG.ViewModels.Forms
 
 		public Employee SelectedEmployee { get=> selectedEmployee; set { selectedEmployee = value; OnChanged(); } }
 
-        public int SelectedDepartmentId {  get => selectedDepartmentId; set  {  selectedDepartmentId = value;  OnChanged(nameof(SelectedDepartmentId));  } }
+        public Guid SelectedDepartmentId { get => selectedDepartmentId; set  {  selectedDepartmentId = value;  OnChanged(nameof(SelectedDepartmentId));  } }
 		#endregion properties
 
+		#region InitializeWindow
 		public async Task InitializeWindow()
 		{
 			await LoadDepartmentsAsync();
 			await LoadEmployeesAsync();
-		}
+		} 
+		#endregion
 
 		#region LoadDepartments
 		public async Task LoadDepartmentsAsync()
         {
-			ShowWaitMessage("Загрузка подразделений", "Подождите");
-			var departmentsResult = await Task.Run(() => departmentsService.GetDepartments());
-			ClearWaitMessage();
+			base.ShowWaitMessage("Загрузка подразделений", "Подождите");
 
-            Departments.Clear();
+			if (fixedDepartmentFilterId != null)
+			{
+				var department = await Task.Run(() => departmentsService.GetDepartmentByIdAsync(fixedDepartmentFilterId.Value));
+				Departments.Clear();
+				Departments.Add(department);
+			}
+			else
+			{
+				var departmentsResult = await Task.Run(() => departmentsService.GetDepartmentsAsync(Guid.Empty));
 
-            if (departmentsResult.StatusCode == DatabaseResponse<Department>.ResponseCode.Success && departmentsResult.Results != null)
-                Departments.AddRange(departmentsResult.Results);
-            
-            if (Departments.Count > 0)
-                SelectedDepartmentId = 0;
+				Departments.Clear();
+				Departments.Add(new Department() { Id = Guid.Empty, Name = "Все подразделения" });
+				Departments.AddRange(departmentsResult);
+			}
+
+            SelectedDepartmentId = Departments.Count > 0 ? Departments.First().Id : Guid.Empty;
+
+			base.ClearWaitMessage();
 		}
 		#endregion
 
-		#region LoadEmployees
+		#region LoadEmployeesAsync
 		public async Task LoadEmployeesAsync()
         {
-            if (SelectedDepartmentId < 0)
-                return;
-			ShowWaitMessage("Загрузка списка сотрудников", "Подождите");
-			var employees = await Task.Run(() => employesService.GetEmployees(SelectedDepartmentId));
-			ClearWaitMessage();
+			base.ShowWaitMessage("Загрузка списка сотрудников", "Подождите");
 
+			var employees = await employesService.GetEmployeesAsync(SelectedDepartmentId, FetchAim.Table);
+			
 			Employees.Clear();
-			if (employees.StatusCode == DatabaseResponse<Employee>.ResponseCode.Success && employees.Results != null)
-				Employees.AddRange(employees.Results);
+			Employees.AddRange(employees);
+
+			base.ClearWaitMessage();
 		}
 		#endregion
 
@@ -82,6 +99,50 @@ namespace AG.ViewModels.Forms
 			new WndEmployeeTimeIntervals(SelectedEmployee).ShowDialog();
 			//MessageBox.Show("Не выбран сотрудник для отображения неявок", "", MessageBoxButton.OK, MessageBoxImage.Warning);
 		}
+		#endregion
+
+		#region AddEmployee
+		public async void AddEmployee()
+		{
+			new WndEditEmployee().ShowDialog();
+			await LoadEmployeesAsync();
+		} 
+		#endregion
+
+		#region ShowEditEmployeeForm
+		public async void EditEmployee()
+		{
+			if (selectedEmployee != null)
+			{
+				new WndEditEmployee(SelectedEmployee).ShowDialog();
+				await LoadEmployeesAsync();
+			}
+			else
+				MessageBox.Show("Для редактирования сотрудника, сначала выберите его из списка");
+		}
+		#endregion
+
+		#region RemoveEmployee
+		public async void RemoveEmployee()
+		{
+			if (selectedEmployee != null)
+			{
+				try
+				{
+					var removeStatus = await employesService.DeleteEmployeeAsync(SelectedEmployee.Id);
+					if (removeStatus)
+						Employees.Remove(SelectedEmployee);
+				}
+				catch (UnauthorizedAccessException ex)
+				{
+					MessageBox.Show($"Не удалось удалить сотрудника. {ex.Message}", "Внимание", MessageBoxButton.OK, MessageBoxImage.Hand);
+				}
+				catch (Exception ex)
+				{
+					MessageBox.Show($"Не удалось удалить сотрудника. {ex.Message}", "Внимание", MessageBoxButton.OK, MessageBoxImage.Warning);
+				}
+			}
+		} 
 		#endregion
 	}
 }

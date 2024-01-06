@@ -5,7 +5,6 @@ namespace Core.ViewModel
 	public class ViewModelCore: BaseModel
 	{
 		#region fields
-		private bool messageVisibility = false;
 		private ObservableCollection<ValidationMessage> validationMessages = new ObservableCollection<ValidationMessage>();
 
 		private string waitMessageTitle = "";
@@ -14,19 +13,20 @@ namespace Core.ViewModel
 		#endregion
 
 		#region Properties
-		public ObservableCollection<ValidationMessage> ValidationMessages { get => validationMessages; set { validationMessages = value; OnChanged(nameof(ValidationMessages)); } }
-		public bool IsMessageVisible { get => messageVisibility; set { messageVisibility = value; OnChanged(nameof(IsMessageVisible)); } }
+		public ObservableCollection<ValidationMessage> ValidationMessages { get => validationMessages; set { validationMessages = value; OnChanged(); } }
 
 		public string WaitMessageTitle { get => waitMessageTitle; set { waitMessageTitle = value; OnChanged(); } }
 		public string WaitMessageText { get => waitMessageText; set { waitMessageText = value; OnChanged(); } }
 		public bool IsWaitMessageVisible { get => isWaitMessageVisible; set { isWaitMessageVisible= value; OnChanged(); } }
+
+		public bool IsValid => ValidationMessages.Count == 0;
 		#endregion
 
 		#region AddValidationMessage
 		public void AddValidationMessage(ValidationMessage message)
 		{
 			ValidationMessages.Add(message);
-			IsMessageVisible = true;
+			OnChanged(nameof(IsValid));
 		}
 
 		public void AddValidationMessage(string message, string title)
@@ -39,7 +39,7 @@ namespace Core.ViewModel
 		public void ClearValidationMessages()
 		{
 			ValidationMessages.Clear();
-			IsMessageVisible = false;
+			OnChanged(nameof(IsValid));
 		}
 		#endregion
 

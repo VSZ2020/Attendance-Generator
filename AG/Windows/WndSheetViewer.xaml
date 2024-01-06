@@ -59,9 +59,7 @@
             </ToolBarTray>
             <DataGrid x:Name="grid"
                   Grid.Row="2"
-                  AutoGenerateColumns="False"
-                  CanUserAddRows="False"
-                  CanUserDeleteRows="False"
+                  Style="{StaticResource DefaultDataGridStyle}"
                   CanUserReorderColumns="True"
                   SelectionMode="Extended"
                   SelectionUnit="Cell">

@@ -1,7 +1,12 @@
-﻿using AG.Services;
-using AG.Windows;
+﻿using AG.Windows;
 using Core.ViewModel;
+using Services;
+using Services.Database;
 using Services.Domains;
+using Services.Infrastructure;
+using Services.Session;
+using System;
+using System.Linq;
 using System.Windows;
 
 namespace AG.ViewModels.Forms
@@ -11,27 +16,36 @@ namespace AG.ViewModels.Forms
 		#region ctor
 		public MainWindowViewModel()
 		{
+			departmentsService = ServicesLocator.GetService<IDepartmentsService>()!;
 
+			SetEstablishment();
+			LoadApplication();
 		}
 		#endregion ctor
 
 		#region fields
+		private readonly IDepartmentsService departmentsService;
+
 		private bool isLoggedIn = false;
 		private string username = string.Empty;
+		private string windowTitle = "";
 		#endregion
+
 		#region Properties
 		public string Username { get => username; set { username = value; OnChanged(); } }
-
-        public int EstablishmentId { get; set; } = 1;
 		public bool IsLoggedIn { get => isLoggedIn; set { isLoggedIn = value; OnChanged(); } }
+
+		public string Title { get => "Attendance Generator" + (!string.IsNullOrEmpty(windowTitle) ? " - " + windowTitle : ""); set {  windowTitle = value; OnChanged(); } }
+        public Guid EstablishmentId { get; set; } = Guid.Empty;
         #endregion properties
 
 		public void LoadApplication()
 		{
 			IsLoggedIn = true;
-			SessionService.User = new UserAccount("Test user");
+			//SessionService.User = new UserAccount("Test user");
 		}
 
+		#region LoginUser
 		/// <summary>
 		/// Вход пользователя в систему
 		/// </summary>
@@ -50,7 +64,8 @@ namespace AG.ViewModels.Forms
 				MessageBox.Show("Не удалось пройти аутентификацию пользователя!", "Внимание", MessageBoxButton.OK, MessageBoxImage.Warning);
 
 			}
-		}
+		} 
+		#endregion
 
 		/// <summary>
 		/// Выход пользователя из системы
@@ -59,6 +74,42 @@ namespace AG.ViewModels.Forms
 		{
 			SessionService.User = null;
 			IsLoggedIn = false;
+		}
+
+		public void ShowDepartmentsForm()
+		{
+			new WndDepartments(EstablishmentId).ShowDialog();
+		}
+
+		public async void ShowOrganizationForm()
+		{
+			var establishment = await departmentsService.GetEstablishmentByIdAsync(EstablishmentId);
+			new WndEditEstablishment(establishment).ShowDialog();
+		}
+
+		public void ShowEmployeesList()
+		{
+			new WndEmployeesList().ShowDialog();
+		}
+
+		public void ShowReportForm()
+		{
+			new WndSheetViewer().ShowDialog();
+		}
+
+		public void ShowUserAccountsForm()
+		{
+			throw new NotImplementedException();
+		}
+
+		public void SetEstablishment()
+		{
+			var establishment = departmentsService.GetEstablishmentsAsync().Result.First();
+
+			EstablishmentId = establishment.Id;
+			Title = establishment.Name;
+
+			SessionService.CurrentEstablishemntId = EstablishmentId;
 		}
     }
 }

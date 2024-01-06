@@ -3,29 +3,21 @@ using SQLiteRepository.ModelsConfigurations;
 
 namespace SQLiteRepository
 {
-    public class EstablishmentContext: DbContext
+    public class EstablishmentContext: BaseContext
     {
-        public const string DEFAULT_DB_NAME = "Establishment";
-        private readonly string connectionString = "";
+		public override string DatabaseName => "Establishment";
 
-        public EstablishmentContext(): this(null)
+		public EstablishmentContext(): base()
         {
 
         }
 
-        public EstablishmentContext(string? connectionString = null)
-        {
-            if (string.IsNullOrEmpty(connectionString))
-                this.connectionString = $"Data Source={DEFAULT_DB_NAME}.db";
-
-            Database.EnsureDeleted();
-            Database.EnsureCreated();
-          
-        }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlite(connectionString);
+            optionsBuilder.UseSqlite(base.ConnectionString);
+#if DEBUG
             optionsBuilder.EnableSensitiveDataLogging();
+#endif
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -39,6 +31,7 @@ namespace SQLiteRepository
             modelBuilder.ApplyConfiguration(new TimeIntervalsConfig());
             modelBuilder.ApplyConfiguration(new TimeIntervalTypesConfig());
             modelBuilder.ApplyConfiguration(new EmoployeeStatusConfig());
+            modelBuilder.ApplyConfiguration(new CorrectionDaysConfig());
         }
 
         /// <summary>

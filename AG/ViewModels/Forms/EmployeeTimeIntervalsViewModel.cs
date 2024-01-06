@@ -1,37 +1,43 @@
-﻿using AG.Windows;
-using Core.ViewModel;
+﻿using Core.ViewModel;
 using Services.Database;
 using Services.Domains;
 using Services.Extensions;
+using Services.Infrastructure;
+using Services.Infrastructure.Logger;
 using Services.Translators;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Threading;
+using System.Windows.Data;
 
 namespace AG.ViewModels.Forms
 {
-    public class EmployeeTimeIntervalsViewModel: ViewModelCore
+	public class EmployeeTimeIntervalsViewModel: ViewModelCore
     {
 		#region ctor
 		public EmployeeTimeIntervalsViewModel()
 		{
-			this.employeeService = ServiceLocator.GetService<IEmployeeService>()!;
+			this.employeeService = ServicesLocator.GetService<IEmployeeService>()!;
 			this.AvailableTimeIntervals = GetAvailableTimeIntervals();
 		}
 		#endregion
 
 		#region	fields
-		private int employeeId;
+		private const int AllMonthEntryId = 0;
+		private const string AllYearsEntryName = "Все";
+
+		private Guid employeeId;
 		private string employeeName;
 		private readonly IEmployeeService employeeService;
 		
 		private TimeInterval? selectedTimeInterval;
 		private ObservableCollection<TimeInterval> timeIntervals = new ObservableCollection<TimeInterval>();
+		private IList<Guid> editedTimeIntervalsIds = new List<Guid>();
+		private IList<Guid> removedTimeIntervalsIds = new List<Guid>();
 		
 		private string selectedFilterYearId;
 		private int selectedFilterMonthId = 1;
@@ -44,16 +50,21 @@ namespace AG.ViewModels.Forms
 		private IList<TimeIntervalType> availableTimeIntervals;
 
 		private ObjectOperationType currentOperationType;
+
+		private ObservableCollection<string> filterYears = new();
+		private ObservableCollection<FilterMonth> filterMonths = new();
+
+		private ICollectionView employeeTimeIntervals;
 		#endregion
 
 		#region	Properties
 		public string EmployeeName { get => employeeName; set { employeeName = value; OnChanged(); } }
-
+		public ICollectionView EmployeeTimeIntervals { get => employeeTimeIntervals; set { employeeTimeIntervals = value; OnChanged(); } }
 		public ObservableCollection<TimeInterval> TimeIntervals { get => timeIntervals; set { timeIntervals = value; OnChanged(); } }
 		public TimeInterval? SelectedTimeInterval { get => selectedTimeInterval; set { selectedTimeInterval = value; OnChanged(); } }
 
-		public ObservableCollection<string> FilterYears { get; set; } = new ();
-		public ObservableCollection<FilterMonth> FilterMonths { get; set; } = new();
+		public ObservableCollection<string> FilterYears { get => filterYears; set { filterYears = value; OnChanged(); } }
+		public ObservableCollection<FilterMonth> FilterMonths { get => filterMonths; set { filterMonths = value; OnChanged(); } }
 
 		public string SelectedFilterYear { get =>  selectedFilterYearId; set { selectedFilterYearId = value; OnChanged(); } }
 		public int SelectedFilterMonth { get => selectedFilterMonthId; set { selectedFilterMonthId = value; OnChanged(); } }
@@ -66,22 +77,30 @@ namespace AG.ViewModels.Forms
 		public IList<TimeIntervalType> AvailableTimeIntervals { get => availableTimeIntervals; set { availableTimeIntervals = value; OnChanged(); } }
 		#endregion
 
+		#region LoadInterface
 		public void LoadInterface(Employee employee)
 		{
 			this.employeeId = employee.Id;
 			EmployeeName = employee.FullName;
+
 			LoadTimeIntervals();
 			UpdateFilterEntries();
-		}
+		} 
+		#endregion
 
-		#region UpdateFilterEntries()
+		#region UpdateFilterEntries
 		public void UpdateFilterEntries()
 		{
+
+			var previouslyChosenYearName = SelectedFilterYear;
+			var previouslyChosenMonthId = SelectedFilterMonth;
+
 			var years = TimeIntervals
 				.Select(ti => ti.Begin.Year)
 				.Union(TimeIntervals.Select(ti_to => ti_to.End.Year).ToList())
 				.Distinct()
 				.Select(y => y.ToString())
+				.OrderBy(y => y)
 				.ToList();
 			var months = TimeIntervals
 				.Select(ti => ti.Begin.Month)
@@ -89,37 +108,72 @@ namespace AG.ViewModels.Forms
 				.Distinct()
 				.Select(m => new FilterMonth(m, CalendarTranslator.TranslateMonthId(m)))
 				.ToList();
+
 			FilterYears.Clear();
-			FilterYears.Add("Все");
+			FilterYears.Add(AllYearsEntryName);
 			FilterYears.AddRange(years);
 
 			FilterMonths.Clear();
-			FilterMonths.Add(new FilterMonth(0,"Все"));
+			FilterMonths.Add(new FilterMonth(AllMonthEntryId,AllYearsEntryName));
 			FilterMonths.AddRange(months);
 
-			SelectedFilterYear = "Все";
-			SelectedFilterMonth = 0;
+			SelectedFilterYear = !FilterYears.Contains(previouslyChosenYearName) ? AllYearsEntryName : previouslyChosenYearName;
+			SelectedFilterMonth = filterMonths.Where(m => m.Id == previouslyChosenMonthId).Count() == 0 ? 0 : previouslyChosenMonthId;
 		}
 		#endregion
 
+		#region FilterTimeIntervals
 		public void FilterTimeIntervals()
 		{
+			//LoadTimeIntervals();
 
+			//if (SelectedFilterYear != AllYearsEntryName || SelectedFilterMonth > AllMonthEntryId)
+			//{
+			//	var filteredTI = TimeIntervals.ToList();
+			//	if (SelectedFilterYear != AllYearsEntryName)
+			//	{
+			//		filteredTI = filteredTI.Where(ti => ti.Begin.Year.ToString() == SelectedFilterYear).ToList();
+			//	}
+			//	if (SelectedFilterMonth > AllMonthEntryId)
+			//	{
+			//		filteredTI = filteredTI.Where(ti => ti.Begin.Month == SelectedFilterMonth).ToList();
+			//	}
+
+			//	TimeIntervals = new ObservableCollection<TimeInterval>(filteredTI);
+			//}
+
+			employeeTimeIntervals.Filter = TimeIntervalsFilter;
+			employeeTimeIntervals.Refresh();
 		}
+		#endregion
 
+		#region TimeIntervalsFilter
+		private bool TimeIntervalsFilter(object item)
+		{
+			var ti = item as TimeInterval;
+			var condition_1 = SelectedFilterYear != AllYearsEntryName ? ti!.Begin.Year.ToString() == SelectedFilterYear : true;
+			var condition_2 = SelectedFilterMonth > AllMonthEntryId ? ti!.Begin.Month == SelectedFilterMonth : true;
+			return condition_1 && condition_2;
+		} 
+		#endregion
+
+		#region LoadTimeIntervals
 		private async void LoadTimeIntervals()
 		{
-			//var waitWnd = new WndWait("Загрузка временных интервалов пользователя");
-			//waitWnd.Show();
-			ShowWaitMessage("Загрузка временных интервалов пользователя", "Подождите");
+			base.ShowWaitMessage("Загрузка временных интервалов пользователя", "Подождите");
 
-			var timeIntervals = await Task.Run(() => employeeService.GetEmployeePeriods(employeeId).Results!);
-			TimeIntervals.AddRange(timeIntervals);
+			var employeeTimeIntervals = await employeeService.GetTimeIntervalAsync(employeeId, FetchAim.Table);
 
-			ClearWaitMessage();
-			//waitWnd.Close();
+			TimeIntervals.Clear();
+			TimeIntervals.AddRange(employeeTimeIntervals);
+
+			this.EmployeeTimeIntervals = CollectionViewSource.GetDefaultView(TimeIntervals);
+
+			base.ClearWaitMessage();
 		}
+		#endregion
 
+		#region MakeTimeInterval
 		private TimeInterval MakeTimeInterval()
 		{
 			return new TimeInterval()
@@ -128,20 +182,28 @@ namespace AG.ViewModels.Forms
 				Begin = PopupDateFrom,
 				End = PopupDateTo,
 				TimeIntervalType = PopupTimeIntervalType,
-				Comment = PopupComment
+				TimeIntervalTypeId = PopupTimeIntervalType.Id,
+				Comment = PopupComment,
+				EmployeeId = employeeId
 			};
-		}
+		} 
+		#endregion
+
+		#region AddTimeInterval
 		private bool AddTimeInterval()
 		{
 			var newTI = MakeTimeInterval();
 			if (ValidatePopupInputs(newTI))
 			{
 				TimeIntervals.Add(newTI);
+
 				return true;
 			}
 			return false;
 		}
+		#endregion
 
+		#region EditTimeInterval
 		private bool EditTimeInterval()
 		{
 			if (SelectedTimeInterval != null)
@@ -153,16 +215,21 @@ namespace AG.ViewModels.Forms
 					SelectedTimeInterval.TimeIntervalType = PopupTimeIntervalType;
 					SelectedTimeInterval.Comment = PopupComment;
 
+					if (SelectedTimeInterval.Id != Guid.Empty)
+						editedTimeIntervalsIds.Add(SelectedTimeInterval.Id);
 					return true;
 				}
 			}
 			return false;
 		}
+		#endregion
 
+		#region RemoveTimeInterval
 		public void RemoveTimeInterval()
 		{
 			if (SelectedTimeInterval != null)
 			{
+				removedTimeIntervalsIds.Add(SelectedTimeInterval.Id);
 				TimeIntervals.Remove(SelectedTimeInterval);
 			}
 			else
@@ -170,12 +237,14 @@ namespace AG.ViewModels.Forms
 				MessageBox.Show("Для того, чтобы удалить запись, необходимо сначала ее выбрать", "", MessageBoxButton.OK, MessageBoxImage.Warning);
 			}
 		}
+		#endregion
 
+		#region CheckTimeIntervalsCollision
 		private bool CheckTimeIntervalsCollision(TimeInterval timeInterval)
 		{
 			if (currentOperationType == ObjectOperationType.Edit && timeInterval.Begin.Date == SelectedTimeInterval.Begin.Date && timeInterval.End.Date == SelectedTimeInterval.End.Date)
 				return true;
-			
+
 			var collisions = TimeIntervals.GetCollisionsWith(timeInterval);
 			if (collisions.Count > 0)
 			{
@@ -186,32 +255,87 @@ namespace AG.ViewModels.Forms
 				return true;
 			}
 			return false;
-		}
+		} 
+		#endregion
 
+		#region ValidatePopupInputs
 		private bool ValidatePopupInputs(TimeInterval ti)
 		{
 			ClearValidationMessages();
 			if (popupDateFrom > popupDateTo)
 				AddValidationMessage("Начальная дата не может быть больше конечной", "Ошибка в датах");
-			
+
 			CheckTimeIntervalsCollision(ti);
 
 			return ValidationMessages.Count == 0;
 		}
-		
-		public void ApplyPendingChanges()
+		#endregion
+
+		#region ApplyPendingChanges
+		public async Task<bool> ApplyPendingChanges()
 		{
+			base.ShowWaitMessage("Выполняется запись неявок в базу", "Пожалуйста, подождите");
+			var ret = true;
+
 			try
 			{
-				//employeeService.AddEmployeePeriod()
+				var existingTI = await employeeService.GetTimeIntervalAsync(employeeId, FetchAim.Table);
+				var ids = existingTI.Select(ti => ti.Id).ToList();
+
+				//Статистика обработки изменений
+				var addedCount = 0;
+				var editedCount = 0;
+				var removedCount = 0;
+
+				foreach (var item in TimeIntervals)
+				{
+					bool operationStatus = true;
+					if (ids.Contains(item.Id))
+					{
+						if (editedTimeIntervalsIds.Contains(item.Id))
+						{
+							operationStatus = await employeeService.UpdateTimeIntervalAsync(item);
+							editedCount++;
+						}	
+					}
+					else
+					{
+						if (removedTimeIntervalsIds.Contains(item.Id))
+						{
+							operationStatus = await employeeService.DeleteTimeIntervalAsync(item.Id);
+							removedCount++;
+						}
+						else
+						{
+							operationStatus = await employeeService.AddTimeIntervalAsync(item);
+							addedCount++;
+						}
+					}
+
+					if (!operationStatus)
+					{
+						AddValidationMessage($"Не удалось добавить временной интервал {item.TimeIntervalType?.LongName ?? "Интервал"}: {item.Begin.ToShortDateString()}-{item.End.ToShortDateString()}", "Ошибка записи в базу");
+					}
+				}
+
+				MessageBox.Show($"Успешно добавлено {addedCount}, отредактировано {editedCount} и удалено {removedCount} неявок!");
 			}
 			catch (Exception ex)
 			{
-
+				Logger.Log(ex, "Database Time Intervals saving");
+				MessageBox.Show($"Ошибка записи в базу перечня интервалов. Причина: {ex.Message}", "Ошибка");
+				ret = false;
+			}
+			finally
+			{
+				base.ClearWaitMessage();
 			}
 
-		}
+			return ret;
+		} 
+		#endregion
 
+		#region ShowPopup
 		public void ShowPopup(ObjectOperationType operationType)
 		{
 			currentOperationType = operationType;
@@ -219,8 +343,8 @@ namespace AG.ViewModels.Forms
 			{
 				case ObjectOperationType.Add:
 					IsPopupVisible = true;
-					PopupDateFrom = DateTime.Now;
-					PopupDateTo = DateTime.Now.AddDays(7);
+					PopupDateFrom = DateTime.Now.Date;
+					PopupDateTo = DateTime.Now.Date.AddDays(7);
 					PopupTimeIntervalType = AvailableTimeIntervals.FirstOrDefault() ?? new TimeIntervalType();
 					PopupComment = "";
 					break;
@@ -237,7 +361,9 @@ namespace AG.ViewModels.Forms
 					break;
 			}
 		}
+		#endregion
 
+		#region ClosePopup
 		public void ClosePopup(bool isCancel = false)
 		{
 			if (isCancel)
@@ -246,7 +372,7 @@ namespace AG.ViewModels.Forms
 				IsPopupVisible = false;
 				return;
 			}
-			
+
 			switch (currentOperationType)
 			{
 				case ObjectOperationType.Add:
@@ -257,12 +383,13 @@ namespace AG.ViewModels.Forms
 					break;
 			}
 			UpdateFilterEntries();
-		}
+		} 
+		#endregion
 
-		#region GetAvailableTimeIntervals()
+		#region GetAvailableTimeIntervals
 		public IList<TimeIntervalType> GetAvailableTimeIntervals()
 		{
-			var types = employeeService.GetTimeIntervalTypes().Results;
+			var types = employeeService.GetTimeIntervalTypesAsync().Result;
 			return types != null ? types : new List<TimeIntervalType>();
 		}
 		#endregion

@@ -1,22 +1,15 @@
-﻿using Core.Database.AppEntities;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using SQLiteRepository.ModelsConfigurations;
 
 namespace SQLiteRepository
 {
-    public class AppContext: DbContext
+	public class AppContext: BaseContext
     {
-        public const string DEFAULT_DB_NAME = "Users";
-        private string connectionString = $"Data Source ={DEFAULT_DB_NAME}.db";
+		public override string DatabaseName => "Users";
 
-        public AppContext(): this(null) { }
-
-        public AppContext(string? connString = null)
+        public AppContext()
         {
-            if (string.IsNullOrEmpty(connString))
-                this.connectionString = $"Data Source={DEFAULT_DB_NAME}.db";
-            Database.EnsureDeleted();
-            Database.EnsureCreated();
+            base.RecreateDb();
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -25,9 +18,9 @@ namespace SQLiteRepository
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlite(connectionString);
+            optionsBuilder.UseSqlite(base.ConnectionString);
         }
 
-        public static AppContext Get() => new AppContext();
+        public static AppContext Instance => new AppContext();
     }
 }

@@ -1,0 +1,99 @@
+﻿@page
+@model AG.Web.Pages.Establishment.EditEmployeeModel
+@using Services.Domains
+
+@{
+    ViewData["Title"] = "Редактирование данных сотрудника";
+}
+<h1 class="display-5">@ViewData["Title"]</h1>
+<h2 class="display-6">@Model.EmployeeFullName</h2>
+<hr/>
+<div class="row">
+    <div class="col-md-4">
+        <form method="POST">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="CurrentEmployee.Id" />
+            <div class="form-group">
+                <label asp-for="CurrentEmployee.LastName" class="control-label"></label>
+                <input asp-for="CurrentEmployee.LastName" class="form-control" />
+                <span asp-validation-for="CurrentEmployee.LastName"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="CurrentEmployee.FirstName" class="control-label"></label>
+                <input asp-for="CurrentEmployee.FirstName" class="form-control" />
+                <span asp-validation-for="CurrentEmployee.FirstName"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="CurrentEmployee.MiddleName" class="control-label"></label>
+                <input asp-for="CurrentEmployee.MiddleName" class="form-control" />
+                <span asp-validation-for="CurrentEmployee.MiddleName"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="CurrentEmployee.Rate" class="control-label"></label>
+                <input asp-for="CurrentEmployee.Rate" class="form-control" />
+                <span asp-validation-for="CurrentEmployee.Rate"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="CurrentEmployee.IsConcurrent" class="control-label"></label>
+                <input asp-for="CurrentEmployee.IsConcurrent" class="form-control" />
+                <span asp-validation-for="CurrentEmployee.IsConcurrent"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="CurrentEmployee.Email" class="control-label"></label>
+                <input asp-for="CurrentEmployee.Email" class="form-control" />
+                <span asp-validation-for="CurrentEmployee.Email"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="CurrentEmployee.PhoneNumber" class="control-label"></label>
+                <input asp-for="CurrentEmployee.PhoneNumber" class="form-control" />
+                <span asp-validation-for="CurrentEmployee.PhoneNumber"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="CurrentEmployee.FunctionName" class="control-label"></label>
+                <select asp-items="@Model.AvailableFunctionsSL" asp-for="CurrentEmployee.FunctionId" class="form-control">
+                    <option value="@Guid.Empty">--Не указана--</option>
+                </select>
+                <span asp-validation-for="CurrentEmployee.FunctionId"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="CurrentEmployee.DepartmentName" class="control-label"></label>
+                <select asp-items="@Model.AvailableDepartmentsSL" asp-for="CurrentEmployee.DepartmentId" class="form-control">
+                    <option value="@Guid.Empty">--Не указан--</option>
+                </select>
+                <span asp-validation-for="CurrentEmployee.DepartmentId"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="CurrentEmployee.StatusName" class="control-label"></label>
+                <select asp-items="@Model.AvailableStatusesSL" asp-for="CurrentEmployee.StatusId" class="form-control">
+                    <option value="@Guid.Empty">--Не задан--</option>
+                </select>
+                <span asp-validation-for="CurrentEmployee.StatusId"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Сохранить" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
+
+@if (Request.Method == "POST")
+{
+    <h2>Изменения сохранены</h2>
+    <p>ФИО: @Model.EmployeeFullName</p>
+    <p>Доля ставки: @Model.CurrentEmployee.Rate</p>
+}
