@@ -1,10 +1,10 @@
-﻿namespace AG.ViewModels
+﻿namespace AG.WPF.ViewModels
 {
-	public enum ObjectOperationType
-	{
-		Add,
-		Edit,
-		Remove,
-		Cancel
-	}
+    public enum ObjectOperationType
+    {
+        Add,
+        Edit,
+        Remove,
+        Cancel
+    }
 }

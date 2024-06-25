@@ -1,12 +1,13 @@
-﻿using AG.ViewModels.Forms;
+﻿using AG.WPF.ViewModels;
+using AG.WPF.ViewModels.Forms;
 using System.Windows;
 
 namespace AG.Windows
 {
-	/// <summary>
-	/// Логика взаимодействия для WndCorrectionDayEdit.xaml
-	/// </summary>
-	public partial class WndCorrectionDayEdit : Window
+    /// <summary>
+    /// Логика взаимодействия для WndCorrectionDayEdit.xaml
+    /// </summary>
+    public partial class WndCorrectionDayEdit : Window
 	{
 		private readonly CorrectionDaysFormViewModel viewModel;
 
@@ -22,12 +23,12 @@ namespace AG.Windows
 		{
 			if (sender == btnAdd)
 			{
-				viewModel?.ShowPopup(ViewModels.ObjectOperationType.Add);
+				viewModel?.ShowPopup(ObjectOperationType.Add);
 				return;
 			}
 			if (sender == btnEdit)
 			{
-				viewModel?.ShowPopup(ViewModels.ObjectOperationType.Edit);
+				viewModel?.ShowPopup(ObjectOperationType.Edit);
 				return;
 			}
 			if (sender == btnRemove)
@@ -42,7 +43,7 @@ namespace AG.Windows
 			}
 			if (sender == btnPopupCancel)
 			{
-				viewModel.ClosePopup(ViewModels.ObjectOperationType.Cancel);
+				viewModel.ClosePopup(ObjectOperationType.Cancel);
 				return;
 			}
 			if(sender == btnImport)
@@ -53,7 +54,7 @@ namespace AG.Windows
 
 		private void ListView_MouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
 		{
-			viewModel.ShowPopup(ViewModels.ObjectOperationType.Edit);
+			viewModel.ShowPopup(ObjectOperationType.Edit);
 		}
 	}
 }

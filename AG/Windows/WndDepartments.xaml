@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:AG.Windows"
-        xmlns:cmd="clr-namespace:AG.Commands"
+        xmlns:cmd="clr-namespace:AG.WPF.Commands"
         mc:Ignorable="d"
         Title="Подразделения" Height="337" Width="515" WindowStartupLocation="CenterScreen">
     <Window.CommandBindings>

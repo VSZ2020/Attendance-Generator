@@ -1,6 +1,6 @@
-﻿using AG.Commands;
-using AG.ViewModels.Forms;
-using AG.Windows;
+﻿using AG.Windows;
+using AG.WPF.Commands;
+using AG.WPF.ViewModels.Forms;
 using Services;
 using Services.Database;
 using Services.Domains;
@@ -10,10 +10,10 @@ using System.Windows.Input;
 
 namespace AG
 {
-	/// <summary>
-	/// Interaction logic for MainWindow.xaml
-	/// </summary>
-	public partial class MainWindow : Window
+    /// <summary>
+    /// Interaction logic for MainWindow.xaml
+    /// </summary>
+    public partial class MainWindow : Window
     {
 		#region ctor
 		public MainWindow()

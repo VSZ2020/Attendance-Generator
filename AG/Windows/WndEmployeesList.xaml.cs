@@ -1,5 +1,5 @@
-﻿using AG.Commands;
-using AG.ViewModels.Forms;
+﻿using AG.WPF.Commands;
+using AG.WPF.ViewModels.Forms;
 using System;
 using System.Windows;
 using System.Windows.Controls;

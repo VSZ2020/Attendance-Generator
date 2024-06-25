@@ -1,4 +1,4 @@
-﻿using AG.ViewModels.Forms;
+﻿using AG.WPF.ViewModels.Forms;
 using System;
 using System.Collections.Generic;
 using System.Linq;

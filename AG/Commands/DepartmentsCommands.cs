@@ -1,7 +1,7 @@
 ﻿using AG.Windows;
 using System.Windows.Input;
 
-namespace AG.Commands
+namespace AG.WPF.Commands
 {
     public class DepartmentsCommands
     {

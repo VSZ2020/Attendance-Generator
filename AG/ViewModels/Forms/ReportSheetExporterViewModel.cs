@@ -1,4 +1,4 @@
-﻿using Core.ViewModel;
+﻿using AG.WPF.ViewModel;
 using Services.Domains;
 using System;
 using System.Collections.Generic;
@@ -6,114 +6,114 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AG.ViewModels.Forms
+namespace AG.WPF.ViewModels.Forms
 {
-    public class ReportSheetExporterViewModel: ViewModelCore
+    public class ReportSheetExporterViewModel : ViewModelCore
     {
-		public ReportSheetExporterViewModel() 
-		{ 
-		
-		}
+        public ReportSheetExporterViewModel()
+        {
 
-		#region Fields
-		private string formTypeId = "504421";
-		private string name = "Без названия";
+        }
 
-		private int number = 0;
+        #region Fields
+        private string formTypeId = "504421";
+        private string name = "Без названия";
 
-		private int sheetType = 0;
+        private int number = 0;
 
-		private int correctionNumber = 0;
+        private int sheetType = 0;
 
-		private string establishmentName = string.Empty;
+        private int correctionNumber = 0;
 
-		private string departmentName = string.Empty;
+        private string establishmentName = string.Empty;
 
-		private TimeInterval? accountingPeriod;
+        private string departmentName = string.Empty;
 
-		private DateTime? date;
+        private TimeInterval? accountingPeriod;
 
-		private DateTime? generationTime;
+        private DateTime? date;
 
-		private string sheetResponsible = string.Empty;
+        private DateTime? generationTime;
 
-		private string sheetExecutor = string.Empty;
+        private string sheetResponsible = string.Empty;
 
-		private string financialExecutor = string.Empty;
-		#endregion
+        private string sheetExecutor = string.Empty;
 
-		#region Properties
-		/// <summary>
-		/// Номер формы по ОКУД
-		/// </summary>
-		public string FormTypeId { get => formTypeId; set { formTypeId = value; OnChanged(); } }
+        private string financialExecutor = string.Empty;
+        #endregion
 
-		/// <summary>
-		/// Название табеля
-		/// </summary>
-		public string Name { get => name; set { name = value; OnChanged(); } }
+        #region Properties
+        /// <summary>
+        /// Номер формы по ОКУД
+        /// </summary>
+        public string FormTypeId { get => formTypeId; set { formTypeId = value; OnChanged(); } }
 
-		/// <summary>
-		/// Номер табеля
-		/// </summary>
-		public int Number { get => number; set { number = value; OnChanged(); } }
+        /// <summary>
+        /// Название табеля
+        /// </summary>
+        public string Name { get => name; set { name = value; OnChanged(); } }
 
-		/// <summary>
-		/// Вид табеля:
-		/// 0 - первичный,
-		/// 1 - корректирующий, и т.д.
-		/// </summary>
-		public int SheetType { get => sheetType; set { sheetType = value; OnChanged(); } }
+        /// <summary>
+        /// Номер табеля
+        /// </summary>
+        public int Number { get => number; set { number = value; OnChanged(); } }
 
-		/// <summary>
-		/// Номер корректировки
-		/// </summary>
-		public int CorrectionNumber { get => correctionNumber; set { correctionNumber = value; OnChanged(); } }
+        /// <summary>
+        /// Вид табеля:
+        /// 0 - первичный,
+        /// 1 - корректирующий, и т.д.
+        /// </summary>
+        public int SheetType { get => sheetType; set { sheetType = value; OnChanged(); } }
 
-		/// <summary>
-		/// Учреждение
-		/// </summary>
-		public string EstablishmentName { get => establishmentName; set { establishmentName = value; OnChanged(); } }
+        /// <summary>
+        /// Номер корректировки
+        /// </summary>
+        public int CorrectionNumber { get => correctionNumber; set { correctionNumber = value; OnChanged(); } }
 
-		/// <summary>
-		/// Отдел, для которого генерируется табель
-		/// </summary>
-		public string DepartmentName { get => departmentName; set { departmentName = value; OnChanged(); } }
+        /// <summary>
+        /// Учреждение
+        /// </summary>
+        public string EstablishmentName { get => establishmentName; set { establishmentName = value; OnChanged(); } }
 
-		/// <summary>
-		/// Период ведения табеля
-		/// </summary>
-		public TimeInterval? AccountingPeriod { get => accountingPeriod; set { accountingPeriod = value; OnChanged(); } }
+        /// <summary>
+        /// Отдел, для которого генерируется табель
+        /// </summary>
+        public string DepartmentName { get => departmentName; set { departmentName = value; OnChanged(); } }
 
-		/// <summary>
-		/// Дата по ОКПО
-		/// </summary>
-		public DateTime? Date { get => date; set { date = value; OnChanged(); } }
+        /// <summary>
+        /// Период ведения табеля
+        /// </summary>
+        public TimeInterval? AccountingPeriod { get => accountingPeriod; set { accountingPeriod = value; OnChanged(); } }
 
-		/// <summary>
-		/// Дата формирования табеля
-		/// </summary>
-		public DateTime? GenerationTime { get => generationTime; set { generationTime = value; OnChanged(); } }
+        /// <summary>
+        /// Дата по ОКПО
+        /// </summary>
+        public DateTime? Date { get => date; set { date = value; OnChanged(); } }
 
-		/// <summary>
-		/// Ответственный за табель
-		/// </summary>
-		public string? SheetResponsible { get => sheetResponsible; set { sheetResponsible = value; OnChanged(); } }
+        /// <summary>
+        /// Дата формирования табеля
+        /// </summary>
+        public DateTime? GenerationTime { get => generationTime; set { generationTime = value; OnChanged(); } }
 
-		/// <summary>
-		/// Исполнитель
-		/// </summary>
-		public string SheetExecutor { get => sheetExecutor; set { sheetExecutor = value; OnChanged(); } }
+        /// <summary>
+        /// Ответственный за табель
+        /// </summary>
+        public string? SheetResponsible { get => sheetResponsible; set { sheetResponsible = value; OnChanged(); } }
 
-		/// <summary>
-		/// Финансовый исполнитель (проверяющий бухгалтер)
-		/// </summary>
-		public string FinancialExecutor { get => financialExecutor; set { financialExecutor = value; OnChanged(); } }
-		#endregion
+        /// <summary>
+        /// Исполнитель
+        /// </summary>
+        public string SheetExecutor { get => sheetExecutor; set { sheetExecutor = value; OnChanged(); } }
 
-		public void InitializeViewModel()
-		{
+        /// <summary>
+        /// Финансовый исполнитель (проверяющий бухгалтер)
+        /// </summary>
+        public string FinancialExecutor { get => financialExecutor; set { financialExecutor = value; OnChanged(); } }
+        #endregion
 
-		}
-	}
+        public void InitializeViewModel()
+        {
+
+        }
+    }
 }

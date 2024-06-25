@@ -1,13 +1,13 @@
-﻿using AG.ViewModels.Forms;
+﻿using AG.WPF.ViewModels.Forms;
 using Services.Domains;
 using System.Windows;
 
 namespace AG.Windows
 {
-	/// <summary>
-	/// Логика взаимодействия для WndEditEstablishment.xaml
-	/// </summary>
-	public partial class WndEditEstablishment : Window
+    /// <summary>
+    /// Логика взаимодействия для WndEditEstablishment.xaml
+    /// </summary>
+    public partial class WndEditEstablishment : Window
 	{
 		private EditEstablishmentViewModel viewModel;
 		public WndEditEstablishment(Establishment? est = null)

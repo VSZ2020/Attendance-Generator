@@ -1,14 +1,15 @@
-﻿using AG.ViewModels.Forms;
+﻿using AG.WPF.ViewModels;
+using AG.WPF.ViewModels.Forms;
 using Services.Domains;
 using System.Windows;
 using System.Windows.Input;
 
 namespace AG.Windows
 {
-	/// <summary>
-	/// Логика взаимодействия для WndEmployeeTimeIntervals.xaml
-	/// </summary>
-	public partial class WndEmployeeTimeIntervals : Window
+    /// <summary>
+    /// Логика взаимодействия для WndEmployeeTimeIntervals.xaml
+    /// </summary>
+    public partial class WndEmployeeTimeIntervals : Window
     {
         private EmployeeTimeIntervalsViewModel viewModel;
 
@@ -24,7 +25,7 @@ namespace AG.Windows
 
 		private void TimeIntervalsDataGrid_MouseDoubleClick(object sender, MouseButtonEventArgs e)
 		{
-			viewModel?.ShowPopup(ViewModels.ObjectOperationType.Edit);
+			viewModel?.ShowPopup(ObjectOperationType.Edit);
 		}
 
 		#region Button_Click
@@ -40,13 +41,13 @@ namespace AG.Windows
 
 			if (sender == btnAddTimeInterval)
 			{
-				viewModel?.ShowPopup(ViewModels.ObjectOperationType.Add);
+				viewModel?.ShowPopup(ObjectOperationType.Add);
 				return;
 			}
 
 			if (sender == btnEditTimeInterval)
 			{
-				viewModel?.ShowPopup(ViewModels.ObjectOperationType.Edit);
+				viewModel?.ShowPopup(ObjectOperationType.Edit);
 				return;
 			}
 

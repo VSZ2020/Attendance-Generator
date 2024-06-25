@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:uc="clr-namespace:AG.UserControls"
-        xmlns:cmd="clr-namespace:AG.Commands"
+        xmlns:cmd="clr-namespace:AG.WPF.Commands"
         xmlns:local="clr-namespace:AG.Windows"
         mc:Ignorable="d"
         Title="Карточка сотрудника" Height="450" Width="543" WindowStartupLocation="CenterScreen">

@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:AG.Windows"
-        xmlns:vm="clr-namespace:AG.ViewModels.Forms"
+        xmlns:vm="clr-namespace:AG.WPF.ViewModels.Forms"
         mc:Ignorable="d"
         Title="Корректировка дней" Height="383" Width="356" WindowStartupLocation="CenterScreen">
     <Window.Resources>

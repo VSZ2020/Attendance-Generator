@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:AG.Windows"
-        xmlns:vm="clr-namespace:AG.ViewModels.Forms"
+        xmlns:vm="clr-namespace:AG.WPF.ViewModels.Forms"
         xmlns:uc="clr-namespace:AG.UserControls"
         mc:Ignorable="d"
         Title="Неявки сотрудника" Height="450" Width="476" WindowStartupLocation="CenterScreen">

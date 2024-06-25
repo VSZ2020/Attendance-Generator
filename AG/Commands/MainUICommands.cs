@@ -1,6 +1,6 @@
 ﻿using System.Windows.Input;
 
-namespace AG.Commands
+namespace AG.WPF.Commands
 {
     public class MainUICommands
     {
@@ -30,11 +30,11 @@ namespace AG.Commands
             typeof(MainWindow)
             );
 
-		public static RoutedUICommand cmdViewSheet = new RoutedUICommand(
-			"Просмотр табеля",
-			"ViewReport",
-			typeof(MainWindow)
-			);
+        public static RoutedUICommand cmdViewSheet = new RoutedUICommand(
+            "Просмотр табеля",
+            "ViewReport",
+            typeof(MainWindow)
+            );
 
-	}
+    }
 }

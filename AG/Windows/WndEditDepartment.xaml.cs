@@ -1,14 +1,14 @@
-﻿using AG.ViewModels.Forms;
+﻿using AG.WPF.ViewModels.Forms;
 using Services.Domains;
 using System;
 using System.Windows;
 
 namespace AG.Windows
 {
-	/// <summary>
-	/// Логика взаимодействия для WndEditDepartment.xaml
-	/// </summary>
-	public partial class WndEditDepartment : Window
+    /// <summary>
+    /// Логика взаимодействия для WndEditDepartment.xaml
+    /// </summary>
+    public partial class WndEditDepartment : Window
     {
         #region ctor
         public WndEditDepartment(Guid establishmentId, Department? department = null)

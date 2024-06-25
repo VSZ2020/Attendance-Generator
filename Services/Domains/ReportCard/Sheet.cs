@@ -1,5 +1,4 @@
-﻿using Core.ViewModel;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using System.Text.Json.Serialization;
 
 namespace Services.Domains.ReportCard

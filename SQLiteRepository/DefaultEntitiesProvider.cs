@@ -265,7 +265,7 @@ namespace SQLiteRepository
 			{
 				new EmployeeStatusEntity() {
 					Id = DefaultStatusActiveId,
-					Name = "Активный"
+					Name = "Активен"
 				},
 				new EmployeeStatusEntity() {
 					Id = DefaultStatusDeactivatedId,

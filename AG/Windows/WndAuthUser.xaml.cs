@@ -1,26 +1,12 @@
-﻿using AG.ViewModels.Forms;
-using Core.ViewModel;
-using Services.Domains;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using AG.WPF.ViewModels.Forms;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace AG.Windows
 {
-	/// <summary>
-	/// Логика взаимодействия для WndAuthUser.xaml
-	/// </summary>
-	public partial class WndAuthUser : Window
+    /// <summary>
+    /// Логика взаимодействия для WndAuthUser.xaml
+    /// </summary>
+    public partial class WndAuthUser : Window
 	{
 		#region ctor
 		public WndAuthUser()

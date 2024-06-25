@@ -6,10 +6,10 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
-namespace AG.Commands
+namespace AG.WPF.Commands
 {
-	public class EmployeeCardCommands
-	{
-		public static RoutedUICommand CmdEmployeeTimeInterval = new RoutedUICommand("Неявки", "TimeIntervals", typeof(WndEditEmployee));
-	}
+    public class EmployeeCardCommands
+    {
+        public static RoutedUICommand CmdEmployeeTimeInterval = new RoutedUICommand("Неявки", "TimeIntervals", typeof(WndEditEmployee));
+    }
 }

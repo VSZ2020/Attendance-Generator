@@ -3,9 +3,9 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:cmd="clr-namespace:AG.Commands"
-        xmlns:vm="clr-namespace:AG.ViewModels.Forms"
-        xmlns:session="clr-namespace:Services"
+        xmlns:cmd="clr-namespace:AG.WPF.Commands"
+        xmlns:vm="clr-namespace:AG.WPF.ViewModels.Forms"
+        xmlns:session="clr-namespace:Services.Session;assembly=AG.Services"
         xmlns:local="clr-namespace:AG"
         mc:Ignorable="d"
         Title="{Binding Title}" Height="450" Width="800" WindowStartupLocation="CenterScreen">

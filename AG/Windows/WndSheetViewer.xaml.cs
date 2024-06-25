@@ -1,12 +1,12 @@
-﻿using AG.ViewModels.Forms;
+﻿using AG.WPF.ViewModels.Forms;
 using System.Windows;
 
 namespace AG.Windows
 {
-	/// <summary>
-	/// Логика взаимодействия для WndSheetViewer.xaml
-	/// </summary>
-	public partial class WndSheetViewer : Window
+    /// <summary>
+    /// Логика взаимодействия для WndSheetViewer.xaml
+    /// </summary>
+    public partial class WndSheetViewer : Window
 	{
 		#region ctor
 		public WndSheetViewer()

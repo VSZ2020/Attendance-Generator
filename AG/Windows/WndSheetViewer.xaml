@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:AG.Windows"
         xmlns:uc="clr-namespace:AG.UserControls"
         mc:Ignorable="d"
-        xmlns:vm="clr-namespace:AG.ViewModels.Forms"
+        xmlns:vm="clr-namespace:AG.WPF.ViewModels.Forms"
         Title="Просмотр табеля посещаемости" Height="450" Width="800" WindowStartupLocation="CenterScreen">
     <Window.Resources>
         <vm:SheetViewViewModel x:Key="viewModel"/>

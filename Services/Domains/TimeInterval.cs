@@ -1,6 +1,5 @@
 ﻿using Core.Converters;
 using Core.Database.Entities;
-using Core.ViewModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
