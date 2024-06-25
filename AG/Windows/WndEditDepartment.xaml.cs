@@ -1,5 +1,5 @@
-﻿using AG.WPF.ViewModels.Forms;
-using Services.Domains;
+﻿using AG.WPF.Domains;
+using AG.WPF.ViewModels.Forms;
 using System;
 using System.Windows;
 

@@ -366,3 +366,8 @@ FodyWeavers.xsd
 
 #Rider folder
 .idea/
+
+#Old project
+AG/
+Databases/
+SQLiteRepository/

@@ -7,18 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Core\AG.Core.csproj" />
-    <ProjectReference Include="..\SQLiteRepository\SQLiteRepository.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Attributes\" />
-    <Folder Include="Generators\" />
-    <Folder Include="Infrastructure\Cacher\" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <Compile Remove="Attributes\**" />
+    <Compile Remove="Generators\**" />
+    <EmbeddedResource Remove="Attributes\**" />
+    <EmbeddedResource Remove="Generators\**" />
+    <None Remove="Attributes\**" />
+    <None Remove="Generators\**" />
   </ItemGroup>
 
 </Project>

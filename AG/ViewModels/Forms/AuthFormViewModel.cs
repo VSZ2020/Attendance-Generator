@@ -1,10 +1,10 @@
-﻿using AG.WPF.ViewModel;
+﻿using AG.WPF.Database;
+using AG.WPF.Infrastructure;
+using AG.WPF.Infrastructure.Logger;
+using AG.WPF.Session;
+using AG.WPF.ViewModel;
 using Microsoft.Extensions.DependencyInjection;
 using Services;
-using Services.Database;
-using Services.Infrastructure;
-using Services.Infrastructure.Logger;
-using Services.Session;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows;

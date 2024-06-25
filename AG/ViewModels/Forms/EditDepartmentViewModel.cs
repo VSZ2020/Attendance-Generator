@@ -1,8 +1,8 @@
-﻿using AG.WPF.ViewModel;
-using Services.Database;
-using Services.Domains;
-using Services.Extensions;
-using Services.Infrastructure;
+﻿using AG.WPF.Database;
+using AG.WPF.Domains;
+using AG.WPF.Extensions;
+using AG.WPF.Infrastructure;
+using AG.WPF.ViewModel;
 using System;
 using System.Collections.ObjectModel;
 using System.Linq;

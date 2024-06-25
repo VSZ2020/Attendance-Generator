@@ -21,8 +21,8 @@ namespace AG.Data.Entities
 
         public int Status { get; set; }
 
-
         public ICollection<BusinessTripEntity> BusinessTrips { get; set; }
+        public ICollection<ContractEntity> Contracts { get; set; }
         public ICollection<EmployeeToDepartment> EmployeeToDepartmentTable { get; set;}
         public ICollection<EmployeeToFunction> EmployeeToFunctionTable { get; set; }
         public ICollection<EmployeeToTimeInterval> EmployeeToTimeIntervalTable { get; set; }

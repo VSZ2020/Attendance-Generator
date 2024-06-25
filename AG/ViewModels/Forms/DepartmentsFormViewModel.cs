@@ -1,10 +1,10 @@
 ﻿using AG.Windows;
+using AG.WPF.Database;
+using AG.WPF.Domains;
+using AG.WPF.Extensions;
+using AG.WPF.Infrastructure;
+using AG.WPF.Infrastructure.Logger;
 using AG.WPF.ViewModel;
-using Services.Database;
-using Services.Domains;
-using Services.Extensions;
-using Services.Infrastructure;
-using Services.Infrastructure.Logger;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;

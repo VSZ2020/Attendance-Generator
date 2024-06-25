@@ -1,10 +1,10 @@
 ﻿using AG.Windows;
+using AG.WPF.Database;
+using AG.WPF.Infrastructure;
+using AG.WPF.Session;
 using AG.WPF.ViewModel;
 using Services;
-using Services.Database;
 using Services.Domains;
-using Services.Infrastructure;
-using Services.Session;
 using System;
 using System.Linq;
 using System.Windows;

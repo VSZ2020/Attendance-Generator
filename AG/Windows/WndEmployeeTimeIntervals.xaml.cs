@@ -1,6 +1,6 @@
-﻿using AG.WPF.ViewModels;
+﻿using AG.WPF.Domains;
+using AG.WPF.ViewModels;
 using AG.WPF.ViewModels.Forms;
-using Services.Domains;
 using System.Windows;
 using System.Windows.Input;
 

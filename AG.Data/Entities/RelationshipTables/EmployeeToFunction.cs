@@ -8,11 +8,15 @@ namespace AG.Data.Entities.RelationshipTables
 
         public Guid FunctionId { get; set; }
 
+        [Required]
         public DateTime AssignmentDate { get; set; }
 
         public string Reason { get; set; }
 
         [Required]
         public float Rate { get; set; }
+
+        [Required]
+        public bool IsConcurrent { get; set; }
     }
 }

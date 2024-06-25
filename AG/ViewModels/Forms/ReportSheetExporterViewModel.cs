@@ -1,5 +1,5 @@
-﻿using AG.WPF.ViewModel;
-using Services.Domains;
+﻿using AG.WPF.Domains;
+using AG.WPF.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
