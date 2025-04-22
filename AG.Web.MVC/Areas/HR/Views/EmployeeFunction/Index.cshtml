@@ -1,0 +1,47 @@
+﻿@model EmployeeFunctionIndexVM
+@{
+    ViewData["Title"] = "Перечень должностей сотрудника";
+}
+
+<h3>@ViewData["Title"]</h3>
+<h1 class="mb-3">@Model.EmployeeName</h1>
+
+<a class="btn btn-sm btn-outline-primary" asp-action="Create" asp-controller="EmployeeFunction" asp-route-employeeId="@Model.EmployeeId">Назначить на новую должность</a>
+<table class="table table-responsive-md align-content-center">
+    <thead>
+        <tr>
+            <th>Должность</th>
+            <th>Подразделение</th>
+            <th>Доля ставки</th>
+            <th>Совместитель</th>
+            <th>Начало работы</th>
+            <th>Окончание работы</th>
+            <th></th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach(var item in Model.EmployeeFunctions)
+        {
+            <tr>
+                <td>@item.FunctionName</td>
+                <td>@item.DepartmentName</td>
+                <td>@item.Rate</td>
+                <td>@(item.IsConcurrent ? "Да" : "Нет")</td>
+                <td>@item.AssignmentDate.ToShortDateString()</td>
+                <td>@(item.FiredDate != null ? item.FiredDate.Value.ToShortDateString() : "-")</td>
+                <td>
+                    @if (!item.FiredDate.HasValue)
+                    {
+                        @Html.ActionLink("Уволить", "Fire", "EmployeeFunction", new { recordId = item.Id }, new { @class = "btn btn-sm btn-link" })
+                    }
+                </td>
+                <td>
+                    @Html.ActionLink("Редактировать", "Edit", "EmployeeFunction", new {recordId = item.Id}, new {@class = "btn btn-sm btn-link"})
+                    
+                    @Html.ActionLink("Удалить", "Remove", "EmployeeFunction", new { recordId = item.Id }, new { @class = "btn btn-sm btn-link text-danger" })
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

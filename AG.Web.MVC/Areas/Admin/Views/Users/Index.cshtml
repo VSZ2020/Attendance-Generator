@@ -1,0 +1,50 @@
+﻿@model IndexUsersViewModel
+@{
+    ViewData["Title"] = "Список пользователей";
+}
+<h1>@ViewData["Title"]</h1>
+<a asp-area="Admin" asp-controller="Users" asp-action="Create" class="btn btn-sm btn-outline-primary">Новый пользователь</a>
+
+<table class="table table-sm">
+    <thead>
+        <tr>
+            <th>Имя пользователя</th>
+            <th>Активен?</th>
+            <th>Роль</th>
+            <th>Создан</th>
+            <th>E-mail</th>
+            <th>E-mail подтв.?</th>
+            <th>Подразделение</th>
+            <th>Связанный сотрудник</th>
+            <th>Последнее посещение</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach(var user in Model.Users)
+        {
+            <tr class="align-middle">
+                <td>@user.Username</td>
+                <td>@(user.IsActivatedAccount ? "Да" : "Нет")</td>
+                <td>@user.Role</td>
+                <td>@string.Format("{0:dd.MM.yyyy HH:mm}", user.CreatedAt)</td>
+                <td>@(string.IsNullOrEmpty(user.Email) ? "-" : user.Email)</td>
+                <td>@(user.IsEmailConfirmed ? "Да" : "Нет")</td>
+                <td>@user.AssigmedDepartment</td>
+                <td>@user.AssignedEmployee</td>
+                <td>@(user.LastVisit.HasValue ? string.Format("{0:dd.MM.yyyy HH:mm}", user.LastVisit) : "-")</td>
+                <td class="">
+                    <div class="dropdown">
+                        <a class="btn btn-sm btn-outline-primary dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Действия</a>
+                        <ul class="dropdown-menu">
+                            <li><a class="btn btn-sm btn-link" asp-area="Admin" asp-controller="Users" asp-action="ResetPassword" asp-route-id="@user.Id">Сбросить пароль</a></li>
+                            <li><a class="btn btn-sm btn-link" asp-area="Admin" asp-controller="Users" asp-action="ReplaceRole" asp-route-id="@user.Id">Сменить роль</a></li>
+                            <li><a class="btn btn-sm btn-link" asp-area="Admin" asp-controller="Users" asp-action="Edit" asp-route-id="@user.Id">Редактировать</a></li>
+                            <li><a class="btn btn-sm btn-link text-danger" asp-area="Admin" asp-controller="Users" asp-action="Remove" asp-route-id="@user.Id">Удалить</a></li>
+                        </ul>
+                    </div>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

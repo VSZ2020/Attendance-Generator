@@ -1,0 +1,66 @@
+﻿@model AG.Web.MVC.Models.EmployeeTimeInterval.IndexEmployeeTimeIntervalVM
+@{
+    ViewData["Title"] = "Неявки";
+}
+<h3>@ViewData["Title"]</h3>
+<h1>@Model.EmployeeName</h1>
+
+<a class="btn btn-sm btn-outline-primary mb-3" asp-action="Create" asp-controller="EmployeeTimeInterval" asp-route-employeeId="@Model.EmployeeId">Новая неявка</a>
+
+<div class="mb-3">
+    <form method="get" asp-action="Index" asp-route-employeeId="@Model.EmployeeId">
+        <div class="row g-3 align-items-baseline mb-3">
+
+            @Html.HiddenFor(x => x.EmployeeId)
+
+            <div class="col-auto">
+                <h5>Фильтр данных</h5>
+            </div>
+
+            <div class="col-auto">
+                <span>Год</span>
+            </div>
+
+            <div class="col-auto">
+                @Html.TextBoxFor(x => x.FilterYear, new { @class = "form-control form-control-sm", type = "number" })
+            </div>
+
+            <div class="col-auto">
+                <span>Месяц</span>
+            </div>
+            <div class="col-auto">
+                @Html.DropDownListFor(x => x.FilterMonth, Model.AvailableMonths, "Все", new { @class = "form-select form-select-sm" })
+            </div>
+
+            <div class="col-auto">
+                <button class="btn btn-sm btn-outline-secondary" type="submit">Применить фильтр</button>
+            </div>
+        </div>
+    </form>
+</div>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Начало</th>
+            <th>Окончание</th>
+            <th>Вид неявки</th>
+            <th>Обозначение в табеле</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.TimeIntervals)
+        {
+            <tr>
+                <td>@item.Begin.ToString("dd.MM.yyyy")</td>
+                <td>@item.End.ToString("dd.MM.yyyy")</td>
+                <td>@item.Title</td>
+                <td>@item.ShortTitle</td>
+                <td>
+                    <a class="btn btn-sm btn-link" asp-action="Edit" asp-controller="EmployeeTimeInterval" asp-route-id="@item.Id">Изменить</a>
+                    <a class="btn btn-sm btn-link text-danger" asp-action="Remove" asp-controller="EmployeeTimeInterval" asp-route-id="@item.Id">Удалить</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

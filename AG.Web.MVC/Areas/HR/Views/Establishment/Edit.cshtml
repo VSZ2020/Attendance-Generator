@@ -1,0 +1,67 @@
+﻿@model EstablishmentViewModel
+@{
+    ViewData["Title"] = "Редактирование организации";
+}
+<h1>@ViewData["Title"]</h1>
+<hr />
+<h3>@Model.Title</h3>
+
+<div class="col-md-4">
+    <form method="post" action="Edit">
+        <div asp-validation-summary="All" class="text-danger"></div>
+        @Html.Hidden("Id")
+
+        <div class="form-floating mb-3">
+            @Html.TextBoxFor(x => x.Title, new {@class = "form-control"})
+            <label>Полное наименование организации</label>
+        </div>
+
+        <div class="form-floating mb-3">
+            @Html.TextBoxFor(x => x.ShortTitle, new { @class = "form-control" })
+            <label>Сокращенное наименование организации</label>
+        </div>
+
+        <div class="form-floating mb-3">
+            @Html.TextBoxFor(x => x.INN, new { @class = "form-control" })
+            <label>ИНН</label>
+        </div>
+
+        <div class="form-floating mb-3">
+            @Html.TextBoxFor(x => x.OGRN, new { @class = "form-control" })
+            <label>ОГРН</label>
+        </div>
+
+        <div class="form-floating mb-3">
+            @Html.TextBoxFor(x => x.Header, new { @class = "form-control" })
+            <label>Руководитель</label>
+        </div>
+
+        <div class="form-floating mb-3">
+            @Html.TextBoxFor(x => x.HeaderFunction, new { @class = "form-control" })
+            <label>Должность руководителя</label>
+        </div>
+
+        <div class="form-floating mb-3">
+            @Html.TextBoxFor(x => x.RegistrationDate, string.Format("{0:d}", Model.RegistrationDate.HasValue ? Model.RegistrationDate.Value.ToShortDateString() : DateTime.Now), new { @class = "form-control", type = "date" })
+            <label>Дата регистрации</label>
+        </div>
+
+        <div class="form-floating mb-3">
+            @Html.TextBoxFor(x => x.Address, new { @class = "form-control" })
+            <label>Адрес</label>
+        </div>
+
+        <div class="form-floating mb-3">
+            @Html.TextBoxFor(x => x.Email, new { @class = "form-control", type = "email" })
+            <label>Адрес электронной почты</label>
+        </div>
+
+        <div class="form-floating mb-3">
+            @Html.TextBoxFor(x => x.Phones, new { @class = "form-control" })
+            <label>Телефоны для связи</label>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Сохранить</button>
+        <a class="btn btn-light" asp-action="Index" asp-controller="Establishment">Отмена</a>
+    </form>
+</div>

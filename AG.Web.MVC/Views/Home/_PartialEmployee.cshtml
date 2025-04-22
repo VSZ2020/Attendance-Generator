@@ -1,0 +1,18 @@
+﻿@using AG.Core.Policy
+
+@{
+
+}
+@*@if (User.IsInRole(DefaultRoles.EMPLOYEE))*@
+@if(true)
+{
+    <div class="card mb-3">
+        <div class="card-header text-bg-success"><h3 class="card-title">Ответственный за табель</h3></div>
+        <div class="card-body">
+            <ul>
+                <li><a asp-controller="Department" asp-action="Index">Мои подразделения</a></li>
+                <li><a asp-controller="Employee" asp-action="ByDepartment">Мои сотрудники</a></li>
+            </ul>
+        </div>
+    </div>
+}

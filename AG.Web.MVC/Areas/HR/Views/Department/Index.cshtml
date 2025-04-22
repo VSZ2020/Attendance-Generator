@@ -1,0 +1,37 @@
+﻿@model DepartmentListViewModel
+
+@{
+    ViewData["Title"] = "Подразделения";
+}
+<div>
+    <h1>@ViewData["Title"]</h1>
+    <div class="text-start">
+        <a class="btn btn-sm btn-outline-primary" asp-area="HR" asp-controller="Department" asp-action="Create">Создать подразделение</a>
+    </div>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Название</th>
+                <th>Руководитель</th>
+                <th>Кол-во сотрудников</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Departments)
+            {
+                <tr>
+                    <td>@item.Name</td>
+                    <td>@item.Header</td>
+                    <td>@item.EmployeesCount</td>
+                    <td>
+                        <a asp-area="HR" asp-action="Edit" asp-controller="Department" asp-route-Id="@item.Id" class="btn btn-sm btn-link">Редактировать</a>
+                        <a asp-area="HR" asp-action="Index" asp-controller="Employee" asp-route-departmentId="@item.Id" class="btn btn-sm btn-primary">Сотрудники</a>
+                        <a asp-area="" asp-action="Index" asp-controller="Timesheet" asp-route-departmentId="@item.Id" class="btn btn-sm btn-success">Табели</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

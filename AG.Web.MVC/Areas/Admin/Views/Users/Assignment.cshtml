@@ -1,0 +1,25 @@
+﻿@model ReassignEmployeeViewModel
+@{
+    ViewData["Title"] = "Прикрепление сотрудника к аккаунту";
+}
+<h1>@ViewData["Title"]</h1>
+<h3>@Model.Username</h3>
+<p>Далее выбирается сотрудник,профиль которого связывается с учетной записью для входа в систему</p>
+
+<div class="col-md-4">
+    <form method="post" asp-action="Assignment">
+        <div asp-validation-summary="All" class="text-danger"></div>
+
+        @Html.HiddenFor(x => x.Id)
+        @Html.HiddenFor(x => x.Username)
+
+        <div class="form-floating mb-3">
+            @Html.DropDownListFor(x => x.AssignedEmployeeId, Model.AvailableEmployees, new { @class = "form-select" })
+            <label>Выберите сотрудника</label>
+        </div>
+
+        <button class="btn btn-primary" type="submit">Сохранить</button>
+        <a class="btn btn-light" asp-area="Admin" asp-action="Index" asp-controller="Users">Отмена</a>
+
+    </form>
+</div>

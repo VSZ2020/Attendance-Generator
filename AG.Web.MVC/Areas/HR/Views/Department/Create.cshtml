@@ -1,0 +1,72 @@
+﻿@model DepartmentViewModel
+@{
+    ViewData["Title"] = "Новое подразделение";
+}
+<h1>@ViewData["Title"]</h1>
+<div id="headerModal" class="modal fade" tabindex="-1" data-bs-keyboard="false">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header"><h5 class="modal-title fs-5">Список сотрудников</h5></div>
+            <div class="modal-body">
+                <p>
+                    <table class="table table-sm table-hover">
+                        <thead>
+                            <tr>
+                                <th>ФИО</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var header in Model.HeadersList)
+                            {
+                                <tr>
+                                    <td>@header</td>
+                                    <td><button class="btn btn-link" type="button" onclick="applyHeader('@header')">Выбрать</button></td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    function applyHeader(name) {
+        if (name == "Не задан") {
+            name = "";
+        }
+        document.getElementById('headerName').setAttribute('value', name);
+        bootstrap.Modal.getInstance(document.getElementById('headerModal')).hide();
+    }
+
+</script>
+
+<div class="col-md-4">
+    <form method="post" asp-action="Create" asp-controller="Department">
+        <div asp-validation-summary="All" claas="text-danger"></div>
+
+        <div class="form-floating mb-4">
+            @Html.TextBoxFor(m => m.Name, new { @class = "form-control" })
+            <label>Название</label>
+        </div>
+
+        <div class="row mb-4">
+            <div class="col">
+                <div class="form-floating">
+                    @Html.TextBoxFor(m => m.Header, new { @class = "form-control", @id = "headerName", @readonly = "readonly" })
+                    <label>Руководитель подразделения</label>
+                </div>
+            </div>
+            <div class="col-auto">
+                <button type="button" class="btn btn-light h-100" data-bs-toggle="modal" data-bs-target="#headerModal">Выбрать</button>
+            </div>
+        </div>
+
+        <button class="btn btn-primary" type="submit">Создать</button>
+        <a class="btn btn-light" asp-action="Index" asp-controller="Department">Отмена</a>
+    </form>
+</div>

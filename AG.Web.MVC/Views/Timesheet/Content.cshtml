@@ -1,0 +1,161 @@
+﻿@model Form0504421ContentVM
+@{
+    ViewData["Title"] = "Табель посещаемости";
+    string signField = "___________________";
+    string dateField = "\"___\" ___________ 20__ г.";
+    string timesheetNumber = string.IsNullOrEmpty(Model?.TimesheetNumber ?? "") ? "_________" : Model.TimesheetNumber;
+}
+<style>
+    td.special{
+    border-bottom: 1px double Gray;
+    }
+    div.rotate{
+    -moz-transform: rotate(-90.0deg); /* FF3.5+ */
+    -o-transform: rotate(-90.0deg); /* Opera 10.5 */
+    -webkit-transform: rotate(-90.0deg); /* Saf3.1+, Chrome */
+    filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=0.083); /* IE6,IE7 */
+    -ms-filter: "progid:DXImageTransform.Microsoft.BasicImage(rotation=0.083)"; /* IE8 */
+    }
+</style>
+
+<table class="table table-borderless">
+    <tr>
+        <td>
+            <h3>@ViewData["Title"]</h3>
+            <div class="mb-1 fst-italic">Идентификатор: @(Model != null ? Model.Id.ToString().ToUpper() : "Отсутствует")</div>
+            <div class="mb-2 fst-italic">Дата последнего изменения: @(Model != null ? string.Format("{0:dd.MM.yyyy HH:mm:ss}", Model.LastModifiedAt) : "Отсутствует")</div>
+        </td>
+        <td class="text-end align-middle">
+            <div class="d-inline-flex">
+                <form method="get" asp-action="RecreateContent" asp-route-id="@Model?.Id">
+                    <button type="submit" class="btn btn-sm btn-primary">Пересоздать</button>&nbsp;
+                </form>
+
+                <form method="get" asp-action="ToExcel">
+                    <button type="submit" class="btn btn-sm btn-success">Экспорт в Excel</button>&nbsp;
+                </form>
+
+                <form method="get" asp-action="Print">
+                    <button type="submit" class="btn btn-sm btn-secondary">Печать</button>
+                </form>
+            </div>
+        </td>
+    </tr>
+</table>
+
+<div class="col">
+    <div class="row-auto">
+        <table class="table table-sm table-borderless">
+            <colgroup>
+                <col span="1" style="width: 1px; white-space: nowrap" />
+                <col span="1" />
+            </colgroup>
+            <tbody>
+                <tr>
+                    <td colspan="2" class="text-center"><h3>
+                            Табель № <span class="text-decoration-underline">@timesheetNumber</span><br />
+                            учета использования рабочего времени
+                        </h3>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Организация</td>
+                    <td class="special">@(Model?.EstablishmentName ?? "")</td>
+                </tr>
+                <tr>
+                    <td>Подразделение</td>
+                    <td class="special">@(Model?.DepartmentName ?? "")</td>
+                </tr>
+                <tr>
+                    <td>Отчетный период</td>
+                    <td class="special">с @(Model?.Begin.ToString("dd.MM.yyyy") ?? dateField) по @(Model?.End.ToString("dd.MM.yyyy") ?? dateField)</td>
+                </tr>
+                <tr>
+                    <td>Вид табеля</td>
+                    <td class="special">@(Model?.TimesheetKind ?? "")</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="row-auto">
+        <div class="text-center">
+            @* <p>
+                <h3>Табель № <span class="text-decoration-underline">@timesheetNumber</span></h3>
+                <b>Организация <span class="text-decoration-underline">@Model.EstablishmentName</span></b><br />
+                Подразделение <span class="text-decoration-underline">@Model.DepartmentName</span><br />
+                Отчетный период с <span class="text-decoration-underline">@Model.Begin.ToString("dd.MM.yyyy")</span> по <span class="text-decoration-underline">@Model.End.ToString("dd.MM.yyyy")</span><br />
+                Вид табеля <span class="text-decoration-underline">@Model.TimesheetKind</span>
+            </p> *@
+
+            @if (Model != null && Model.Rows != null && Model.Rows.Count > 0){
+                <table class="table table-sm table-responsive table-hover table-bordered">
+                    <thead>
+                        <tr class="align-middle">
+                            <td style="width: 3rem;">№ п/п</td>
+                            <td >ФИО</td>
+                            <td style="width: 12rem;">Должность (профессия)</td>
+                            <td style="width: 8rem;">Доля ставки</td>
+                            @for (var i = 0; i < Model.Dates.Count; i++)
+                            {
+                                var day = Model.Dates[i];
+                                if (i == 15 && Model.Dates.Count > 15)
+                                {
+                                    <td style="width: 4rem;"><div class="text-wrap">Итого дней/часов явок с 1 по 15</div></td>
+                                }
+                                <td style="width: 2rem;"><div class="fw-bold">@day.Day</div></td>
+                            }
+                            @if (Model.Dates.Count > 15)
+                            {
+                                <td style="width: 4rem;"><div class="text-wrap">Всего дней/часов явок за месяц</div></td>
+                            }
+                            
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var employee in Model.Rows)
+                        {
+                            <tr>
+                                <td>@employee.Number</td>
+                                <td class="text-start"><div class="text-nowrap">@employee.EmployeeName</div></td>
+                                <td>@employee.Function</td>
+                                <td>@employee.Rate</td>
+                                @if (employee.Days != null)
+                                {
+                                    @for (var i = 0; i < employee.Days.Count; i++)
+                                    {
+                                        var day = employee.Days[i];
+                                        if (i == 15 && employee.Days.Count > 15){
+                                            <td style="width: 4rem;"><div>@Math.Round(employee.TotalHoursPerHalfMonth)</div></td>
+                                        }
+                                        <td style="width: 2rem;"><div class="rotate">@day.Text</div></td>
+                                    }
+                                    @if (employee.Days.Count > 15)
+                                    {
+                                        <td style="width: 4rem;"><div>@Math.Round(employee.TotalHoursPerFullMonth)</div></td>
+                                    }
+                                }
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+            else
+            {
+                <div class="fw-bold">Данные отсутствуют. Попробуйте пересоздать список через кнопку "Пересоздать"</div>
+            }
+        </div>
+    </div>
+    <div class="row-auto">
+        <div class="col">
+            Ответственный исполнитель <span class="text-decoration-underline">@(Model?.ResponsibleEmployee ?? "")</span>  @signField  <span class="text-decoration-underline">@(Model?.ResponsibleEmployeeFunction  ?? "")</span>
+        </div>
+        <div class="col text-end">
+            Проверяющий <span class="text-decoration-underline">@(Model?.AccountingEmployee ?? "")</span>  @signField  <span class="text-decoration-underline">@(Model?.AccountingEmployeeFunction ?? "")</span>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            Исполнитель <span class="text-decoration-underline">@(Model?.ExecutiveEmployee ?? "")</span>  @signField  <span class="text-decoration-underline">@(Model?.ExecutiveEmployeeFunction ?? "")</span>
+        </div>
+    </div>
+</div>

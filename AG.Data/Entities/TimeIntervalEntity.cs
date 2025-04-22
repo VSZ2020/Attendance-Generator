@@ -1,5 +1,6 @@
 ﻿using AG.Data.Entities.RelationshipTables;
 using System.ComponentModel.DataAnnotations;
+using AG.Core.Enums;
 
 namespace AG.Data.Entities
 {
@@ -16,7 +17,10 @@ namespace AG.Data.Entities
 
         public string? Reason { get; set; }
 
-
+        [Required]
+        public DayType DayType { get; set; }
+        
+        public ICollection<EmployeeEntity> Employees { get; set; }
 
         public ICollection<EmployeeToTimeInterval> EmployeeToTimeIntervalTable { get; set; }
     }

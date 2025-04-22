@@ -1,0 +1,44 @@
+﻿@model CreateCorrectionDayVM
+@{
+    ViewData["Title"] = "Создание нового дня";
+}
+
+<div class="col-3">
+    <form method="post" asp-action="Create" asp-controller="CorrectionDay">
+        <div asp-validation-summary="All" class="text-danger"></div>
+
+        <div class="form-floating mb-3">
+            @Html.TextBoxFor(x => x.Title, new {@class = "form-control"})
+            <label>Название</label>
+        </div>
+
+        <div class="form-floating mb-3">
+            @Html.TextBoxFor(x => x.Day, new { @class = "form-control", type="number" })
+            <label>День</label>
+        </div>
+
+        <div class="form-floating mb-3">
+            @Html.DropDownListFor(x => x.Month, Model.AvailableMonths, new { @class = "form-select" })
+            <label>Месяц</label>
+        </div>
+
+        <div class="form-floating mb-3">
+            @Html.TextBoxFor(x => x.Year, new { @class = "form-control", type="number" })
+            <label>Год</label>
+            <span class="text-black-50"><i>Если год не указан, то корректировка будет действовать на все года при формировании нового табеля</i></span>
+        </div>
+
+        <div class="form-floating mb-3">
+            @Html.DropDownListFor(x => x.Type, Model.AvailableDayTypes, new { @class = "form-select" })
+            <label>Тип дня</label>
+        </div>
+
+        <div class="form-floating mb-3">
+            @Html.TextBoxFor(x => x.Hours, new { @class = "form-control", type = "number" })
+            <label>Количество рабочих часов</label>
+        </div>
+
+        <button class="btn btn-primary" type="submit">Создать</button>
+        <a class="btn btn-light" asp-action="Index" asp-controller="CorrectionDay" asp-area="">Отмена</a>
+    </form>
+</div>

@@ -371,3 +371,8 @@ FodyWeavers.xsd
 AG/
 Databases/
 SQLiteRepository/
+
+#Database files
+*.db
+*.db-shm
+*.db-wal

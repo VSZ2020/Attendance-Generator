@@ -1,0 +1,88 @@
+﻿@model IndexTimesheetVM
+@{
+    ViewData["Title"] = "Табели учета рабочего времени подразделения";
+}
+<div>
+    <h3>@ViewData["Title"]</h3>
+    <h1 class="mb-3">@Model.DepartmentName</h1>
+
+    <a class="btn btn-sm btn-outline-primary mb-3" asp-action="Create" asp-route-departmentId="@Model.DepartmentId">Новый табель</a>
+    <a class="btn btn-sm btn-link mb-3" asp-action="Defaults" asp-route-departmentId="@Model.DepartmentId">Настройки табеля</a>
+
+    <form method="get" asp-action="Index">
+        <div class="row g-3 align-items-baseline mb-3">
+            @Html.HiddenFor(m => m.DepartmentId)
+
+            <div class="col-auto">
+                <h5>Фильтр данных</h5>
+            </div>
+
+            <div class="col-auto">
+                <span>Год</span>
+            </div>
+
+            <div class="col-auto">
+                @Html.TextBoxFor(x => x.FilterYear, new { @class = "form-control form-control-sm", type = "number" })
+            </div>
+
+            <div class="col-auto">
+                <span>Месяц</span>
+            </div>
+            <div class="col-auto">
+                @Html.DropDownListFor(x => x.FilterMonth, Model.AvaialbleMonths, "Все", new { @class = "form-select form-select-sm" })
+            </div>
+
+            <div class="col-auto">
+                <button class="btn btn-sm btn-outline-secondary" type="submit">Применить фильтр</button>
+            </div>
+        </div>
+    </form>
+
+    @if (Model.Timesheets != null && Model.Timesheets.Count() > 0)
+    {
+        <table class="table table-sm table-stripped text-center">
+            <thead>
+                <tr>
+                    <th>Отчетный период</th>
+                    <th>Форма</th>
+                    <th>Вид</th>
+                    <th>Сформирован</th>
+                    <th>Создан</th>
+                    <th>Автор</th>
+                    <th>Изменен</th>
+                    <th>Ответственный исполнитель</th>
+                    <th>Исполнитель</th>
+                    <th>Проверяющий</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.Timesheets)
+                {
+                    <tr>
+                        <td>@($"с {item.BeginDate.ToString("dd.MM.yyyy")} по {item.EndDate.ToString("dd.MM.yyyy")}")</td>
+                        <td>@item.FormType</td>
+                        <td>@(item.Kind == 0 ? "Первичный" : "Корректирующий")</td>
+                        <td>@(item.HasContent ? "Да" : "Нет")</td>
+                        <td>@item.CreatedAt.ToString("dd.MM.yyyy")</td>
+                        <td>@item.AuthorName</td>
+                        <td>@(item.LastModifiedAt != null ? item.LastModifiedAt.Value.ToShortDateString() : "-")</td>
+                        <td>@item.ResponsibleExecutorName</td>
+                        <td>@item.ExecutorName</td>
+                        <td>@item.AccountingExecutorName</td>
+
+                        <td>
+                            <a asp-action="Content" asp-controller="Timesheet" asp-route-id="@item.Id" class="btn btn-sm btn-link">Просмотр</a>
+                            
+                            <a asp-action="Remove" asp-controller="Timesheet" asp-route-id="@item.Id" class="btn btn-sm btn-link text-danger">Удалить</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <p>Еще не сформировано ни одного табеля</p>
+    }
+</div>

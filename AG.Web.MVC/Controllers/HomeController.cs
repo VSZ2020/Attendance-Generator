@@ -1,4 +1,6 @@
 using AG.Web.MVC.Models;
+using AG.Web.MVC.Models.Home;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
@@ -20,6 +22,24 @@ namespace AG.Web.MVC.Controllers
 
         public IActionResult Privacy()
         {
+            return View();
+        }
+
+        [Authorize()]
+        [HttpGet]
+        public IActionResult Feedback()
+        {
+            return View();
+        }
+
+        [Authorize()]
+        [HttpPost]
+        public IActionResult Feedback(FeedbackVM? model)
+        {
+            if (ModelState.IsValid)
+            {
+                ViewData["IsSuccess"] = true;
+            }
             return View();
         }
 

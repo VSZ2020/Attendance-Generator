@@ -1,0 +1,9 @@
+﻿@using AG.Core.Policy
+
+@{
+}
+@if (User != null && User.IsInRole(DefaultRoles.ADMIN))
+{
+    <li class="nav-item"><a class="nav-link text-dark" asp-area="Admin" asp-controller="Users" asp-action="Index">Пользователи</a></li>
+    
+}

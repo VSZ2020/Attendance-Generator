@@ -1,0 +1,45 @@
+﻿@model EditCorrectionDayVM
+@{
+    ViewData["Title"] = "Изменение корректирующего дня";
+}
+
+<div class="col-3">
+    <form method="post" asp-action="Edit" asp-controller="CorrectionDay">
+        <div asp-validation-summary="All" class="text-danger"></div>
+
+        @Html.HiddenFor(m => m.Id)
+
+        <div class="form-floating mb-3">
+            @Html.TextBoxFor(x => x.Title, new {@class = "form-control"})
+            <label>Название</label>
+        </div>
+
+        <div class="form-floating mb-3">
+            @Html.TextBoxFor(x => x.Day, new { @class = "form-control", type="number" })
+            <label>День</label>
+        </div>
+
+        <div class="form-floating mb-3">
+            @Html.DropDownListFor(x => x.Month, Model.AvailableMonths, new { @class = "form-select" })
+            <label>Месяц</label>
+        </div>
+
+        <div class="form-floating mb-3">
+            @Html.TextBoxFor(x => x.Year, new { @class = "form-control", type="number" })
+            <label>Год</label>
+        </div>
+
+        <div class="form-floating mb-3">
+            @Html.DropDownListFor(x => x.Type, Model.AvailableDayTypes, new { @class = "form-select" })
+            <label>Тип дня</label>
+        </div>
+
+        <div class="form-floating mb-3">
+            @Html.TextBoxFor(x => x.Hours, new { @class = "form-control", type = "number" })
+            <label>Количество рабочих часов</label>
+        </div>
+
+        <button class="btn btn-primary" type="submit">Сохранить изменения</button>
+        <a class="btn btn-light" asp-action="Index" asp-controller="CorrectionDay" asp-area="">Отмена</a>
+    </form>
+</div>

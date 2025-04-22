@@ -1,0 +1,10 @@
+﻿@using AG.Core.Policy
+
+@{
+    
+}
+@if (User != null && User.IsInRole(DefaultRoles.HR))
+{
+    <li class="nav-item"><a class="nav-link text-dark" asp-area="HR" asp-controller="Department" asp-action="Index">Подразделения</a></li>
+    <li class="nav-item"><a class="nav-link text-dark" asp-area="HR" asp-controller="Employee" asp-action="ByDepartment">Сотрудники</a></li>
+}

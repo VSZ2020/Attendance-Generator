@@ -2,5 +2,5 @@
 
 public class DayVM
 {
-    
+    public string Text { get; set; }
 }

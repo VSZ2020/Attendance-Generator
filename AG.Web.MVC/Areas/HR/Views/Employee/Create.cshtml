@@ -1,0 +1,69 @@
+﻿@model CreateEmployeeViewModel
+@{
+    ViewData["Title"] = "Добавление нового сотрудника";
+}
+<h1>@ViewData["Title"]</h1>
+
+<div class="col-md-4">
+    <form method="post" asp-action="Create" asp-controller="Employee">
+        <div asp-validation-summary="All"></div>
+
+        <div class="form-floating mb-3">
+            @Html.TextBoxFor(x => x.LastName, new {@class = "form-control"})
+            <label>Фамилия</label>
+        </div>
+
+        <div class="form-floating mb-3">
+            @Html.TextBoxFor(x => x.FirstName, new { @class = "form-control" })
+            <label>Имя</label>
+        </div>
+
+        <div class="form-floating mb-3">
+            @Html.TextBoxFor(x => x.MiddleName, new { @class = "form-control" })
+            <label>Отчество (при наличии)</label>
+        </div>
+
+        <div class="form-floating mb-3">
+            @Html.TextBoxFor(x => x.Email, new { @class = "form-control" })
+            <label>Адрес электронной почты</label>
+        </div>
+
+        <div class="form-floating mb-3">
+            @Html.TextBoxFor(x => x.Phone, new { @class = "form-control" })
+            <label>Телефон</label>
+        </div>
+
+        <div class="form-floating mb-3">
+            <select asp-for="DepartmentId" asp-items="@Model.AvailableDepartments" class="form-select"></select>
+            <label>Подразделение</label>
+        </div>
+
+        <div class="form-floating mb-3">
+            <select asp-for="FunctionId" asp-items="@Model.AvailableFunctions" class="form-select"></select>
+            <label>Должность</label>
+        </div>
+
+        <div class="form-floating mb-3">
+            @Html.TextBoxFor(x => x.AssignmentDate, string.Format("{0:dd.MM.yyyy}", Model.AssignmentDate.ToShortDateString()), new { @class = "form-control", type="date" })
+            <label>Принят на работу с</label>
+        </div>
+
+        <div class="form-floating mb-3">
+            @Html.TextBoxFor(x => x.Reason, new { @class = "form-control" })
+            <label>Основание</label>
+        </div>
+
+        <div class="form-floating mb-3">
+            @Html.TextBoxFor(x => x.Rate, new { @class = "form-control" })
+            <label>Доля ставки</label>
+        </div>
+
+        <div class="form-check mb-3">
+            @Html.CheckBoxFor(x => x.IsConcurrent, new { @class = "form-check-input" })
+            <label class="form-check-label">Внешний совместитель</label>
+        </div>
+
+        <button class="btn btn-primary" type="submit">Создать</button>
+        <a class="btn btn-light" asp-action="Index" asp-controller="Employee" asp-route-departmentId="@Model.DepartmentId">Отмена</a>
+    </form>
+</div>
