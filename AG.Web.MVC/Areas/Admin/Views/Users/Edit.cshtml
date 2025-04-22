@@ -1,0 +1,44 @@
+﻿@model EditUserViewModel
+@{
+    ViewData["Title"] = "Редактирование данных пользователя";
+}
+
+<h1>@ViewData["Title"]</h1>
+<h2>@Model.Username</h2>
+
+<div class="col-md-4">
+    <form asp-controller="Users" asp-action="Edit" method="post">
+        <div asp-validation-summary="All" class="text-danger"></div>
+
+        @Html.HiddenFor(x => x.Id)
+        @Html.HiddenFor(x => x.Username)
+
+        <div class="form-check mb-3">
+            @Html.CheckBoxFor(x => x.IsActivatedAccount, new { @class = "form-check-input" })
+            <label class="form-check-label">Активировать аккаунт</label>
+        </div>
+
+        <div class="form-floating mb-3">
+            @Html.TextBoxFor(x => x.Email, new { @class = "form-control" })
+            <label>Адрес электронной почты</label>
+        </div>
+
+        <div class="form-check mb-3">
+            @Html.CheckBoxFor(x => x.IsEmailConfirmed, new { @class = "form-check-input" })
+            <label class="form-check-label">Email подтвержден?</label>
+        </div>
+
+        <div class="form-floating mb-3">
+            <select asp-for="AssignedDepartmentId" asp-items="@Model.AvailableDepartmetns" class="form-select"></select>
+            <label>Подразделение</label>
+        </div>
+
+        <div class="form-floating mb-3">
+            <select asp-for="AssignedEmployeeId" asp-items="@Model.AvailableEmployees" class="form-select"></select>
+            <label>Прикрепленный сотрудник</label>
+        </div>
+
+        <button class="btn btn-primary" type="submit">Сохранить</button>
+        <a class="btn btn-light" asp-area="Admin" asp-action="Index" asp-controller="Users">Отмена</a>
+    </form>
+</div>

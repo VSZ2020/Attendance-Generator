@@ -1,0 +1,58 @@
+﻿@model EmployeeByDepViewModel
+@{
+    ViewData["Title"] = "Сотрудники";
+    int depCounter = 1;
+}
+
+<div class="row d-flex justify-content-center">
+    <div class="col-md-7">
+        <h1 class="mb-3">Список сотрудников по подразделениям</h1>
+
+        @foreach (var department in Model.EmployeeGroups)
+        {
+            <div class="accordion mb-3" id="groups">
+                <div class="accordion-item">
+                    <h4 class="accordion-header">
+                        <button type="button" class="accordion-button" style="background-color: white"  data-bs-toggle="collapse" data-bs-target="#collapseDep@(depCounter)" aria-expanded="true" aria-controls="collapseDep@(depCounter)">
+                            @department.DepartmentName
+                        </button>
+                    </h4>
+                    <div id="collapseDep@(depCounter++)" class="accordion-collapse collapse show">
+                        <div class="accordion-body">
+                            <a class="btn btn-sm btn-outline-primary mb-2" asp-area="HR" asp-action="Create" asp-controller="Employee" asp-route-departmentId="@department.DepartmentId">Добавить сотрудника</a>
+                            <table class="table table-sm align-middle">
+                                <thead>
+                                    <tr scope="row">
+                                        <th scope="col">#</th>
+                                        <th scope="col">ФИО</th>
+                                        <th scope="col">Должность</th>
+                                        <th scope="col">Доля ставки</th>
+                                        <th scope="col-auto"></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @for(int i = 0; i < department.Employees.Count; i++)
+                                    {
+                                        var employee = department.Employees[i];
+                                        <tr scope="row">
+                                            <th scope="col">@(i+1)</th>
+                                            <td scope="col">@employee.ShortName</td>
+                                            <td scope="col">@employee.Function</td>
+                                            <td scope="col">@employee.Rate</td>
+                                            <td scope="col">
+                                                <a asp-area="" asp-action="Index" asp-controller="EmployeeTimeInterval" asp-route-employeeId="@employee.Id" class="btn btn-sm btn-link">Неявки</a>
+                                                <span>|</span>
+                                                <a asp-area="HR" asp-action="Edit" asp-controller="Employee" asp-route-employeeId="@employee.Id" class="btn btn-sm btn-link">Редактировать</a>
+                                                <a asp-area="HR" asp-action="Remove" asp-controller="Employee" asp-route-employeeId="@employee.Id" class="btn btn-sm btn-link text-danger">Удалить</a>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>

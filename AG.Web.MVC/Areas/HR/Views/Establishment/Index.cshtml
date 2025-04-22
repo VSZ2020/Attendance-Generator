@@ -1,0 +1,53 @@
+﻿@model EstablishmentViewModel
+@{
+    ViewData["Title"] = "Карточка организации";
+}
+<div class="col-md-4">
+    <div class="card">
+        <div class="card-header"><h3>@ViewData["Title"]</h3></div>
+        <div class="card-body">
+            <div class="input-group mb-3">
+                <label class="input-group-text">Полное наименование</label><br />
+                <div class="form-control">@Model.Title</div>
+            </div>
+            <div class="input-group mb-3">
+                <label class="input-group-text">Сокращенное наименование</label>
+                <span class="form-control">@Model.ShortTitle</span>
+            </div>
+            <div class="input-group mb-3">
+                <label class="input-group-text">ИНН</label>
+                <span class="form-control">@Model.INN</span>
+            </div>
+            <div class="input-group mb-3">
+                <label class="input-group-text">ОГРН</label>
+                <span class="form-control">@Model.OGRN</span>
+            </div>
+            <div class="input-group mb-3">
+                <label class="input-group-text">Руководитель</label>
+                <span class="form-control">@Model.Header</span>
+            </div>
+            <div class="input-group mb-3">
+                <label class="input-group-text">Должность руководителя</label>
+                <span class="form-control">@Model.HeaderFunction</span>
+            </div>
+            <div class="input-group mb-3">
+                <label class="input-group-text">Дата регистрации</label>
+                <span class="form-control">@(string.Format("{0:d}", Model.RegistrationDate.HasValue ? Model.RegistrationDate.Value.ToShortDateString() : DateTime.Now))</span>
+            </div>
+            <div class="input-group mb-3">
+                <label class="input-group-text">Фактический адрес регистрации</label>
+                <span class="form-control">@Model.Address</span>
+            </div>
+            <div class="input-group mb-3">
+                <label class="input-group-text">Email</label>
+                <span class="form-control">@Model.Email</span>
+            </div>
+            <div class="input-group mb-3">
+                <label class="input-group-text">Телефоны для связи</label>
+                <span class="form-control">@Model.Phones</span>
+            </div>
+
+            <a class="btn btn-primary" asp-controller="Establishment" asp-action="Edit">Изменить</a>
+        </div>
+    </div>
+</div>

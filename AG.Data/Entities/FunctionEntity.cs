@@ -11,8 +11,11 @@ namespace AG.Data.Entities
         [Required]
         public string ShortName { get; set; }
 
+        public string? Category { get; set; }
 
+        //public ICollection<EmployeeEntity> Employees { get; set; }
 
-        public ICollection<EmployeeToFunction> EmployeeToFunctionTable { get; set; }
+        public ICollection<EmployeeToDepartment> EmployeeToDepartmentTable { get; set; }
+        //public ICollection<EmployeeToFunction> EmployeeToFunctionTable { get; set; }
     }
 }

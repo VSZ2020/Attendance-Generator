@@ -1,18 +1,12 @@
-﻿@model TModel
+﻿@model AG.Web.MVC.Models.EmployeeTimeInterval.RemoveEmployeeTimeIntervalVM
 
 @{
-    Layout = null;
+    ViewData["Title"] = "Удаление интервала";
 }
 
-<!DOCTYPE html>
-
-<html>
-<head>
-    <title>title</title>
-</head>
-<body>
-<div>
-      
-</div>
-</body>
-</html>
+<h3>Подтверждение удаления</h3>
+<p>Вы уверены, что хотите удалить временной интервал <b>@Model.IntervalName</b> с <b>@Model.Begin.ToShortDateString()</b> по <b>@Model.End.ToShortDateString()</b>?</p>
+<form method="post" asp-action="Remove" asp-controller="EmployeeTimeInterval">
+    <button type="submit" class="btn btn-outline-danger">Подтвердить</button>
+    <a class="btn btn-light" asp-action="Index" asp-controller="EmployeeTimeInterval" asp-route-employeeId="@Model.EmployeeId">Отмена</a>
+</form>

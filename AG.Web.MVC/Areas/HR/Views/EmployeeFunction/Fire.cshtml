@@ -1,0 +1,22 @@
+﻿@model FireEmployeeFunctionVM
+@{
+    ViewData["Title"] = "Увольнение";
+}
+
+<h3>@ViewData["Title"]</h3>
+<div class="col-md-4">
+    <form method="post" asp-action="Fire">
+        <div asp-validation-summary="All" class="text-danger"></div>
+        @Html.HiddenFor(x => x.RecordId)
+        <p>
+            Вы действительно хотите уволить сотрудника <b>@Model.EmployeeName</b> с должности <b>@(Model.FunctionName)</b> в подразделении <b>@(Model.DepartmentName)</b>?
+        </p>
+        <div class="form-floating mb-3">
+            @Html.TextBoxFor(x => x.FiredDate, string.Format("{0:dd.MM.yyyy}", Model.FiredDate), new { @class = "form-control", type = "date" })
+            <label>Дата увольнения</label>
+        </div>
+
+        <button type="submit" class="btn btn-outline-danger">Уволить</button>
+        <a class="btn btn-light" asp-action="Index" asp-route-employeeId="@Model.EmployeeId">Отмена</a>
+    </form>
+</div>

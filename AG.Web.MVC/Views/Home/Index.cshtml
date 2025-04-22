@@ -1,8 +1,21 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Главная";
 }
+<h3 class="mb-3">Страницы ролей пользователей</h3>
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+
+<partial name="_PartialAdministrator"/>
+<partial name="_PartialHR"/>
+<partial name="_PartialEmployee"/>
+
+<div class="card mb-3" style="max-width: 18rem;">
+    <div class="card-header"><h3 class="card-title">Общие страницы</h3></div>
+    <div class="card-body">
+        <ul>
+            <li><a asp-controller="CorrectionDay" asp-action="Index">Корректирующие дни</a></li>
+
+            <li><a asp-controller="Handbook" asp-action="Notations">Обозначения табеля</a></li>
+            <li><a asp-controller="Handbook" asp-action="Functions">Перечень должностей</a></li>
+        </ul>
+    </div>
 </div>

@@ -1,0 +1,46 @@
+﻿@model FeedbackVM
+@{
+    ViewData["Title"] = "Обратная связь";
+}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-auto">
+            <h3>Обратная связь</h3>
+            @if (ViewData["IsSuccess"] != null)
+            {
+                <div class="alert alert-success">
+                    Сообщение успешно отправлено!
+                </div>
+            }
+            @if (ViewData["IsWarning"] != null)
+            {
+                <div class="alert alert-warning">
+                    Сообщение не отправлено. Попробуйте позже.
+                </div>
+            }
+            <p>Заполните следующую форму, чтобы сообщить о проблеме или оставить отзыв администратору</p>
+            <form method="post" asp-action="Feedback">
+                <div class="col">
+                    <div asp-validation-summary="All" class="text-danger"></div>
+
+                    <div class="form-floating mb-3">
+                        @Html.TextBoxFor(x => x.Sender, new { @class = "form-control" })
+                        <label>Ваше имя</label>
+                    </div>
+
+                    <div class="form-floating mb-3">
+                        @Html.TextBoxFor(x => x.Email, new { @class = "form-control" })
+                        <label>E-mail для связи</label>
+                    </div>
+
+                    <div class="form-floating mb-3">
+                        @Html.TextAreaFor(x => x.Message, new { @class = "form-control" })
+                        <label>Сообщение</label>
+                    </div>
+
+                    <button class="btn btn-primary" type="submit">Отправить</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

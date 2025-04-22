@@ -1,0 +1,27 @@
+﻿@using AG.Data.Entities
+@model IEnumerable<TimeIntervalEntity>
+@{
+    ViewData["Title"] = "Обозначения";
+}
+<h5 class="card-title">Обозначения табеля</h5>
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>Код</th>
+            <th>Сокращение</th>
+            <th>Наименование</th>
+            <th>Расшифровка</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.CODE.ToString("0#")</td>
+                <td>@item.ShortTitle</td>
+                <td>@item.Title</td>
+                <td>@item.Reason</td>
+            </tr>
+        }
+    </tbody>
+</table>

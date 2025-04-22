@@ -1,0 +1,63 @@
+﻿@model DefaultsTimesheetVM
+@{
+    ViewData["Title"] = "Настройки по-умолчанию";
+}
+<div class="d-flex justify-content-center">
+    <div class="col-md-4">
+        <h3>Подстановочные данные табеля</h3>
+        <form method="post" asp-action="Defaults">
+            <div asp-validation-summary="All"></div>
+            @Html.HiddenFor(x => x.DepartmentId)
+            <div class="row mb-3">
+                <div class="col">
+                    <div class="form-floating">
+                        @Html.TextBoxFor(x => x.ResponsibleExecutorName, new {@class = "form-control"})
+                        <label>Ответственный исполнитель</label>
+                    </div>
+                </div>
+                <div class="col-auto">
+                    <div class="form-floating">
+                        @Html.TextBoxFor(x => x.ResponsibleExecutorFunction, new { @class = "form-control" })
+                        <label>Должность</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col">
+                    <div class="form-floating">
+                        @Html.TextBoxFor(x => x.ExecutorName, new { @class = "form-control" })
+                        <label>Исполнитель</label>
+                    </div>
+                </div>
+                <div class="col-auto">
+                    <div class="form-floating">
+                        @Html.TextBoxFor(x => x.ExecutorFunction, new { @class = "form-control" })
+                        <label>Должность</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col">
+                    <div class="form-floating">
+                        @Html.TextBoxFor(x => x.AccountingExecutorName, new { @class = "form-control" })
+                        <label>Проверяющий</label>
+                    </div>
+                </div>
+                <div class="col-auto">
+                    <div class="form-floating">
+                        @Html.TextBoxFor(x => x.AccountingExecutorFunction, new { @class = "form-control" })
+                        <label>Должность</label>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="d-flex justify-content-end">
+                <button class="btn btn-primary" type="submit">Сохранить</button>
+                <a class="btn btn-light" asp-action="Index" asp-route-departmentId="@Model.DepartmentId">Отмена</a>
+            </div>
+        </form>
+    </div>
+</div>

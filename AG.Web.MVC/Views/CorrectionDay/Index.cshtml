@@ -1,0 +1,71 @@
+﻿@using AG.Core.Enums
+@model IndexCorrectionDayVM
+@{
+    ViewData["Title"] = "Корректирующие дни";
+}
+<div class="row d-flex justify-content-center">
+    <div class="col-md-7">
+        <div class="text-center">
+            <h3 class="mb-3">@ViewData["Title"]</h3>
+            <a asp-action="Create" asp-controller="CorrectionDay" asp-area="" class="btn btn-sm btn-outline-primary mb-3">Создать новый день</a>
+        </div>
+        <p class="text-black-50">Внимание! Если для корректирующего дня не указан год, то он распространяется на все года</p>
+        <form method="get" asp-action="Index">
+            <div class="row g-3 align-items-baseline mb-3">
+
+                <div class="col-auto">
+                    <h5>Фильтр данных</h5>
+                </div>
+
+                <div class="col-auto">
+                    <span>Год</span>
+                </div>
+
+                <div class="col-auto">
+                    @Html.TextBoxFor(x => x.FilterYear, new { @class = "form-control form-control-sm", type = "number" })
+                </div>
+
+                <div class="col-auto">
+                    <span>Месяц</span>
+                </div>
+                <div class="col-auto">
+                    @Html.DropDownListFor(x => x.FilterMonth, Model.AvailableMonths, "Все", new { @class = "form-select form-select-sm" })
+                </div>
+
+                <div class="col-auto">
+                    <button class="btn btn-sm btn-outline-secondary" type="submit">Применить фильтр</button>
+                </div>
+            </div>
+        </form>
+        <table class="table table-striped table-sm">
+            <thead>
+                <tr class="text-start">
+                    <th>Дата</th>
+                    <th>Название</th>
+                    <th>Тип</th>
+                    <th>Длит. раб. дня (ч)</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.CorrectionDays)
+                {
+                    <tr>
+                        <td>@item.Date</td>
+                        <td>@item.Title</td>
+                        <td>@item.DayType</td>
+                        <td>@(item.DayType == "Выходной" ? "-" : item.Hours)</td>
+                        <td>
+                            <div class="d-flex">
+                                <a asp-action="Edit" asp-controller="CorrectionDay" asp-area="" asp-route-id="@item.Id" class="btn btn-sm btn-link">Изменить</a>
+                                <form method="post" asp-action="Remove" asp-controller="CorrectionDay" asp-area="" asp-route-id="@item.Id">
+                                    <button type="submit" asp-action="Remove" asp-controller="CorrectionDay" asp-area="" asp-route-id="@item.Id" class="btn btn-sm btn-link">Удалить</button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

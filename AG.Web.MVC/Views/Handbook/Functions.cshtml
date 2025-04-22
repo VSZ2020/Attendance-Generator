@@ -1,0 +1,25 @@
+﻿@using AG.Data.Entities
+@model IEnumerable<FunctionEntity>
+@{
+    ViewData["Title"] = "Перечень должностей";
+}
+<h3 class="card-title">Перечень должностей</h3>
+<table class="table table-striped table-bordered">
+    <thead>
+        <tr>
+            <th>Наименование</th>
+            <th>Сокращение</th>
+            <th>Категория</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.Name</td>
+                <td>@item.ShortName</td>
+                <td>@item.Category</td>
+            </tr>
+        }
+    </tbody>
+</table>

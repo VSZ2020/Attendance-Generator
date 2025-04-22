@@ -1,0 +1,56 @@
+﻿@model CreateEmployeeFunctionVM
+@{
+    ViewData["Title"] = "Новая должность сотрудника";
+}
+<h3>@ViewData["Title"]</h3>
+<h1>@Model.EmployeeName</h1>
+<div class="col-md-4">
+    <form method="post" asp-action="Create" asp-controller="EmployeeFunction">
+        <div asp-validation-summary="All" class="text-danger"></div>
+
+        @Html.HiddenFor(x => x.EmployeeId)
+
+        <div class="form-floating mb-3">
+            @Html.DropDownList("DepartmentId", Model.AvailableDepartments, new { @class = "form-select" })
+            <label>Подразделение</label>
+        </div>
+
+        <div class="form-floating mb-3">
+            @Html.DropDownList("FunctionId", Model.AvailableFunctions, new { @class = "form-select" })
+            <label>Должность</label>
+        </div>
+
+        <div class="form-floating mb-3">
+            @Html.DropDownList("ScheduleId", Model.AvailableSchedules, new { @class = "form-select" })
+            <label>График работы</label>
+        </div>
+
+        <div class="form-floating mb-3">
+            @Html.TextBoxFor(x => x.Rate, new {@class = "form-control"})
+            <label>Доля ставки</label>
+        </div>
+
+        <div class="form-check mb-3">
+            @Html.CheckBoxFor(x => x.IsConcurrent, new { @class = "form-check-input" })
+            <label class="form-check-label">Внешний совместитель</label>
+        </div>
+
+        <div class="form-floating mb-3">
+            @Html.TextBoxFor(x => x.AssignmentDate, string.Format("{0:dd.MM.yyyy}", Model.AssignmentDate), new { @class = "form-control", type="date" })
+            <label>Дата назначения</label>
+        </div>
+
+        <div class="form-floating mb-3">
+            @Html.TextBoxFor(x => x.Reason, new { @class = "form-control" })
+            <label>Основание</label>
+        </div>
+
+        <div class="form-floating mb-3">
+            @Html.TextBoxFor(x => x.FiredDate, string.Format("{0:dd.MM.yyyy}", Model.FiredDate), new { @class = "form-control", type = "date" })
+            <label>Дата снятия с должности</label>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Создать</button>
+        <a class="btn btn-light" asp-action="Index" asp-controller="EmployeeFunction" asp-route-employeeId="@Model.EmployeeId">Отмена</a>
+    </form>
+</div>

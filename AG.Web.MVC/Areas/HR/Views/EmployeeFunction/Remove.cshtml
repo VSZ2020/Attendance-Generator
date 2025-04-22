@@ -1,0 +1,15 @@
+﻿@model RemoveEmployeeFunctionVM
+@{
+    ViewData["Title"] = "Удаление должности";
+}
+<h3>@ViewData["Title"]</h3>
+<h1>@Model.EmployeeName</h1>
+<form method="post" asp-action="Remove">
+    <div asp-validation-summary="All" class="text-danger"></div>
+    @Html.HiddenFor(x => x.RecordId)
+
+    <p>Вы уверены, что ходите удалить должность '@Model.FunctionName' в подразделении '@Model.DepartmentName'?</p>
+
+    <button class="btn btn-outline-danger" type="submit">Подтвердить удаление</button>
+    <a class="btn btn-light" asp-action="Index" asp-route-employeeId="@Model.EmployeeId">Отмена</a>
+</form>

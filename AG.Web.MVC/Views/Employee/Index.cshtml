@@ -1,0 +1,29 @@
+﻿@model IndexEmployeeVM
+@{
+    ViewData["Title"] = "Сотрудники";
+}
+<h3>Список сотрудников подразделения</h3>
+<h1 class="mb-3">@Model.DepartmentName</h1>
+<table class="table">
+    <thead>
+        <tr>
+            <th>ФИО</th>
+            <th>Должность</th>
+            <th>Доля ставки</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var employee in Model.Employees)
+        {
+            <tr>
+                <td>@employee.Name</td>
+                <td>@employee.Function</td>
+                <td>@employee.Rate</td>
+                <td>
+                    @Html.ActionLink("Неявки", "Index", "EmployeeTimeInterval", new { employeeId = employee.Id }, new { @class = "btn btn-sm btn-outline-primary" })
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

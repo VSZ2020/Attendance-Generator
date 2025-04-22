@@ -1,0 +1,24 @@
+﻿@model LoginViewModel
+@{
+    ViewData["Title"] = "Вход в систему";
+}
+
+<h1>@ViewData["Title"]</h1>
+<div class="col-md-4">
+
+    <form asp-area="Account" asp-controller="Account" asp-action="Login" method="post">
+        <div asp-validation-summary="All" class="text-danger"></div>
+
+        <div class="form-floating mb-3">
+            @Html.TextBoxFor(x => x.Username, new { @class = "form-control"})
+            <label>Имя пользователя</label>
+        </div>
+
+        <div class="form-floating mb-3">
+            @Html.TextBoxFor(x => x.Password, new { @class = "form-control" })
+            <label>Пароль</label>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Войти в систему</button>
+    </form>
+</div>

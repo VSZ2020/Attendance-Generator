@@ -1,0 +1,18 @@
+﻿
+@{
+    ViewData["Title"] = "Ошибка";
+}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class=" col-auto card text-center">
+            <h3 class="mt-sm-3 text-danger">Ошибка</h3>
+            <div class="card-body">
+                <p class="align-middle">@ViewBag.Message</p>
+                @if (ViewBag.Action != null)
+                {
+                    <a asp-action="@ViewBag.Action" asp-controller="@ViewBag.Controller">Назад</a>
+                }
+            </div>
+        </div>
+    </div>
+</div>

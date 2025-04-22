@@ -1,0 +1,22 @@
+﻿@model ReplaceRoleViewModel
+@{
+    ViewData["Title"] = "Смена роли пользователя в системе";
+}
+<h1>@ViewData["Title"]</h1>
+<h2>@Model.Username</h2>
+
+<div class="col-md-4">
+    <form method="post" asp-action="ReplaceRole">
+        <div asp-validation-summary="All" class="text-danger"></div>
+
+        @Html.HiddenFor(x => x.Id)
+        @Html.HiddenFor(x => x.Username)
+        @Html.HiddenFor(x => x.Role)
+
+        <div class="form-floating mb-3">
+            @Html.DropDownListFor(x => x.Role, Model.AvailableRoles, new {@class = "form-select"})
+            <label>Выберите роль пользователя в системе</label>
+        </div>
+        
+    </form>
+</div>

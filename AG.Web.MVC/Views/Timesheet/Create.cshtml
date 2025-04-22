@@ -1,0 +1,90 @@
+﻿@model CreateTimesheetVM
+@{
+    ViewData["Title"] = "Новый табель";
+}
+
+<h3>Метаданные нового табеля для подразделения</h3>
+<h1>@Model.DepartmentName</h1>
+<form method="post" asp-action="Create">
+    <div class="col-6">
+        <div asp-validation-summary="All" class="text-danger"></div>
+        @Html.HiddenFor(x => x.DepartmentId)
+        
+        <div class="form-floating mb-3">
+            @Html.DropDownListFor(x => x.Month, Model.AvaialbleMonths, new {@class = "form-select"})
+            <label>Месяц</label>
+        </div>
+        
+        <div class="form-floating mb-3">
+            @Html.TextBoxFor(x => x.BeginDate, new {@class = "form-control"})
+            <label>Начало отчетного периода</label>
+        </div>
+        <div class="form-floating mb-3">
+            @Html.TextBoxFor(x => x.EndDate, new { @class = "form-control"})
+            <label>Окончание отчетного периода (включительно)</label>
+        </div>
+
+        <div class="form-floating mb-3">
+            @Html.DropDownListFor(x => x.Kind, Model.AvaialbleKinds, new { @class = "form-select" })
+            <label>Вид табеля</label>
+        </div>
+
+        <div class="form-floating mb-3">
+            @Html.DropDownListFor(x => x.FormType, Model.AvaialbleForms, new { @class = "form-select" })
+            <label>Форма</label>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col">
+                <div class="form-floating">
+                    @Html.TextBoxFor(x => x.ResponsibleExecutorName, new { @class = "form-control" })
+                    <label>Ответственный исполнитель</label>
+                </div>
+            </div>
+            <div class="col-auto">
+                <div class="form-floating">
+                    @Html.TextBoxFor(x => x.ResponsibleExecutorFunction, new { @class = "form-control" })
+                    <label>Должность</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col">
+                <div class="form-floating">
+                    @Html.TextBoxFor(x => x.ExecutorName, new { @class = "form-control" })
+                    <label>Исполнитель</label>
+                </div>
+            </div>
+            <div class="col-auto">
+                <div class="form-floating">
+                    @Html.TextBoxFor(x => x.ExecutorFunction, new { @class = "form-control" })
+                    <label>Должность</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col">
+                <div class="form-floating">
+                    @Html.TextBoxFor(x => x.AccountingExecutorName, new { @class = "form-control" })
+                    <label>Проверяющий</label>
+                </div>
+            </div>
+            <div class="col-auto">
+                <div class="form-floating">
+                    @Html.TextBoxFor(x => x.AccountingExecutorFunction, new { @class = "form-control" })
+                    <label>Должность</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-floating mb-3">
+            @Html.TextAreaFor(x => x.Comment, new { @class = "form-control" })
+            <label>Примечание</label>
+        </div>
+
+        <button class="btn btn-primary" type="submit">Создать</button>
+        <a class="btn btn-light" asp-action="Index" asp-route-departmentId="@Model.DepartmentId">Отмена</a>
+    </div>
+</form>

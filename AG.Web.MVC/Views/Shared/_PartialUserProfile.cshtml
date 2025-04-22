@@ -1,0 +1,24 @@
+﻿@using System.Security.Claims
+
+@{
+    var isAuthenticated = User?.Identity?.IsAuthenticated ?? false;
+}
+@if (isAuthenticated)
+{
+    <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">@User!.FindFirst(ClaimTypes.Name).Value</a>
+        <ul class="dropdown-menu">
+            <li><a class="dropdown-item" asp-area="Account" asp-controller="Account" asp-action="Index">Профиль</a></li>
+            <li><hr /></li>
+            <li><a class="dropdown-item" asp-area="Account" asp-controller="Account" asp-action="Logout">Выйти</a></li>
+        </ul>
+    </li>
+}
+else
+{
+    <ul class="navbar-nav">
+        <li class="nav-item">
+            <a class="nav-link text-dark" asp-area="Account" asp-controller="Account" asp-action="Login">Войти</a>
+        </li>
+    </ul>
+}

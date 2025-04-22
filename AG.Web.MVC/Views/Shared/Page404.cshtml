@@ -1,0 +1,9 @@
+﻿@{
+    ViewData["Title"] = "Страница не найдена";
+}
+<h2 class="text-center">Запрашиваемая страница не найдена. Проверьте введенный адрес.</h2>
+@if (!string.IsNullOrEmpty(ViewBag.Message as string))
+{
+    <h3>Дополнительная информация</h3>
+    <p class="alert alert-info">@ViewBag.Message</p>
+}
