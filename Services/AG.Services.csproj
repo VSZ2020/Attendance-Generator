@@ -1,0 +1,31 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Attributes\**" />
+    <Compile Remove="Generators\**" />
+    <EmbeddedResource Remove="Attributes\**" />
+    <EmbeddedResource Remove="Generators\**" />
+    <None Remove="Attributes\**" />
+    <None Remove="Generators\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\AG.Data\AG.Data.csproj" />
+    <ProjectReference Include="..\Core\AG.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Timesheet\Content\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+  </ItemGroup>
+
+</Project>
