@@ -14,8 +14,4 @@
     <ProjectReference Include="..\Core\AG.Core.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\Core\AG.Core.csproj" />
-  </ItemGroup>
-
 </Project>
